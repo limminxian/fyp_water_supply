@@ -4,6 +4,38 @@
   <style>
 
 
+.signup {
+  padding: 20px;
+  background-color: #83FF9F; /* light green */
+  color: black;
+  -moz-animation: cssAnimation 0s ease-in 2s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 2s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 2s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+		padding: 0;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+		padding: 0;
+    }
+}
+
  </style>
  </head>
  
@@ -32,6 +64,12 @@ include_once 'userClass.php';
 $check = true;
 
 createTables();
+
+if(isset($_SESSION["signup"]))
+{
+	echo "<div class='signup'>Sign up successfully please wait to be approved</div>" ;
+	UNSET($_SESSION["signup"]);
+}
 
 //Submission of the form
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
