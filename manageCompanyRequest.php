@@ -67,13 +67,17 @@ $allCompany = $company->getAllCompany();
   </tr>	
 <?php
 //view button cliked direct to viewProduct.php
-if (isset($_POST["view"])){
-	$a = $_POST['view'];
-	eval("\$foo=$a;");
-	$_SESSION["view"] = $foo;
-	unset($_POST["view"]);
-	header("Location: viewProduct.php");
+if (isset($_POST["accept"])){
+	$company = unserialize(base64_decode($_POST["accept"]));
+	$company->appRejCompany("ACTIVE");
 }
+if (isset($_POST["reject"])){
+	$company = unserialize(base64_decode($_POST["reject"]));
+	$company->appRejCompany("REJECT");
+}
+?>
+  <form action="" method="post">
+<?php
 foreach($allCompany as $company){
 	?>
   <tr>
@@ -86,10 +90,10 @@ foreach($allCompany as $company){
 		<?php }
 	?>
 	<td>
-		<button  value="" name="Accept"/>Accept</button>
+		<button  value="<?=base64_encode(serialize($company))?>" name="accept"/>Accept</button>
 	</td>
 	<td>
-		<button  value="" name="Reject"/>Reject</button>
+		<button  value="<?=base64_encode(serialize($company))?>" name="reject"/>Reject</button>
 	</td>
   </tr><?php
 }

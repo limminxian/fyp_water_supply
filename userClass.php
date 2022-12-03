@@ -46,9 +46,6 @@ class User{
 	public $type;
 	public $status;
 	
-	function setUser(){
-	}
-	
 	function addUser($user){
 		foreach($user as $key=>$value){
 			$this->$key = $value;
@@ -103,6 +100,10 @@ class User{
 		}
 	}
 	
+	function getId(){
+		return $this->id;
+	}
+	
 	function getCompany($company){
 		// foreach($user as $key=>$value){
 			// $this->$key = $value;
@@ -132,6 +133,7 @@ class User{
 }
 
 class Company extends User{
+
 	//properties
 	public $number;
 	public $street;
@@ -150,14 +152,26 @@ class Company extends User{
 			$this->$key = $value;
 		}
 		
+		$this->id = $id;
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`ID`,`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`) VALUES(?,?,?,?,?);");
 		mysqli_stmt_bind_param($stmt,"dssds", $id,$this->number,$this->street,$this->postalcode,$this->description);
 		mysqli_stmt_execute($stmt);
 		echo mysqli_error($conn);
+		echo 'id:'.parent::getId();
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
 		// header("Location:login.php");
 	}
+	
+	function appRejCompany($status){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"UPDATE `USER` SET `STATUS` = ? WHERE ID = ?;");
+		mysqli_stmt_bind_param($stmt,"sd",$status, $this->id);
+		mysqli_stmt_execute($stmt);
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+	}
+	
 }
 ?>

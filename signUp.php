@@ -77,8 +77,6 @@ if (isset($_POST['submit'])) {
 		$a = new User();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
 		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description));
-		if($result){
-		}
 	}
 
 	if(isset($_SESSION["errorAddUser"]))
