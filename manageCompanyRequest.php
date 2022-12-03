@@ -31,20 +31,18 @@
 <?php
 
 include_once 'userClass.php';
-session_start();
 
 //check token and make sure user do not bypass login
-// if(!isset($_SESSION['checkAdmin'])){
-	// echo "Not allowed! Please login!";
-	// ?>
+if(!isset($_SESSION['checkLogin'])){
+	echo "Not allowed! Please login!";
+	?>
 	
-<!--<br><br><input type="button" onclick="window.location.href='login.php';" value="Login" />-->
+<<br><br><input type="button" onclick="window.location.href='login.php';" value="Login" />
 
 <?php
 
-// } 
-// else{
-	//display product
+} 
+else{
 
 $company = new Company();
 $allCompany = $company->getAllCompany();
@@ -106,6 +104,6 @@ if(isset($_POST["back"])){
 		</p>
 </form>
 </body>
-<?php //}
+<?php }
 ?>
 </html>

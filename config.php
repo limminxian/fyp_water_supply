@@ -190,4 +190,20 @@ FOREIGN KEY (COMPANY) REFERENCES COMPANY(ID)
 $con=getdb();
 mysqli_multi_query($con, $createTables);
 }
+
+function createSuperadmin(){
+	
+$hashed = password_hash("123Admin.",PASSWORD_DEFAULT);
+$createAdmin ="
+
+INSERT INTO `USER` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
+    SELECT 'Admin1','admin@gmail.com','".$hashed."',1, 'ACTIVE'
+    WHERE NOT EXISTS
+        (SELECT id FROM `USER` WHERE EMAIL = 'admin@gmail.com');
+
+";
+$con=getdb();
+mysqli_query($con, $createAdmin);
+echo mysqli_error($con);
+}
 ?>

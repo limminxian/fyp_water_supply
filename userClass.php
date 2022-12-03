@@ -1,5 +1,6 @@
 <?php
 include_once 'config.php';
+session_start();
 class Role {
 	// Properties
 	public $id;
@@ -92,6 +93,7 @@ class User{
 				$row = mysqli_fetch_array($result, MYSQLI_NUM);
 			
 				if(password_verify($this->password, $row[0])){
+					$_SESSION['checkLogin']=TRUE;
 					header("Location:".$row[1].".php");
 				}
 				else{

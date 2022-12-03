@@ -99,6 +99,7 @@ include_once 'userClass.php';
 $check = true;
 
 createTables();
+createSuperadmin();
 
 if(isset($_SESSION["signup"]))
 {

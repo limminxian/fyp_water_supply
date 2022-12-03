@@ -44,10 +44,22 @@ body {font-family: Arial;}
 </style>
 </head>
 <body>
+<?php 
+include_once 'userClass.php';
+if(!isset($_SESSION['checkLogin'])){
+	echo "Not allowed! Please login!";
+	?>
+	
+<br><br><input type="button" onclick="window.location.href='login.php';" value="Login" />
 
+<?php
+
+} 
+else{
+?>
 <div class="topnav">
   <a class="active" href="#manage">Manage Account</a>
-  <a href='manageCompanyRequest.php'>Compant Request</a>
+  <a href='manageCompanyRequest.php'>Company Request</a>
   
 </div>
 
@@ -84,6 +96,9 @@ function openUser(evt, user) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 </script>
+<?php 
+}
+?>
    
 </body>
 </html> 
