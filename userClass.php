@@ -161,7 +161,7 @@ class Company extends User{
 		echo 'id:'.parent::getId();
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
-		// header("Location:login.php");
+		header("Location:login.php");
 	}
 	
 	function appRejCompany($status){
