@@ -45,6 +45,9 @@ class User{
 	public $type;
 	public $status;
 	
+	function setUser(){
+	}
+	
 	function addUser($user){
 		foreach($user as $key=>$value){
 			$this->$key = $value;
@@ -62,8 +65,9 @@ class User{
 			mysqli_stmt_close($stmt);
 			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
 			$row = mysqli_fetch_row($result)[0];
+			$this->id=$row;
 			$company = new Company();
-			$company->addCompanyDetails($row,$user);
+			$company->addCompanyDetails($this->id,$user);
 		}
 	}
 	
@@ -104,47 +108,54 @@ class User{
 	}
 	
 	function getAllCompany(){
-		
-		foreach($user as $key=>$value){
-			$this->$key = $value;
-		}
-		
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT * FROM `USER` WHERE `TYPE`=2 AND `STATUS` = 'PENDING';");
-		mysqli_stmt_bind_param($stmt,"ss", $this->name,$this->description);
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,STREET,POSTALCODE,DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C WHERE `TYPE`=2 AND `STATUS` = 'PENDING' AND U.ID=C.ID;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($c);}
 		else{
-			mysqli_stmt_close($stmt);
+			$result = mysqli_stmt_get_result($stmt);
+			$companyArray=[];			
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Company();
+					$c->setCompany($r);
+					array_push($companyArray,$c);
+				}
+			}
+			return $companyArray;
 			$_SESSION["add"]=true;
 		}
 	}
 }
 
-class Company{
+class Company extends User{
 	//properties
-	public $id;
 	public $number;
 	public $street;
 	public $postalcode;
 	public $description;
 	
+	function setCompany($company){
+		foreach($company as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
 	function addCompanyDetails($id,$company){
 		foreach($company as $key=>$value){
 			$this->$key = $value;
-			echo $this->$key;
 		}
-		$this->id = $id;
 		
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`ID`,`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`) VALUES(?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssds", $this->id,$this->number,$this->street,$this->postalcode,$this->description);
+		mysqli_stmt_bind_param($stmt,"dssds", $id,$this->number,$this->street,$this->postalcode,$this->description);
 		mysqli_stmt_execute($stmt);
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
-		header("Location:login.php");
+		// header("Location:login.php");
 	}
 }
 ?>
