@@ -8,7 +8,7 @@ body{
 }
 
 button{
-  background-color: pink;
+  background-color: yellow;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -25,6 +25,18 @@ input {
 
 button:hover {
   background-color: lightgray;
+}
+
+/* Index Main Page */
+.template {
+  max-width: 700px;
+  margin: auto;
+  margin-top:150px;
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  border: 5px solid #333F50;
+  
 }
 
 .signup {

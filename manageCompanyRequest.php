@@ -97,7 +97,7 @@ foreach($allCompany as $company){
 }
 if(isset($_POST["back"])){
 	unset($_SESSION["view"]);
-	header("Location: admin.php");
+	header("Location: superadmin.php");
 }
 ?>
 <form action="" method="post">
