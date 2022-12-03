@@ -3,6 +3,29 @@
   <title>Login Page</title>
   <style>
 
+body{
+  font-family: arial;
+}
+
+button{
+  background-color: pink;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight:bold;
+  margin: 0 auto;
+    display: block;
+  cursor: pointer;
+}
+
+input {
+  padding: 10px;
+}
+
+button:hover {
+  background-color: lightgray;
+}
 
 .signup {
   padding: 20px;

@@ -60,8 +60,10 @@ class User{
 		}
 		else{
 			mysqli_stmt_close($stmt);
-			$_SESSION["addUser"]=true;
-			header("Location:login.php");
+			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
+			$row = mysqli_fetch_row($result)[0];
+			$company = new Company();
+			$company->addCompanyDetails($row,$user);
 		}
 	}
 	
@@ -95,5 +97,54 @@ class User{
 		}
 	}
 	
+	function getCompany($company){
+		// foreach($user as $key=>$value){
+			// $this->$key = $value;
+		// }
+	}
+	
+	function getAllCompany(){
+		
+		foreach($user as $key=>$value){
+			$this->$key = $value;
+		}
+		
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM `USER` WHERE `TYPE`=2 AND `STATUS` = 'PENDING';");
+		mysqli_stmt_bind_param($stmt,"ss", $this->name,$this->description);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			mysqli_stmt_close($stmt);
+			$_SESSION["add"]=true;
+		}
+	}
+}
+
+class Company{
+	//properties
+	public $id;
+	public $number;
+	public $street;
+	public $postalcode;
+	public $description;
+	
+	function addCompanyDetails($id,$company){
+		foreach($company as $key=>$value){
+			$this->$key = $value;
+			echo $this->$key;
+		}
+		$this->id = $id;
+		
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`ID`,`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`) VALUES(?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dssds", $this->id,$this->number,$this->street,$this->postalcode,$this->description);
+		mysqli_stmt_execute($stmt);
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+		$_SESSION["addUser"]=true;
+		header("Location:login.php");
+	}
 }
 ?>

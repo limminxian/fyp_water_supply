@@ -43,6 +43,10 @@ if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
+	$number = $_POST['number'];
+	$street = $_POST['street'];
+	$postalcode = $_POST['postal'];
+	$description = $_POST['description'];
 	$checker = TRUE;
 
 	//validation
@@ -72,7 +76,9 @@ if (isset($_POST['submit'])) {
 	if ($checker) {
 		$a = new User();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
-		$a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed));
+		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description));
+		if($result){
+		}
 	}
 
 	if(isset($_SESSION["errorAddUser"]))
@@ -89,9 +95,29 @@ if (isset($_POST['submit'])) {
 <div>
   <form action="" method="post">
   
-Name: <input type="text" name="name" placeholder="Your Name" value="<?php if (isset($_POST["name"])) echo $_POST["name"];?>"><br>
+Userame: <input type="text" name="name" placeholder="Your Name" value="<?php if (isset($_POST["name"])) echo $_POST["name"];?>"><br>
 <?php if(isset($nameError)) { ?>
 <p><?php echo $nameError ?> </p>
+<?php } ?>
+
+Password: <input type="password" name="password" placeholder="Password" ><br>
+<?php if(isset($passwordError)) { ?>
+  <p><?php echo $passwordError ?> </p>
+<?php } ?>
+
+Re-type Password: <input type="password" name="password" placeholder="Password" ><br>
+<?php if(isset($retypePasswordError)) { ?>
+  <p><?php echo $retypePasswordError ?> </p>
+<?php } ?>
+
+Company Name: <input type="text" name="compName" placeholder="Compant Name" ><br>
+<?php if(isset($passwordError)) { ?>
+  <p><?php echo $passwordError ?> </p>
+<?php } ?>
+
+Number: <input type="text" name="number" placeholder="Number" ><br>
+<?php if(isset($retypePasswordError)) { ?>
+  <p><?php echo $retypePasswordError ?> </p>
 <?php } ?>
 
 E-mail: <input type="text" name="email" placeholder="E-mail Address" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>"><br>
@@ -99,10 +125,21 @@ E-mail: <input type="text" name="email" placeholder="E-mail Address" value="<?ph
   <p><?php echo $emailError ?> </p>
 <?php } ?>
 
-Password: <input type="password" name="password" placeholder="Password" ><br>
+Street: <input type="text" name="street" placeholder="Street" ><br>
+<?php if(isset($retypePasswordError)) { ?>
+  <p><?php echo $retypePasswordError ?> </p>
+<?php } ?>
+
+Postal Code: <input type="text" name="postal" placeholder="Postal code" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>"><br>
+<?php if(isset($emailError)) { ?>
+  <p><?php echo $emailError ?> </p>
+<?php } ?>
+
+Decription of Business: <input type="text" name="description" placeholder="Description" ><br>
 <?php if(isset($passwordError)) { ?>
   <p><?php echo $passwordError ?> </p>
 <?php } ?>
+
 
 <br>
 
