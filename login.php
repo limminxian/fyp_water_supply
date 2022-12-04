@@ -78,6 +78,7 @@ button:hover {
  <h1>Login</h1>
   <br>
   <br>
+  <template>
   <div align="center">
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
   <p>
@@ -139,5 +140,7 @@ function preVal($str) {
 }
 
 ?>
+
 </div>
+</template>
 </body>
