@@ -1,3 +1,9 @@
+
+<?php
+include_once 'config.php';
+include_once 'userClass.php';
+?>
+
 <html>
 <title>IT for rent</title> 
 
@@ -34,15 +40,22 @@
     }
 }
 
+#homeownerForm {
+	display: none;
+}
+	
+#companyForm {
+	display: none;
+}	
+
 </style>
 <h1>Register</h1>
 <?php
-include_once 'config.php';
-include_once 'userClass.php';
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
+	$repassword = $_POST['repassword'];
 	$number = $_POST['number'];
 	$street = $_POST['street'];
 	$postalcode = $_POST['postal'];
@@ -50,30 +63,12 @@ if (isset($_POST['submit'])) {
 	$checker = TRUE;
 
 	//validation
-	if(empty($name)) {
-		$nameError = "**Please insert your name**";
-		$checker = FALSE; 
-	} 
-  
-	if(empty($email)) {
-		$emailError = "**Please insert your email**";
-		$checker = FALSE;
-	}else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {   
-		$emailError = "**Please insert a valid email**";
-		$checker = FALSE;
-	}
-  
-	if (empty($password))  { 
-	$passwordError = "**Please insert your password**";
-    $checker = FALSE;}
-	else if (!preg_match('/^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$/',
-					$password))
-	{
-		$passwordError ="password must be between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character";
-		$checker = FALSE;
-	}
 	
-	if ($checker) {
+	if ($_POST['role']=="c") {
+		$a = new User();
+		$hashed = password_hash($password,PASSWORD_DEFAULT);
+		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description));
+	}else{
 		$a = new User();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
 		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description));
@@ -90,59 +85,95 @@ if (isset($_POST['submit'])) {
 
 ?>
 
-<div>
-  <form action="" method="post">
-  
-Userame: <input type="text" name="name" placeholder="Your Name" value="<?php if (isset($_POST["name"])) echo $_POST["name"];?>"><br>
-<?php if(isset($nameError)) { ?>
-<p><?php echo $nameError ?> </p>
-<?php } ?>
+<div >
+  <form action="" method="post" >
 
-Password: <input type="password" name="password" placeholder="Password" ><br>
-<?php if(isset($passwordError)) { ?>
-  <p><?php echo $passwordError ?> </p>
-<?php } ?>
+Role:
+<input type="radio" value="company" id="company" name="role" onclick="companyFuntion()" <?php if (isset($_POST["role"])) if($_POST["role"]  == "company" ) echo 'checked'; ?> required>
 
-Re-type Password: <input type="password" name="password" placeholder="Password" ><br>
-<?php if(isset($retypePasswordError)) { ?>
-  <p><?php echo $retypePasswordError ?> </p>
-<?php } ?>
+<label for="company">company</label>
 
-Company Name: <input type="text" name="compName" placeholder="Compant Name" ><br>
-<?php if(isset($passwordError)) { ?>
-  <p><?php echo $passwordError ?> </p>
-<?php } ?>
+<input type="radio" value="homeowner" id="homeowner" name="role" onclick="homeownerFuntion()" <?php if (isset($_POST["role"])) if($_POST["role"]  == "homeowner" ) echo 'checked'; ?>>
+ 
+ <label for="homeowner">homeowner</label>
+ <br>
+ 
+Userame: <input type="text" name="name" placeholder="Your Name" value="<?php if (isset($_POST["name"])) echo $_POST["name"];?>" required ><br>
 
-Number: <input type="text" name="number" placeholder="Number" ><br>
-<?php if(isset($retypePasswordError)) { ?>
-  <p><?php echo $retypePasswordError ?> </p>
-<?php } ?>
+Password: <input type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that is between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
 
-E-mail: <input type="text" name="email" placeholder="E-mail Address" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>"><br>
-<?php if(isset($emailError)) { ?>
-  <p><?php echo $emailError ?> </p>
-<?php } ?>
+Re-type Password: <input type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
 
-Street: <input type="text" name="street" placeholder="Street" ><br>
-<?php if(isset($retypePasswordError)) { ?>
-  <p><?php echo $retypePasswordError ?> </p>
-<?php } ?>
+Phone Number: <input type="text" name="phone number" placeholder="Phone Number" oninvalid="this.setCustomValidity('Please insert a valid phone number that starts with 6, 8 or 9 and includes 8 digits');" pattern = "^(8|9)\d{7}$" oninput="setCustomValidity('')" required><br>
 
-Postal Code: <input type="text" name="postal" placeholder="Postal code" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>"><br>
-<?php if(isset($emailError)) { ?>
-  <p><?php echo $emailError ?> </p>
-<?php } ?>
+E-mail: <input type="email" name="email" placeholder="E-mail Address" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" oninput="setCustomValidity('')" required ><br>
+
+Street: <input type="text" name="street" placeholder="Street" required><br>
+
+Postal Code: <input type="text" name="postal" placeholder="Postal code" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>"  oninvalid="this.setCustomValidity('Please insert a valid postal code that includes 6 digits');" pattern = "^[1-9]\d{5}$" oninput="setCustomValidity('')" required ><br>
+
+<div id="companyForm">
+
+Company Name: <input type="text" name="compName" placeholder="Compant Name" required ><br>
 
 Decription of Business: <input type="text" name="description" placeholder="Description" ><br>
-<?php if(isset($passwordError)) { ?>
-  <p><?php echo $passwordError ?> </p>
-<?php } ?>
 
+UEN: <input type="text" name="uen" placeholder="UEN" required ><br>
+
+</div>
+
+<div id="homeownerForm">
+
+Block: <input type="text" name="block" placeholder="block" required ><br>
+
+Unit no: <input type="number" name="unit" placeholder="unit" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" required><br>
+
+<label for="house">House type:</label>
+
+<select name="house" id="house" required>
+  <option value="HDB">HDB</option>
+  <option value="condo">Condo</option>
+  <option value="landed">Landed property</option>
+</select>
+<br>
+
+No. of people: <input type="text" name="people" placeholder="No of people" value="<?php if (isset($_POST["email"])) echo $_POST["email"];?>" required><br>
+
+</div>
+
+<br>
 
 <br>
 
 <input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
 <input type="button" onclick="window.location.href='login.php';" value="Login" />
+
+</form>
+
+
+
+<script>
+function homeownerFuntion() {
+	document.getElementById("companyForm").style.display = "none";
+	document.getElementById("homeownerForm").style.display = "inline";
+}
+function companyFuntion() {
+	document.getElementById("homeownerForm").style.display = "none";
+	document.getElementById("companyForm").style.display = "inline";
+}
+function checkPassword() {
+	var x = document.getElementById("repassword").value;
+	var y = document.getElementById("password").value;
+	
+	if(x.localeCompare(y)!=0){
+		document.getElementById("repassword").setCustomValidity("Password do not match");
+	}
+	else{
+		document.getElementById("repassword").setCustomValidity("");
+	}
+}
+</script>
+
 </div>
 </body>
 </html>
