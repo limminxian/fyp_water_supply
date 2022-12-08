@@ -44,8 +44,8 @@ if(!isset($_SESSION['checkLogin'])){
 } 
 else{
 
-$company = new Company();
-$allCompany = $company->getAllCompany();
+$company = new DataManager();
+$company->getAllCompany();
 	
 	// var_dump($allCompany);
 // foreach($allCompany as $a=>$r){
@@ -55,12 +55,12 @@ $allCompany = $company->getAllCompany();
 ?>
 <table>
   <tr>
-    <th>ID</th>
+    <th>Company Admin</th>
     <th>Name</th>
     <th>Number</th>
     <th>Email</th>
     <th>Street</th>
-    <th>Postal code</th>
+    <th>Postal Code</th>
     <th>Description</th>
     <th></th>
 	<th></th>
@@ -78,22 +78,22 @@ if (isset($_POST["reject"])){
 ?>
   <form action="" method="post">
 <?php
-foreach($allCompany as $company){
+foreach($company->companyArray as $c){
 	?>
   <tr>
 	<?php
 		$properties = array('id', 'name', 'number', 'email', 'street', 'postalcode', 'description');
 		foreach ($properties as $prop) {?>
 			<td>
-				<?=$company->$prop?>
+				<?=$c->$prop?>
 			</td>
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($company))?>" name="accept"/>Accept</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="accept"/>Accept</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($company))?>" name="reject"/>Reject</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="reject"/>Reject</button>
 	</td>
   </tr><?php
 }
@@ -102,7 +102,6 @@ if(isset($_POST["back"])){
 	header("Location: superadmin.php");
 }
 ?>
-<form action="" method="post">
 		<p>
 			<input type="submit" name="back" value="Back" />
 		</p>

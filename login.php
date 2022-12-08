@@ -129,7 +129,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	if ($check){
 		$a = new User();
-		$a->validateLogin(array("email"=>$email,"password"=>$password));
+		$result = $a->validateLogin(array("email"=>$email,"password"=>$password));
+		if($result[0]){
+			header("Location:".$result[1].".php");
+		}else{
+			echo $result[2];
+		}
 	}
 }
 

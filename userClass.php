@@ -70,7 +70,7 @@ class User{
 		}
 		$conn = getdb();
 		// $hashed = password_hash($this->password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"SELECT U.`PASSWORD`, R.`NAME` FROM `USER` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
+		$stmt = mysqli_prepare($conn,"SELECT U.`PASSWORD`, U.`ID`, R.`NAME` FROM `USER` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
 		mysqli_stmt_bind_param($stmt,"s",$this->email);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -79,17 +79,17 @@ class User{
 		else{
 			$result = mysqli_stmt_get_result($stmt);
 			if(mysqli_num_rows($result)==0){
-				echo "Email does not exist!";
+				return array(FALSE,"Email does not exist!");
 			}				
 			else{
 				$row = mysqli_fetch_array($result, MYSQLI_NUM);
 			
 				if(password_verify($this->password, $row[0])){
-					$_SESSION['checkLogin']=TRUE;
-					header("Location:".$row[1].".php");
+					$_SESSION['loginId']=$row[1];
+					return array(TRUE,$row[2]);
 				}
 				else{
-					echo "wrong password!";
+					return array(FALSE,"wrong password!");
 				}
 			}
 		}
@@ -99,32 +99,6 @@ class User{
 		return $this->id;
 	}
 	
-	function getCompany($company){
-		// foreach($user as $key=>$value){
-			// $this->$key = $value;
-		// }
-	}
-	
-	function getAllCompany(){
-		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,STREET,POSTALCODE,DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C WHERE `TYPE`=2 AND `STATUS` = 'PENDING' AND U.ID=C.ID;");
-		mysqli_stmt_execute($stmt);
-		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
-		else{
-			$result = mysqli_stmt_get_result($stmt);
-			$companyArray=[];			
-			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
-				foreach ($rows as $r) {
-					$c = new Company();
-					$c->setCompany($r);
-					array_push($companyArray,$c);
-				}
-			}
-			return $companyArray;
-			$_SESSION["add"]=true;
-		}
-	}
 }
 
 class Company extends User{
@@ -204,6 +178,7 @@ class Homeowner extends User{
 		mysqli_stmt_bind_param($stmt,"dssssdsd",$this->id, $this->number,$this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
+		mail($this->email,"My subject","try");
 		$_SESSION["addUser"]=true;
 		header("Location:login.php");
 	}
@@ -217,5 +192,60 @@ class Homeowner extends User{
 		mysqli_stmt_close($stmt);
 	}
 	
+}
+
+class DataManager{
+	public $companyArray=[];
+	public $staffArray=[];
+	
+	function getAllCompany(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,STREET,POSTALCODE,DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C WHERE `TYPE`=2 AND U.`STATUS` = 'PENDING';");
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Company();
+					$c->setCompany($r);
+					array_push($this->companyArray,$c);
+				}
+			}
+		}
+	}
+	
+	function getAllStaff(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,TYPE,STATUS FROM `USER` U, `STAFF` S, `COMPANY` C WHERE `TYPE`=4 AND C.ADMIN=? AND S.COMPANY = C.ID ;");
+		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$s = new Staff();
+					$s->setStaff($r);
+					array_push($this->staffArray,$s);
+				}
+			}
+		}
+	}
+	
+}
+
+class Staff extends User{
+	//properties
+	public $company;
+	
+	function setStaff($staff){
+		foreach($staff as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
 }
 ?>
