@@ -67,7 +67,7 @@ if (isset($_POST['submit'])) {
 		$UEN = $_POST['uen'];
 		$a = new User();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
-		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
+		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
 		echo "tried";
 	}else{
 		$block = $_POST['block'];
@@ -76,7 +76,7 @@ if (isset($_POST['submit'])) {
 		$people = $_POST['people'];
 		$a = new User();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
-		$result = $a->addUser(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
+		$result = $a->addHomeowner(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
 		echo "2try";
 	}
 

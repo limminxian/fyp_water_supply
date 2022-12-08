@@ -61,14 +61,6 @@ class User{
 			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
 			$row = mysqli_fetch_row($result)[0];
 			$this->id=$row;
-			if(strcmp($role,"company")){
-				$company = new Company();
-				$company->addCompanyDetails($this->id,$user);
-			}
-			else{
-				$homeowner = new Homeowner();
-				$homeowner->addHomeowner($this->id,$user);
-			}
 		}
 	}
 	
@@ -138,6 +130,7 @@ class User{
 class Company extends User{
 
 	//properties
+	public $id;
 	public $number;
 	public $street;
 	public $postalcode;
@@ -150,18 +143,16 @@ class Company extends User{
 		}
 	}
 	
-	function addCompanyDetails($id,$company){
+	function addCompany($company){
 		foreach($company as $key=>$value){
 			$this->$key = $value;
 		}
 		
-		$this->id = $id;
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`ID`,`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`) VALUES(?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssds", $id,$this->number,$this->street,$this->postalcode,$this->description);
+		parent::addUser($company);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dssds", $this->number,$this->street,$this->postalcode,$this->description,parent::$id);
 		mysqli_stmt_execute($stmt);
-		echo mysqli_error($conn);
-		echo 'id:'.parent::getId();
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
 		header("Location:login.php");
@@ -175,12 +166,12 @@ class Company extends User{
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
 	}
-	
 }
 
 class Homeowner extends User{
 
 	//properties
+	public $number;
 	public $block;
 	public $unit;
 	public $street;
@@ -188,25 +179,23 @@ class Homeowner extends User{
 	public $housetype;
 	public $noofpeople;
 	
-	function setCompany($company){
-		foreach($company as $key=>$value){
+	function setHomeowner($homeowner){
+		foreach($homeowner as $key=>$value){
 			$lowerKey = strtolower($key);
 			$this->$lowerKey = $value;
 		}
 	}
 	
-	function addCompanyDetails($id,$company){
-		foreach($company as $key=>$value){
+	function addHomeownerDetails($homeowner){
+		foreach($homeowner as $key=>$value){
 			$this->$key = $value;
 		}
 		
-		$this->id = $id;
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`ID`,`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`) VALUES(?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssds", $id,$this->number,$this->street,$this->postalcode,$this->description);
+		parent::addUser($homeowner);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `NUMBER`, `BLOCK`, `UNIT`, `STREET`, `POSTALCODE`, `HOUSETYPE`, 'NOOFPEOPLE') VALUES(?,?,?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dssssdsd",$this->id, $this->number,$this->block,$this->unit,$this->street,$this->postalcode,$this->housetype,$this->noofpeople);
 		mysqli_stmt_execute($stmt);
-		echo mysqli_error($conn);
-		echo 'id:'.parent::getId();
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
 		header("Location:login.php");
