@@ -52,7 +52,6 @@ include_once 'userClass.php';
 <h1>Register</h1>
 <?php
 if (isset($_POST['submit'])) {
-	echo "1try";
 	$name = $_POST['name'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
@@ -61,23 +60,21 @@ if (isset($_POST['submit'])) {
 	$postalcode = $_POST['postal'];
 	$role = $_POST['role'];
 	//check role	
-	if (strcmp($role,"company")) {
+	if (strcmp($role,"company")==0) {
 		$description = $_POST['description'];
 		$compName = $_POST['compName'];
 		$UEN = $_POST['uen'];
-		$a = new User();
+		$a = new Company();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
 		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
-		echo "tried";
 	}else{
 		$block = $_POST['block'];
 		$unitno = $_POST['unit'];
 		$housetype = $_POST['house'];
 		$people = $_POST['people'];
-		$a = new User();
+		$a = new Homeowner();
 		$hashed = password_hash($password,PASSWORD_DEFAULT);
 		$result = $a->addHomeowner(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
-		echo "2try";
 	}
 
 	if(isset($_SESSION["errorAddUser"]))

@@ -29,7 +29,8 @@ class Role {
 		$stmt = mysqli_prepare($conn, "SELECT `ID` FROM `ROLE` WHERE NAME=? ;" );
 		mysqli_stmt_bind_param($stmt,"s", $role);
 		mysqli_stmt_execute($stmt);
-		return mysqli_stmt_get_result($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		return mysqli_fetch_array($result, MYSQLI_NUM)[0];
 	}
 }
 
@@ -49,15 +50,14 @@ class User{
 		}
 		$conn = getdb();
 		$a = new Role();
-		$roleId = $a->getRole($role);
+		$this->role = $a->getRole($this->role);
 		$stmt = mysqli_prepare($conn,"INSERT INTO `USER` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
-		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->roleId);
+		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->role);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorAddUser"]=mysqli_error($conn);
 		}
 		else{
-			mysqli_stmt_close($stmt);
 			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
 			$row = mysqli_fetch_row($result)[0];
 			$this->id=$row;
@@ -150,12 +150,19 @@ class Company extends User{
 		
 		$conn = getdb();
 		parent::addUser($company);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssds", $this->number,$this->street,$this->postalcode,$this->description,parent::$id);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"ssdsd", $this->number,$this->street,$this->postalcode,$this->description,parent::getId());
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
-		$_SESSION["addUser"]=true;
-		header("Location:login.php");
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_query($conn,"select MAX(ID) FROM `COMPANY`;");
+			$row = mysqli_fetch_row($result)[0];
+			$this->id=$row;
+			$_SESSION["add"]=true;
+			header("Location:login.php");
+		}
 	}
 	
 	function appRejCompany($status){
@@ -173,11 +180,11 @@ class Homeowner extends User{
 	//properties
 	public $number;
 	public $block;
-	public $unit;
+	public $unitno;
 	public $street;
 	public $postalcode;
 	public $housetype;
-	public $noofpeople;
+	public $people;
 	
 	function setHomeowner($homeowner){
 		foreach($homeowner as $key=>$value){
@@ -186,15 +193,15 @@ class Homeowner extends User{
 		}
 	}
 	
-	function addHomeownerDetails($homeowner){
+	function addHomeowner($homeowner){
 		foreach($homeowner as $key=>$value){
 			$this->$key = $value;
 		}
 		
 		$conn = getdb();
 		parent::addUser($homeowner);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `NUMBER`, `BLOCK`, `UNIT`, `STREET`, `POSTALCODE`, `HOUSETYPE`, 'NOOFPEOPLE') VALUES(?,?,?,?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssssdsd",$this->id, $this->number,$this->block,$this->unit,$this->street,$this->postalcode,$this->housetype,$this->noofpeople);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `NUMBER`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`) VALUES(?,?,?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dssssdsd",$this->id, $this->number,$this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		$_SESSION["addUser"]=true;
