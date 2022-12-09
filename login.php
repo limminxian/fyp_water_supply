@@ -133,7 +133,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if($result[0]){
 			header("Location:".$result[1].".php");
 		}else{
-			echo $result[2];
+			echo $result[1];
 		}
 	}
 }

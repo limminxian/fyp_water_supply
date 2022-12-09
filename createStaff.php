@@ -51,6 +51,10 @@ include_once 'userClass.php';
 </style>
 <h1>Register</h1>
 <?php
+if(isset($_POST["logout"])){
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$email = $_POST['email'];
@@ -58,7 +62,7 @@ if (isset($_POST['submit'])) {
 	$role = $_POST['role'];
 	//check role	
 	$a = new Staff();
-	$result = $a->addStaff(array("name"=>$name,"email"=>$email,"number"=>$number,"role"=>$role));
+	$result = $a->addStaff(array("name"=>$name,"email"=>$email,"number"=>$number,"role"=>$role,"password"=>$name));
 
 	if(isset($_SESSION["errorAddUser"]))
 	{
@@ -93,9 +97,9 @@ E-mail: <input type="email" name="email" placeholder="E-mail Address" required >
 <br>
 
 <br>
-
 <input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
-<input type="button" onclick="window.location.href='login.php';" value="Login" />
+<input type="button" onclick="window.location.href='companyAdmin.php';" value="Back" />
+<input type="submit" name="logout" value="Logout" />
 
 </form>
 </script>

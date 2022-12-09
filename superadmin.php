@@ -46,7 +46,7 @@ body {font-family: Arial;}
 <body>
 <?php 
 include_once 'userClass.php';
-if(!isset($_SESSION['checkLogin'])){
+if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
 	
@@ -56,10 +56,17 @@ if(!isset($_SESSION['checkLogin'])){
 
 } 
 else{
+	if(isset($_POST["logout"])){
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 ?>
 <div class="topnav">
   <a class="active" href="#manage">Manage Account</a>
   <a href='manageCompanyRequest.php'>Company Request</a>
+  <form action="post">
+	<input type="submit" name="logout" value="Logout" />
+	</form>
   
 </div>
 

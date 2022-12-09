@@ -59,6 +59,17 @@ else{
 	
 $staff = new DataManager();
 $staff->getAllStaff();
+
+
+if(isset($_POST["back"])){
+	unset($_SESSION["view"]);
+	header("Location: superadmin.php");
+}
+
+if(isset($_POST["logout"])){
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 ?>
 <div class="topnav">
   <a class="active" href="#account">Manage Account</a>
@@ -105,13 +116,10 @@ foreach($staff->staffArray as $s){
 	</td>
   </tr><?php
 }
-if(isset($_POST["back"])){
-	unset($_SESSION["view"]);
-	header("Location: superadmin.php");
-}
 ?>
 		<p>
 			<input type="submit" name="back" value="Back" />
+			<input type="submit" name="logout" value="Logout" />
 		</p>
 </form>
 </div>

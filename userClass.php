@@ -51,6 +51,7 @@ class User{
 		$conn = getdb();
 		$a = new Role();
 		$this->type = $a->getRole($this->role);
+		$this->password = password_hash($this->password,PASSWORD_DEFAULT);
 		$stmt = mysqli_prepare($conn,"INSERT INTO `USER` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
 		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->type);
 		mysqli_stmt_execute($stmt);
@@ -72,7 +73,7 @@ class User{
 		}
 		$conn = getdb();
 		// $hashed = password_hash($this->password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"SELECT U.`PASSWORD`, U.`ID`, R.`NAME` FROM `USER` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
+		$stmt = mysqli_prepare($conn,"SELECT STATUS, U.`PASSWORD`, U.`ID`, R.`NAME` FROM `USER` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
 		mysqli_stmt_bind_param($stmt,"s",$this->email);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -82,16 +83,33 @@ class User{
 			$result = mysqli_stmt_get_result($stmt);
 			if(mysqli_num_rows($result)==0){
 				return array(FALSE,"Email does not exist!");
-			}				
-			else{
+			}else{
 				$row = mysqli_fetch_array($result, MYSQLI_NUM);
-			
-				if(password_verify($this->password, $row[0])){
-					$_SESSION['loginId']=$row[1];
-					return array(TRUE,$row[2]);
+				
+				if(strcmp($row[0],"ACTIVE")==0){
+					if(password_verify($this->password, $row[1])){
+						$_SESSION['loginId']=$row[2];
+						return array(TRUE,$row[3]);
+					}
+					else{
+						return array(FALSE,"wrong password!");
+					}
+				}
+				
+				else if(strcmp($row[0],"PENDING")==0){
+					switch($row[3]){
+						case "companyadmin":
+							return array(FALSE,"Your company is being verified. An email will be sent to you when the verification is done.");
+							break;
+						case "customerservice":
+						case "technician":
+							return array(TRUE,"staffFirstLogin");
+							break;
+					}
+					
 				}
 				else{
-					return array(FALSE,"wrong password!");
+					var_dump($row);
 				}
 			}
 		}
@@ -228,9 +246,9 @@ class DataManager{
 	public $companyArray=[];
 	public $staffArray=[];
 	
-	function getAllCompany(){
+	function getAllPendingCompany(){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,STREET,POSTALCODE,DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C WHERE `TYPE`=2 AND U.`STATUS` = 'PENDING';");
+		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN' AND U.`STATUS` = 'PENDING' AND U.ID = C.ADMIN;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($c);}

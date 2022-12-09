@@ -33,7 +33,7 @@
 include_once 'userClass.php';
 
 //check token and make sure user do not bypass login
-if(!isset($_SESSION['checkLogin'])){
+if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
 	
@@ -45,8 +45,16 @@ if(!isset($_SESSION['checkLogin'])){
 else{
 
 $company = new DataManager();
-$company->getAllCompany();
+$company->getAllPendingCompany();
 	
+if(isset($_POST["back"])){
+	unset($_SESSION["view"]);
+	header("Location: superadmin.php");
+}
+	if(isset($_POST["logout"])){
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 	// var_dump($allCompany);
 // foreach($allCompany as $a=>$r){
 	// echo $a.":".$r."<br>";
@@ -68,12 +76,14 @@ $company->getAllCompany();
 <?php
 //view button cliked direct to viewProduct.php
 if (isset($_POST["accept"])){
-	$company = unserialize(base64_decode($_POST["accept"]));
-	$company->appRejCompany("ACTIVE");
+	$c = unserialize(base64_decode($_POST["accept"]));
+	$c->appRejCompany("ACTIVE");
+	header("Refresh:0");
 }
 if (isset($_POST["reject"])){
-	$company = unserialize(base64_decode($_POST["reject"]));
-	$company->appRejCompany("REJECT");
+	$c = unserialize(base64_decode($_POST["reject"]));
+	$c->appRejCompany("REJECT");
+	header("Refresh:0");
 }
 ?>
   <form action="" method="post">
@@ -97,13 +107,10 @@ foreach($company->companyArray as $c){
 	</td>
   </tr><?php
 }
-if(isset($_POST["back"])){
-	unset($_SESSION["view"]);
-	header("Location: superadmin.php");
-}
 ?>
 		<p>
 			<input type="submit" name="back" value="Back" />
+			<input type="submit" name="logout" value="Logout" />
 		</p>
 </form>
 </body>

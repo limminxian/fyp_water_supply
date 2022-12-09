@@ -60,21 +60,19 @@ if (isset($_POST['submit'])) {
 	$postalcode = $_POST['postal'];
 	$role = $_POST['role'];
 	//check role	
-	if (strcmp($role,"company")==0) {
+	if (strcmp($role,"companyadmin")==0) {
 		$description = $_POST['description'];
 		$compName = $_POST['compName'];
 		$UEN = $_POST['uen'];
 		$a = new Company();
-		$hashed = password_hash($password,PASSWORD_DEFAULT);
-		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
+		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
 	}else{
 		$block = $_POST['block'];
 		$unitno = $_POST['unit'];
 		$housetype = $_POST['house'];
 		$people = $_POST['people'];
 		$a = new Homeowner();
-		$hashed = password_hash($password,PASSWORD_DEFAULT);
-		$result = $a->addHomeowner(array("name"=>$name,"email"=>$email,"password"=>$hashed,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
+		$result = $a->addHomeowner(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
 	}
 
 	if(isset($_SESSION["errorAddUser"]))
@@ -92,9 +90,9 @@ if (isset($_POST['submit'])) {
 <form action="" method="post" >
 
 Role:
-<input type="radio" value="company" id="company" name="role" onclick="companyFuntion()" required>
+<input type="radio" value="companyadmin" id="companyadmin" name="role" onclick="companyFuntion()" required>
 
-<label for="company">company</label>
+<label for="companyadmin">company admin</label>
 
 <input type="radio" value="homeowner" id="homeowner" name="role" onclick="homeownerFuntion()" >
  
