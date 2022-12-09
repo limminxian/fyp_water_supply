@@ -52,7 +52,7 @@ class User{
 		$a = new Role();
 		$this->type = $a->getRole($this->role);
 		$this->password = password_hash($this->password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `USER` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
+		$stmt = mysqli_prepare($conn,"INSERT INTO `USERS` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
 		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->type);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -60,7 +60,7 @@ class User{
 			return False;
 		}
 		else{
-			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
+			$result = mysqli_query($conn,"select MAX(ID) FROM `USERS`;");
 			$row = mysqli_fetch_row($result)[0];
 			$this->id=$row;
 			return TRUE;
@@ -73,7 +73,7 @@ class User{
 		}
 		$conn = getdb();
 		// $hashed = password_hash($this->password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"SELECT STATUS, U.`PASSWORD`, U.`ID`, R.`NAME` FROM `USER` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
+		$stmt = mysqli_prepare($conn,"SELECT STATUS, U.`PASSWORD`, U.`ID`, R.`NAME` FROM `USERS` U, `ROLE` R WHERE U.EMAIL = ? AND U.`TYPE` = R.`ID`;");
 		mysqli_stmt_bind_param($stmt,"s",$this->email);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -161,7 +161,7 @@ class Company extends User{
 	
 	function appRejCompany($status){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"UPDATE `USER` SET `STATUS` = ? WHERE ID = ?;");
+		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `STATUS` = ? WHERE ID = ?;");
 		mysqli_stmt_bind_param($stmt,"sd",$status, $this->id);
 		mysqli_stmt_execute($stmt);
 		echo mysqli_error($conn);
@@ -205,7 +205,7 @@ class Homeowner extends User{
 	
 	function appRejCompany($status){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"UPDATE `USER` SET `STATUS` = ? WHERE ID = ?;");
+		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `STATUS` = ? WHERE ID = ?;");
 		mysqli_stmt_bind_param($stmt,"sd",$status, $this->id);
 		mysqli_stmt_execute($stmt);
 		echo mysqli_error($conn);
@@ -248,7 +248,7 @@ class DataManager{
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USER` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN' AND U.`STATUS` = 'PENDING' AND U.ID = C.ADMIN;");
+		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USERS` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN' AND U.`STATUS` = 'PENDING' AND U.ID = C.ADMIN;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($c);}
@@ -266,7 +266,7 @@ class DataManager{
 	
 	function getAllStaff(){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID,U.NAME,EMAIL,R.NAME AS 'ROLE',STATUS FROM `USER` U, `STAFF` S, `COMPANY` C, `ROLE` R WHERE R.`NAME` in ('customerservice','technician') AND U.ID=S.ID AND C.ADMIN=? AND S.COMPANY = C.ID AND R.ID = U.TYPE ORDER BY U.ID;");
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,U.NAME,EMAIL,R.NAME AS 'ROLE',STATUS FROM `USERS` U, `STAFF` S, `COMPANY` C, `ROLE` R WHERE R.`NAME` in ('customerservice','technician') AND U.ID=S.ID AND C.ADMIN=? AND S.COMPANY = C.ID AND R.ID = U.TYPE ORDER BY U.ID;");
 		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
