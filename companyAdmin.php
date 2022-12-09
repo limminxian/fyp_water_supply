@@ -46,7 +46,7 @@ body {font-family: Arial;}
 <body>
 <?php 
 include_once 'userClass.php';
-if(!isset($_SESSION['checkLogin'])){
+if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
 	
@@ -78,9 +78,8 @@ $staff->getAllStaff();
   <tr>
     <th>ID</th>
     <th>Name</th>
-    <th>Number</th>
     <th>Email</th>
-    <th>Type</th>
+    <th>Role</th>
     <th>Status</th>
     <th></th>
 	<th></th>
@@ -91,7 +90,7 @@ foreach($staff->staffArray as $s){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'number', 'email', 'type', 'status');
+		$properties = array('id', 'name', 'email', 'role', 'status');
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$s->$prop?>

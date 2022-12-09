@@ -50,17 +50,19 @@ class User{
 		}
 		$conn = getdb();
 		$a = new Role();
-		$this->role = $a->getRole($this->role);
+		$this->type = $a->getRole($this->role);
 		$stmt = mysqli_prepare($conn,"INSERT INTO `USER` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
-		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->role);
+		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->type);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorAddUser"]=mysqli_error($conn);
+			return False;
 		}
 		else{
 			$result = mysqli_query($conn,"select MAX(ID) FROM `USER`;");
 			$row = mysqli_fetch_row($result)[0];
 			$this->id=$row;
+			return TRUE;
 		}
 	}
 	
@@ -194,6 +196,34 @@ class Homeowner extends User{
 	
 }
 
+class Staff extends User{
+	//properties
+	public $company;
+	
+	function setStaff($staff){
+		foreach($staff as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addStaff($staff){
+		foreach($staff as $key=>$value){
+			$this->$key = $value;
+		}
+		
+		$conn = getdb();
+		if(parent::addUser($staff)){
+			$stmt = mysqli_prepare($conn,"INSERT INTO `Staff` (`ID`, `COMPANY`) SELECT ?,ID FROM COMPANY WHERE ADMIN=?;");
+			mysqli_stmt_bind_param($stmt,"dd",$this->id, $_SESSION["loginId"]);
+			mysqli_stmt_execute($stmt);
+			mysqli_stmt_close($stmt);
+			$_SESSION["addUser"]=true;
+			header("Location:companyAdmin.php");
+		}
+	}
+}
+
 class DataManager{
 	public $companyArray=[];
 	public $staffArray=[];
@@ -218,7 +248,7 @@ class DataManager{
 	
 	function getAllStaff(){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID,NAME,NUMBER,EMAIL,TYPE,STATUS FROM `USER` U, `STAFF` S, `COMPANY` C WHERE `TYPE`=4 AND C.ADMIN=? AND S.COMPANY = C.ID ;");
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,U.NAME,EMAIL,R.NAME AS 'ROLE',STATUS FROM `USER` U, `STAFF` S, `COMPANY` C, `ROLE` R WHERE R.`NAME` in ('customerservice','technician') AND U.ID=S.ID AND C.ADMIN=? AND S.COMPANY = C.ID AND R.ID = U.TYPE ORDER BY U.ID;");
 		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -235,17 +265,5 @@ class DataManager{
 		}
 	}
 	
-}
-
-class Staff extends User{
-	//properties
-	public $company;
-	
-	function setStaff($staff){
-		foreach($staff as $key=>$value){
-			$lowerKey = strtolower($key);
-			$this->$lowerKey = $value;
-		}
-	}
 }
 ?>
