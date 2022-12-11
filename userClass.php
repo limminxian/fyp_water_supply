@@ -267,7 +267,7 @@ class Staff extends User{
 		}
 	}
 	
-	function setPasswordStatus(){
+	function setPasswordStatus($password){
 		$conn = getdb();
 		$this->password = password_hash($password,PASSWORD_DEFAULT);
 		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `PASSWORD` = ?,`STATUS` = 'ACTIVE' WHERE ID = ?;");
