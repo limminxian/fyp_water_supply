@@ -131,10 +131,13 @@ class User{
 	function setPassword($password){
 		$conn = getdb();
 		$this->password = password_hash($password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `PASSWORD` = ?,`STATUS` = 'ACTIVE' WHERE ID = ?;");
+		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `PASSWORD` = ?,WHERE ID = ?;");
 		mysqli_stmt_bind_param($stmt,"sd",$this->password, $_SESSION['loginId']);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
+	}
+	
+	function setStatus(){
 	}
 	
 	function getId(){
@@ -262,6 +265,15 @@ class Staff extends User{
 			$_SESSION["addUser"]=true;
 			header("Location:companyAdmin.php");
 		}
+	}
+	
+	function setPasswordStatus(){
+		$conn = getdb();
+		$this->password = password_hash($password,PASSWORD_DEFAULT);
+		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `PASSWORD` = ?,`STATUS` = 'ACTIVE' WHERE ID = ?;");
+		mysqli_stmt_bind_param($stmt,"sd",$this->password, $_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
 	}
 }
 

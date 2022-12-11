@@ -53,8 +53,8 @@ include_once 'userClass.php';
 <?php
 if (isset($_POST['submit'])) {
 	$password = $_POST['password'];
-	$a = new User();
-	$a->setPassword($password);
+	$a = new Staff();
+	$a->setPasswordStatus($password);
 	header("Location: ".$_SESSION['role'].".php");
 }
   
