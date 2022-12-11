@@ -98,9 +98,8 @@ include_once 'config.php';
 include_once 'userClass.php';
 $check = true;
 
-if(createTables()){
+createTables();
 createSuperadmin();
-}
 
 if(isset($_SESSION["signup"]))
 {
