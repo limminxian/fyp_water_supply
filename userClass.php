@@ -38,6 +38,7 @@ class User{
 	//properties
 	public $id;
 	public $name;
+	public $number;
 	public $email;
 	public $password;
 	public $type;
@@ -52,8 +53,8 @@ class User{
 		$a = new Role();
 		$this->type = $a->getRole($this->role);
 		$this->password = password_hash($this->password,PASSWORD_DEFAULT);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `USERS` (`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,'PENDING');");
-		mysqli_stmt_bind_param($stmt,"sssd", $this->name,$this->email,$this->password,$this->type);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `USERS` (`NUMBER`,`NAME`,`EMAIL`, `PASSWORD`, `TYPE`, `STATUS`) VALUES(?,?,?,?,?,'PENDING');");
+		mysqli_stmt_bind_param($stmt,"ssssd",$this->number, $this->name,$this->email,$this->password,$this->type);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorAddUser"]=mysqli_error($conn);
@@ -103,16 +104,37 @@ class User{
 							break;
 						case "customerservice":
 						case "technician":
+							$_SESSION['role']=$row[3];
+							$_SESSION['loginId']=$row[2];
 							return array(TRUE,"staffFirstLogin");
 							break;
 					}
 					
 				}
+				
+				else if(strcmp($row[0],"SUSPEND")==0){
+					return array(FALSE,"Your sccount has been suspended");
+					
+				}
+				else if(strcmp($row[0],"REJECT")==0){
+					return array(FALSE,"Your company has been rejected");
+					
+				}
+				
 				else{
 					var_dump($row);
 				}
 			}
 		}
+	}
+	
+	function setPassword($password){
+		$conn = getdb();
+		$this->password = password_hash($password,PASSWORD_DEFAULT);
+		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `PASSWORD` = ?,`STATUS` = 'ACTIVE' WHERE ID = ?;");
+		mysqli_stmt_bind_param($stmt,"sd",$this->password, $_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
 	}
 	
 	function getId(){
@@ -125,6 +147,7 @@ class Company extends User{
 
 	//properties
 	public $id;
+	public $compName;
 	public $number;
 	public $street;
 	public $postalcode;
@@ -144,8 +167,8 @@ class Company extends User{
 		
 		$conn = getdb();
 		parent::addUser($company);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NUMBER`, `STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"ssdsd", $this->number,$this->street,$this->postalcode,$this->description,parent::getId());
+		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NAME`,`STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"ssdsd",$this->compName, $this->street,$this->postalcode,$this->description,parent::getId());
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -194,8 +217,8 @@ class Homeowner extends User{
 		
 		$conn = getdb();
 		parent::addUser($homeowner);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `NUMBER`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`) VALUES(?,?,?,?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dssssdsd",$this->id, $this->number,$this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`) VALUES(?,?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dsssdsd",$this->id, $this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		mail($this->email,"My subject","try");

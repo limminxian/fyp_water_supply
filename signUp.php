@@ -101,8 +101,9 @@ Role:
  
 Userame: <input type="text" name="name" placeholder="Your Name" required ><br>
 
-Password: <input type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that is between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
-
+Password: <input type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
+Password requirements: Between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character
+<br>
 Re-type Password: <input type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
 
 Phone Number: <input type="text" name="phonenumber" placeholder="Phone Number" oninvalid="this.setCustomValidity('Please insert a valid phone number that starts with 6, 8 or 9 and includes 8 digits');" oninput="setCustomValidity('')" pattern = "^(8|9)\d{7}$" required><br>
