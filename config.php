@@ -205,6 +205,9 @@ function createSuperadmin(){
 	
 $hashed = password_hash("123Admin.",PASSWORD_DEFAULT);
 $createAdmin ="
+		
+INSERT INTO `ROLE` (`NAME`, `DESCRIPTION`) 
+VALUES ('superadmin', 'superadmin'), ('companyadmin', 'companyadmin'),('technician', 'technician'), ('customerservice', 'customerservice'),('homeowner', 'homeowner');;
 
 INSERT INTO `USERS` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
     SELECT 'Admin1','admin@gmail.com','".$hashed."',1, 'ACTIVE'
@@ -213,7 +216,7 @@ INSERT INTO `USERS` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
 
 ";
 $con=getdb();
-mysqli_query($con, $createAdmin);
+mysqli_multi_query($con, $createAdmin);
 echo mysqli_error($con);
 }
 ?>
