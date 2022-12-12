@@ -64,7 +64,7 @@
     margin-bottom: 25px;
     padding: 10px;
     background: #fff;
-    height: 300px;
+    height: 250px;
     width: 530px;
     border: 1px solid #a7a7a7;
     overflow: auto;
@@ -146,9 +146,29 @@
 	<?php
 		include_once 'userClass.php';
 		$ticket = $_SESSION["ticket"];
+		//type of ticket
+		$type = array("others","maintenance/installation/uninstallation","billing");
 		foreach($ticket as $key=>$a){
-			if(strcmp($key,"chatArray")!=0){
-			 echo "<p>".$key. ": " .$a."</p>";
+			if(strcmp($key,"type")==0){
+				foreach($type as $t){
+					if(strcmp($t,$a)==0){
+						?>
+						<p><?=$key?>: <select name="type" id="type">
+						  <option value=<?=$a?> selected="selected"><?=$a?></option>
+						<?php
+					}
+					else{
+						?>
+						<option value=<?=$t?>><?=$t?></option>
+						<?php
+					}
+				}
+				?>
+				</select>
+				<?php
+			}
+			else if(strcmp($key,"chatArray")!=0){
+				echo "<p>".$key. ": " .$a."</p>";
 			}
 		}
 		
@@ -214,7 +234,7 @@
  
             <form action="" method="post">
                 <input name="usermsg" type="text" id="usermsg" />
-				<input type="submit" id="submit" value="Send" name="submit"/>Send
+				<input type="submit" id="submit" value="Send" name="submit"/>
             </form>
         </div>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
