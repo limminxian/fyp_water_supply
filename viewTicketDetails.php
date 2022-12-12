@@ -36,26 +36,14 @@
     text-decoration: underline;
   }
    
-  #wrapper,
-  #loginform {
+  #wrapper {
     margin: 0 auto;
-    padding-bottom: 25px;
+    padding-bottom: 20px;
     background: #eee;
     width: 600px;
     max-width: 100%;
     border: 2px solid #212121;
     border-radius: 4px;
-  }
-   
-  #loginform {
-    padding-top: 18px;
-    text-align: center;
-  }
-   
-  #loginform p {
-    padding: 15px 25px;
-    font-size: 1.4rem;
-    font-weight: bold;
   }
    
   #chatbox {
@@ -64,7 +52,7 @@
     margin-bottom: 25px;
     padding: 10px;
     background: #fff;
-    height: 250px;
+    height: 200px;
     width: 530px;
     border: 1px solid #a7a7a7;
     overflow: auto;
@@ -103,7 +91,7 @@
     display: flex;
   }
    
-  #menu p.welcome {
+  #menu p.chat {
     flex: 1;
   }
    
@@ -145,34 +133,56 @@
 	</style>
 	<?php
 		include_once 'userClass.php';
+		?>
+		<form action="" method="post">
+			<input type="submit" name="logout" value="Logout" />
+		</form>
+		<?php
 		$ticket = $_SESSION["ticket"];
 		//type of ticket
 		$type = array("others","maintenance/installation/uninstallation","billing");
 		foreach($ticket as $key=>$a){
 			if(strcmp($key,"type")==0){
-				foreach($type as $t){
-					if(strcmp($t,$a)==0){
-						?>
-						<p><?=$key?>: <select name="type" id="type">
-						  <option value=<?=$a?> selected="selected"><?=$a?></option>
-						<?php
-					}
-					else{
-						?>
-						<option value=<?=$t?>><?=$t?></option>
-						<?php
-					}
-				}
 				?>
-				</select>
+				<p><?=$key?>: 
+				<form method="post" action="">
+					<select name="type" id="type" onchange="this.form.submit()">
+					<?php
+					foreach($type as $t){
+						if(strcmp($t,$a)==0){
+							?>
+							  <option value=<?=$a?> selected="selected"><?=$a?></option>
+							<?php
+						}
+						else{
+							?>
+								<option value=<?=$t?>><?=$t?></option>
+								<?php
+						}
+					}
+				?>
+					</select>
+				</form>
 				<?php
 			}
 			else if(strcmp($key,"chatArray")!=0){
 				echo "<p>".$key. ": " .$a."</p>";
 			}
 		}
+		if(isset($_POST["type"])){
+			$ticket->changeType($_POST["type"]);
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF']);
+			exit;
+		}
 		
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		if(isset($_POST["logout"])){
+			unset($_SESSION["loginId"]);
+			header("Location: login.php");
+		}
+		
+		if(isset($_POST["submit"])){
+		// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$_SESSION['postdata'] = $_POST['usermsg'];
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF']);
@@ -205,9 +215,24 @@
         <meta name="description" content="Tuts+ Chat Application" />
     </head>
     <body>
+	
+		<form action="" method="post">
+				<?php
+				if(strcmp($ticket->type,"maintenance/installation/uninstallation")==0){
+				?>
+					<input type="submit" id="aprvTech" value="Approve to Technician" name="submit"/>
+				<?php
+				}
+				else{
+				?>
+					<input type="submit" id="close" value="Close Ticket" name="submit"/>
+				<?php
+				}
+				?>
+        </form>
+			
 		<div id="wrapper">
             <div id="menu">
-                <p class="welcome">Welcome, <b><?php echo $_SESSION['name']; ?></b></p>
             </div>
  
             <div id="chatbox">
@@ -237,6 +262,7 @@
 				<input type="submit" id="submit" value="Send" name="submit"/>
             </form>
         </div>
+		
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </body>
 </html>

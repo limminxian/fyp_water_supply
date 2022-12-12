@@ -369,6 +369,17 @@ class Ticket{
 			$this->getAllChat();
 		}
 	}
+	
+	function changeType($type){
+		$this->type=$type;
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "UPDATE `TICKET` SET `TYPE`= (SELECT `ID` FROM `TICKETTYPE` WHERE NAME=?) WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"sd",$this->type,$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+			}
+	}
 }
 
 
