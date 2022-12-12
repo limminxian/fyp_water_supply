@@ -1,7 +1,4 @@
-
- 
-<!DOCTYPE html>
-<html lang="en">
+<html>
 	<style>
 	* {
     margin: 0;
@@ -146,23 +143,8 @@
     background: orangered;
   }
 	</style>
-    <head>
-        <meta charset="utf-8" />
- 
-        <title>Tuts+ Chat Application</title>
-        <meta name="description" content="Tuts+ Chat Application" />
-        <link rel="stylesheet" href="style.css" />
-    </head>
 	<?php
 		include_once 'userClass.php';
-
-		$ticket = $_SESSION["ticket"];
-		foreach($ticket as $key=>$a){
-			if(strcmp($key,"chatArray")!=0){
-			 echo "<p>".$key. ": " .$a."</p>";
-			}
-		}
-		
 		if(isset($_POST['submit'])){
 			$text = $_POST['usermsg'];
 
@@ -177,9 +159,21 @@
 			';
 			unset($_POST['submit']);
 		}
+		$ticket = $_SESSION["ticket"];
+		foreach($ticket as $key=>$a){
+			if(strcmp($key,"chatArray")!=0){
+			 echo "<p>".$key. ": " .$a."</p>";
+			}
+		}
 		
 		$ticket->getAllChat();
-		?>
+	?>
+    <head>
+        <meta charset="utf-8" />
+ 
+        <title>Tuts+ Chat Application</title>
+        <meta name="description" content="Tuts+ Chat Application" />
+    </head>
     <body>
 		<div id="wrapper">
             <div id="menu">
@@ -210,7 +204,7 @@
  
             <form action="" method="post">
                 <input name="usermsg" type="text" id="usermsg" />
-                <input name="submit" id="submit" type="submit" value="Send" />
+				<input type="submit" name="submit" id="submit" value="Send" />
             </form>
         </div>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

@@ -1,63 +1,6 @@
 <html>
-<title>IT for rent</title> 
-<body>
-<style>
-.errorRent{
-  padding: 20px;
-  background-color: #D91D1D; /* red */
-  color: white;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
- h1{ 
-     background-color: #78aeff;
-     text-align: center; 
-     color: #0f2647;
-  }
-  
-  body{
-    margin: 0;
-    padding: 0;
-	vertical-align: middle;
-    font-family: sans-serif;
-    background-size: cover;
-	min-height:100vh;
-	width:100%; 
-	background-color: edf1f7;
-	background-position:center; 
-	background-size:cover; position:relative;
-	color:  #0f2647;
-  }
-  
-  input[type=button],input[type=submit] {
-	  background-color: #78aeff;
-  }
-  
-   *{
+	<style>
+	* {
     margin: 0;
     padding: 0;
   }
@@ -141,7 +84,7 @@
     padding: 2px 8px;
   }
    
-  #submitmsg,
+  #submit,
   #enter{
     background: #ff9800;
     border: 2px solid #e65100;
@@ -160,7 +103,7 @@
     display: flex;
   }
    
-  #menu p.chat {
+  #menu p.welcome {
     flex: 1;
   }
    
@@ -199,98 +142,81 @@
   .msgln b.user-name-left {
     background: orangered;
   }
-</style>
-<h1>Rent Product</h1>
-<?php
-include_once 'userClass.php';
-//check token and make sure user do not bypass login
-if(!isset($_SESSION['loginId'])){
-	echo "Not allowed! Please login!";
+	</style>
+	<?php
+		include_once 'userClass.php';
+		$ticket = $_SESSION["ticket"];
+		foreach($ticket as $key=>$a){
+			if(strcmp($key,"chatArray")!=0){
+			 echo "<p>".$key. ": " .$a."</p>";
+			}
+		}
+		
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$_SESSION['postdata'] = $_POST['usermsg'];
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF']);
+			exit;
+		}
+
+		// This code can be used anywhere you redirect your user to using the header("Location: ...")
+		if (array_key_exists('postdata', $_SESSION)) {
+			// Handle your submitted form here using the $_SESSION['postdata'] instead of $_POST
+			$text = $_SESSION['postdata'];
+			$ticket->addChat($text);
+			echo '
+			<script type="text/javascript">
+			$(document).ready(function () {
+				var newscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height after the request
+				$("#chatbox").animate({ scrollTop: newscrollHeight }, "normal"); //Autoscroll to bottom of div
+			});
+			</script>
+			';
+			// After using the postdata, don't forget to unset/clear it
+			unset($_SESSION['postdata']);
+		}
+		
+		$ticket->getAllChat();
 	?>
-<br><br><input type="button" onclick="window.location.href='login.php';" value="Login" />
-
-<?php
-} 
-else{
-
-$ticket = $_SESSION["ticket"];
-foreach($ticket as $key=>$a){
-	if(strcmp($key,"chatArray")!=0){
-	 echo "<p>".$key. ": " .$a."</p>";
-	}
-}
-?>
-<p>Chat
-<br>
-
-<?php
-$ticket->getAllChat();
-foreach($ticket->chatArray as $t){
-	foreach($t as $key=>$a){
-		$_SESSION[$key]=$a;
-	}
-}
-	
-if(isset($_SESSION['name'])){
-    $text = $_POST['text'];
-     
-    $text_message = "<div class='msgln'><span class='chat-time'>".date("g:i A")."</span> <b class='user-name'>".$_SESSION['name']."</b> ".stripslashes(htmlspecialchars($text))."<br></div>";
-    file_put_contents("log.html", $text_message, FILE_APPEND | LOCK_EX);
-}
-?>
-<div id="wrapper">
+    <head>
+        <meta charset="utf-8" />
+ 
+        <title>Tuts+ Chat Application</title>
+        <meta name="description" content="Tuts+ Chat Application" />
+    </head>
+    <body>
+		<div id="wrapper">
             <div id="menu">
-                <p class="chat">Chat <b></b></p>
+                <p class="welcome">Welcome, <b><?php echo $_SESSION['name']; ?></b></p>
             </div>
  
-            <div id="chatbox"></div>
+            <div id="chatbox">
+			<?php
+			foreach($ticket->chatArray as $t){
+			?>
+			<div class='msgln'><span class='chat-time'>
+			<?php
+				echo $t->date;
+			?>
+			</span> <b class='user-name'>
+			<?php 
+				echo $t->name;
+			?>
+			</b>
+			<?php
+				echo $t->text;
+			?>			
+			<br></div>
+			<?php
+			}
+			?>
+            </div>
  
-            <form name="message" action="">
+            <form action="" method="post">
                 <input name="usermsg" type="text" id="usermsg" />
-                <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+				<input type="submit" id="submit" value="Send" name="submit"/>Send
             </form>
         </div>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#submitmsg").click(function () {
-                    var clientmsg = $("#usermsg").val();
-                    $.post("post.php", { text: clientmsg });
-                    $("#usermsg").val("");
-                    return false;
-                });
- 
-                function loadLog() {
-                    var oldscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height before the request
- 
-                    $.ajax({
-                        url: "log.html",
-                        cache: false,
-                        success: function (html) {
-                            $("#chatbox").html(html); //Insert chat log into the #chatbox div
- 
-                            //Auto-scroll           
-                            var newscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height after the request
-                            if(newscrollHeight > oldscrollHeight){
-                                $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
-                            }   
-                        }
-                    });
-                }
- 
-                setInterval (loadLog);
- 
-                $("#exit").click(function () {
-                    var exit = confirm("Are you sure you want to end the session?");
-                    if (exit == true) {
-                    window.location = "index.php?logout=true";
-                    }
-                });
-            });
-        </script>
-
-<?php
-}
-?>
-</body>
+    </body>
 </html>
