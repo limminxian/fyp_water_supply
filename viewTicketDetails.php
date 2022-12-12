@@ -182,27 +182,15 @@
 		}
 		
 		if(isset($_POST["submit"])){
-		// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$_SESSION['postdata'] = $_POST['usermsg'];
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF']);
 			exit;
 		}
 
-		// This code can be used anywhere you redirect your user to using the header("Location: ...")
 		if (array_key_exists('postdata', $_SESSION)) {
-			// Handle your submitted form here using the $_SESSION['postdata'] instead of $_POST
 			$text = $_SESSION['postdata'];
 			$ticket->addChat($text);
-			echo '
-			<script type="text/javascript">
-			$(document).ready(function () {
-				var newscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height after the request
-				$("#chatbox").animate({ scrollTop: newscrollHeight }, "normal"); //Autoscroll to bottom of div
-			});
-			</script>
-			';
-			// After using the postdata, don't forget to unset/clear it
 			unset($_SESSION['postdata']);
 		}
 		
@@ -264,5 +252,11 @@
         </div>
 		
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function () {
+			var newscrollHeight = $("#chatbox")[0].scrollHeight; 
+			$("#chatbox").animate({ scrollTop: newscrollHeight }, "normal"); //Autoscroll to bottom of div
+		});
+		</script>
     </body>
 </html>

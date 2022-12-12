@@ -365,9 +365,6 @@ class Ticket{
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($conn);
 			}
-		else{
-			$this->getAllChat();
-		}
 	}
 	
 	function changeType($type){
