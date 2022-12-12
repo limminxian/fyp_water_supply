@@ -96,7 +96,6 @@ class User{
 						return array(FALSE,"wrong password!");
 					}
 				}
-				
 				else if(strcmp($row[0],"PENDING")==0){
 					switch($row[3]){
 						case "companyadmin":
@@ -108,21 +107,22 @@ class User{
 							$_SESSION['loginId']=$row[2];
 							return array(TRUE,"staffFirstLogin");
 							break;
+						case "homeowner":
+							$_SESSION['loginId']=$row[2];
+							return array(TRUE,"homeownerVerifyEmail");
+							break;
 					}
-					
 				}
-				
 				else if(strcmp($row[0],"SUSPEND")==0){
-					return array(FALSE,"Your sccount has been suspended");
+					return array(FALSE,"Your account has been suspended");
 					
 				}
 				else if(strcmp($row[0],"REJECT")==0){
 					return array(FALSE,"Your company has been rejected");
 					
 				}
-				
 				else{
-					var_dump($row);
+					return array(FALSE,"Notworking");
 				}
 			}
 		}
@@ -205,6 +205,7 @@ class Homeowner extends User{
 	public $postalcode;
 	public $housetype;
 	public $people;
+	public $code;
 	
 	function setHomeowner($homeowner){
 		foreach($homeowner as $key=>$value){
@@ -217,25 +218,46 @@ class Homeowner extends User{
 		foreach($homeowner as $key=>$value){
 			$this->$key = $value;
 		}
-		
+		$this->code = rand(100000,999999);
 		$conn = getdb();
 		parent::addUser($homeowner);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`) VALUES(?,?,?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dsssdsd",$this->id, $this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`, `CODE`) VALUES(?,?,?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dsssdsdd",$this->id, $this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people,$this->code);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
-		mail($this->email,"My subject","try");
+		// mail($this->email,"My subject","try");
 		$_SESSION["addUser"]=true;
 		header("Location:login.php");
 	}
 	
-	function appRejCompany($status){
+	function verifyEmail($code){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `STATUS` = ? WHERE ID = ?;");
-		mysqli_stmt_bind_param($stmt,"sd",$status, $this->id);
+		$stmt = mysqli_prepare($conn,"SELECT `CODE` FROM `HOMEOWNER` WHERE ID = ?;");
+		mysqli_stmt_bind_param($stmt,"d",$_SESSION['loginId']);
 		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		$row = mysqli_fetch_array($result, MYSQLI_NUM)[0];
+		if(strcmp($row,$code)==0){
+			$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `STATUS` = 'ACTIVE' WHERE ID = ?;");
+			mysqli_stmt_bind_param($stmt,"d",$_SESSION['loginId']);
+			mysqli_stmt_execute($stmt);
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
+		
+	}
+	
+	function resendCode(){
+		$this->code = rand(100000,999999);
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"UPDATE `HOMEOWNER` SET `CODE` = ? WHERE ID = ?;");
+		mysqli_stmt_bind_param($stmt,"sd",$this->code,$_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		return TRUE;
 	}
 	
 }

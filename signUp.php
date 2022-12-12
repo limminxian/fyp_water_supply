@@ -133,9 +133,19 @@ Unit no: <input type="number" class="homeForm" name="unit" placeholder="unit no"
 <label for="house">House type:</label>
 
 <select name="house" id="house" class="homeForm"  required>
-  <option value="HDB">HDB</option>
-  <option value="condo">Condo</option>
-  <option value="landed">Landed property</option>
+  <option value="oneRoomFlat">1-Room Flat</option>
+  <option value="twoRoomFlat">2-Room Flat</option>
+  <option value="threeRoomFlat">3-Room Flat</option>
+  <option value="fourRoomFlat">4-Room Flat</option>
+  <option value="fiveRoomFlat">5-Room Flat</option>
+  <option value="executiveFlat">Executive Flat</option>
+  <option value="executiveCondo">Executive Condo</option>
+  <option value="privateCondo">Private Condo</option>
+  <option value="apartment">Apartment</option>
+  <option value="semidetached">Semi Detached House</option>
+  <option value="terracce">Terrace House</option>
+  <option value="shophouse">Shop House</option>
+  <option value="bungalow">Bungalow House</option>
 </select>
 <br>
 
