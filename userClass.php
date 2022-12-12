@@ -265,6 +265,7 @@ class Homeowner extends User{
 class Staff extends User{
 	//properties
 	public $company;
+	public $ticketArray=[];
 	
 	function setStaff($staff){
 		foreach($staff as $key=>$value){
@@ -297,11 +298,98 @@ class Staff extends User{
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 	}
+	
+	function getAllTicket(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT T.ID, U.NAME, T.DATE, P.NAME AS TYPE, T.STATUS, T.DESCRIPTION FROM `USERS` U, `TICKET` T, `TICKETTYPE` P, `STAFF` S WHERE U.ID = T.HOMEOWNER AND T.TYPE = P.ID AND T.CUSTOMERSERVICE = S.ID AND T.STATUS='PENDIN' AND S.ID = ?;");
+		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->ticketArray=[];
+				foreach ($rows as $r) {
+					$t = new Ticket();
+					$t->setTicket($r);
+					array_push($this->ticketArray,$t);
+				}
+			}
+		}
+	}
+}
+
+class Ticket{
+	public $id;
+	public $name;
+	public $date;
+	public $type;
+	public $status;
+	public $description;
+	public $chatArray=[];
+	
+	function setTicket($ticket){
+		foreach($ticket as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function getAllChat(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT C.DATE, C.TICKET as ticketid, U.NAME, C.TEXT FROM `CHAT` C, `TICKET` T, `USERS` U WHERE C.TICKET=T.ID AND U.ID=C.SENDER AND T.ID=? ORDER BY C.DATE;");
+		mysqli_stmt_bind_param($stmt,"d",$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);
+			}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->chatArray=[];
+				foreach ($rows as $r) {
+					$c = new Chat();
+					$c->setChat($r);
+					array_push($this->chatArray,$c);
+				}
+			}
+		}
+	}
+	
+	function addChat($text){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `CHAT` (`TICKET`,`SENDER`,`TEXT`) VALUES (?,?,?)");
+		mysqli_stmt_bind_param($stmt,"dds",$this->id, $_SESSION['loginId'],$text);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+			}
+		else{
+			$this->getAllChat();
+		}
+	}
+}
+
+
+class Chat{
+	public $date;
+	public $name;
+	public $ticketid;
+	public $text;
+	
+	function setChat($chat){
+		foreach($chat as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
 }
 
 class DataManager{
 	public $companyArray=[];
 	public $staffArray=[];
+	public $ticketArray=[];
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
