@@ -155,6 +155,7 @@ class Company extends User{
 	public $street;
 	public $postalcode;
 	public $description;
+	public $chemicalArray=[];
 	
 	function setCompany($company){
 		foreach($company as $key=>$value){
@@ -190,6 +191,24 @@ class Company extends User{
 		$stmt = mysqli_prepare($conn,"UPDATE `USERS` SET `STATUS` = ? WHERE ID = ?;");
 		mysqli_stmt_bind_param($stmt,"sd",$status, $this->id);
 		mysqli_stmt_execute($stmt);
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+	}
+	
+	function getAllChemical(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM `CHEMICAL` WHERE COMPANY = (SELECT COMPANY FROM STAFF WHERE ID=?);");
+		mysqli_stmt_bind_param($stmt,"d", $_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->chemicalArray=[];
+				foreach ($rows as $r) {
+					$c = new Chemical();
+					$c->setChemical($r);
+					array_push($this->chemicalArray,$c);
+				}
+			}
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
 	}
@@ -390,6 +409,33 @@ class Chat{
 		foreach($chat as $key=>$value){
 			$lowerKey = strtolower($key);
 			$this->$lowerKey = $value;
+		}
+	}
+}
+
+class Chemical{
+	public $id;
+	public $name;
+	public $amount;
+	
+	function setChemical($chemical){
+		foreach($chemical as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addChemical($chemical){
+		foreach($chemical as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `CHEMICAL` (`NAME`,`AMOUNT`,`COMPANY`) SELECT ?,?,COMPANY FROM `STAFF` WHERE `ID`=?");
+		mysqli_stmt_bind_param($stmt,"sdd",$this->name, $this->amount,$_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
 		}
 	}
 }
