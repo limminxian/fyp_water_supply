@@ -106,7 +106,7 @@ foreach($ticket->ticketArray as $t){
 		<button  value="<?=base64_encode(serialize($t))?>" name="view"/>View</button>
 	</td>
   </tr>
-  </table>
+  
   <?php
 }
 ?>

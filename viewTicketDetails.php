@@ -140,7 +140,9 @@
 		<?php
 		$ticket = $_SESSION["ticket"];
 		//type of ticket
-		$type = array("others","maintenance/installation/uninstallation","billing");
+		// $type = new Tickettype;
+		// $type->getAllTicketType();
+		$type = array("others","maintenance","payment","installation");
 		foreach($ticket as $key=>$a){
 			if(strcmp($key,"type")==0){
 				?>
@@ -206,7 +208,7 @@
 	
 		<form action="" method="post">
 				<?php
-				if(strcmp($ticket->type,"maintenance/installation/uninstallation")==0){
+				if(in_array($ticket->type,array("maintenance","installation"))){
 				?>
 					<input type="submit" id="aprvTech" value="Approve to Technician" name="submit"/>
 				<?php

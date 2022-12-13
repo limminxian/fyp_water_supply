@@ -65,8 +65,9 @@ else{
   <a class="active" href="#manage">Manage Account</a>
   <a href='manageCompanyRequest.php'>Company Request</a>
   <a href='createRole.php'>Create Role</a>
-  <form action="post">
-	<input type="submit" name="logout" value="Logout" />
+  <a href='createTickteType.php'>Create Ticket Type</a>
+	<form action="" method="post">
+		<input type="submit" name="logout" value="Logout" />
 	</form>
   
 </div>

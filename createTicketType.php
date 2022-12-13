@@ -58,10 +58,10 @@ if(isset($_POST["logout"])){
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$description = $_POST['description'];
-	$register = $_POST['register'];
+	$toTech = $_POST['tech'];
 	//check role	
-	$a = new Role();
-	$result = $a->addRole(array("name"=>$name,"description"=>$description,"register"=>$register));
+	$a = new Tickettype();
+	$result = $a->addTicketType(array("name"=>$name,"description"=>$description,"tech"=>$tech));
 
 	if(isset($_SESSION["errorAddUser"]))
 	{
@@ -76,10 +76,6 @@ if (isset($_POST['submit'])) {
 
 <div >
 <form action="" method="post" >
-<input type="submit" name="logout" value="Logout" />
-</form>
-
-<form action="" method="post" >
 
  
 Name: <input type="text" name="name" placeholder="Name" required ><br>
@@ -87,12 +83,12 @@ Name: <input type="text" name="name" placeholder="Name" required ><br>
 Description: <input type="text" name="description" placeholder="Description" required ><br>
 <br>
 
-Register allow:
-<input type="radio" value="1" id="yes" name="register" required>
+Send To Technician Automatically:
+<input type="radio" value="1" id="yes" name="tech" required>
 
 <label for="yes">Yes</label>
 
-<input type="radio" value="0" id="no" name="register" >
+<input type="radio" value="0" id="no" name="tech" >
  
  <label for="no">No</label>
  
@@ -101,6 +97,7 @@ Register allow:
 <br>
 <input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
 <input type="button" onclick="window.location.href='superAdmin.php';" value="Back" />
+<input type="submit" name="logout" value="Logout" />
 
 </form>
 </script>
