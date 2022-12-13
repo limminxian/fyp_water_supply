@@ -6,6 +6,7 @@ class Role {
 	public $id;
 	public $name;
 	public $description;
+	public $register;
 
 	// Methods
 	function addRole($role) {
@@ -13,8 +14,8 @@ class Role {
 			$this->$key = $value;
 		}
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`) VALUES(?,?);");
-		mysqli_stmt_bind_param($stmt,"ss", $this->name,$this->description);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`) VALUES(?,?,?);");
+		mysqli_stmt_bind_param($stmt,"sss", $this->name,$this->description,$this->register);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($c);}

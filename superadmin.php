@@ -64,6 +64,7 @@ else{
 <div class="topnav">
   <a class="active" href="#manage">Manage Account</a>
   <a href='manageCompanyRequest.php'>Company Request</a>
+  <a href='createRole.php'>Create Role</a>
   <form action="post">
 	<input type="submit" name="logout" value="Logout" />
 	</form>

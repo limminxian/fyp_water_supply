@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS ROLE (
 ID INT(6) UNSIGNED AUTO_INCREMENT,
 NAME VARCHAR(30),
 DESCRIPTION VARCHAR(50),
+REGISTER BOOLEAN,	
 PRIMARY KEY (ID)
 );
 
@@ -209,6 +210,11 @@ function createSuperadmin(){
 $hashed = password_hash("123Admin.",PASSWORD_DEFAULT);
 $createAdmin ="
 
+INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
+    SELECT 'superadmin','website owner',FALSE
+    WHERE NOT EXISTS
+        (SELECT ID FROM `ROLE` WHERE NAME = 'superadmin');
+		
 INSERT INTO `USERS` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
     SELECT 'Admin1','admin@gmail.com','".$hashed."',1, 'ACTIVE'
     WHERE NOT EXISTS
