@@ -369,6 +369,16 @@ class Ticket{
 		}
 	}
 	
+	function closeTicket(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "UPDATE `TICKET` SET `STATUS`= 'CLOSE' WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"d",$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
+	
 	function addChat($text){
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `CHAT` (`TICKET`,`SENDER`,`TEXT`) VALUES (?,?,?)");
@@ -376,7 +386,7 @@ class Ticket{
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($conn);
-			}
+		}
 	}
 	
 	function changeType($type){
@@ -387,7 +397,7 @@ class Ticket{
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($conn);
-			}
+		}
 	}
 }
 

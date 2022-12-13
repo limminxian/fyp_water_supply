@@ -190,6 +190,13 @@
 			exit;
 		}
 
+		if(isset($_POST["close"])){
+			$ticket->closeTicket();
+			unset($_POST);
+			header("Location: customerservice.php");
+			exit;
+		}
+
 		if (array_key_exists('postdata', $_SESSION)) {
 			$text = $_SESSION['postdata'];
 			$ticket->addChat($text);
@@ -208,6 +215,8 @@
 	
 		<form action="" method="post">
 				<?php
+				// $ticettype = new Tickettype();
+				
 				if(in_array($ticket->type,array("maintenance","installation"))){
 				?>
 					<input type="submit" id="aprvTech" value="Approve to Technician" name="submit"/>
@@ -215,7 +224,7 @@
 				}
 				else{
 				?>
-					<input type="submit" id="close" value="Close Ticket" name="submit"/>
+					<input type="submit" value="Close Ticket" name="close""/>
 				<?php
 				}
 				?>
