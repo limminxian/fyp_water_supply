@@ -3,7 +3,6 @@
 include_once 'config.php';
 include_once 'userClass.php';
 
-$_SESSION["page"]="createRole";
 ?>
 
 <html>

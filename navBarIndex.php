@@ -1,7 +1,7 @@
 <div class="topnav">
-  <a class="active" href="#home">Water Supply 💧 </a>
-  <a href="homepage.php">Home</a>
-  <a href="about page.php">About</a>
+  <a href="index.php">Water Supply 💧 </a>
+  <a href="about.php">About</a>
+  <a href="download.php">Download</a>
   <div class="topnav-right">
     <a href="signUp.php">Register</a>
     <a href="login.php">Login</a>

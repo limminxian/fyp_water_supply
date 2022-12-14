@@ -11,14 +11,14 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script>
 	$(function(){
-	  $("#nav-placeholder").load("navBarTech.php");
+	  $("#nav-placeholder").load("navBarSuper.php");
 	});
 	</script>
 </head>
 <body>
 <?php 
 include_once 'userClass.php';
-$_SESSION["page"]="technician";
+$_SESSION["page"]="manageRole";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -34,44 +34,33 @@ else{
 	header("Location: login.php");
 }
 
-if (isset($_POST["addNew"])){
-	header("Location: addChemical.php");
-}
-
-$chemical = new Company();
-$chemical->getAllChemical();
+$role = new DataManager();
+$role->getAllRole();
 ?>
 <br>
 <table>
   <tr>
     <th>ID</th>
     <th>Name</th>
-    <th>Amount</th>
+    <th>Description</th>
+    <th>Allow Register</th>
     <th></th>
     <th></th>
-    <th></th>
-	<th></th>
   </tr>	
   <form action="" method="post">
-  	<a class="rightButton" href="addChemical.php">Add new chemical</a>
+  	<a class="rightButton" href="createRole.php">Add new role</a>
 <?php
-foreach($chemical->chemicalArray as $c){
+foreach($role->roleArray as $r){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'amount');
+		$properties = array('id', 'name', 'description','register');
 		foreach ($properties as $prop) {?>
 			<td>
-				<?=$c->$prop?>
+				<?=$r->$prop?>
 			</td>
 		<?php }
 	?>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="add"/>Add amount used</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="view"/>View amount Used</button>
-	</td>
 	<td>
 		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
 	</td>

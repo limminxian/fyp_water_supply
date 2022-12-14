@@ -88,6 +88,8 @@ Decription of Business: <input type="text" class="form compForm" name="descripti
 
 UEN: <input type="text" class="form compForm" name="uen" placeholder="UEN" required ><br>
 
+ACRA certificate: <input type="file" class="form compForm" name="fileToUpload" id="fileToUpload" required>
+
 </div>
 
 <div id="homeownerForm">

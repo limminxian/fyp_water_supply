@@ -44,6 +44,7 @@ if (isset($_POST["view"])){
 $ticket = new Staff();
 $ticket->getAllTicket();
 ?>
+<br>
 
 <table>
   <tr>
@@ -53,7 +54,6 @@ $ticket->getAllTicket();
     <th>Service Type</th>
     <th>Status</th>
     <th></th>
-	<th></th>
   </tr>	
   <form action="" method="post">
 <?php

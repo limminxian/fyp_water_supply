@@ -9,6 +9,14 @@ class Role {
 	public $register;
 
 	// Methods
+	
+	function setRole($role){
+		foreach($role as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
 	function addRole($role) {
 		foreach($role as $key=>$value){
 			$this->$key = $value;
@@ -471,6 +479,7 @@ class DataManager{
 	public $companyArray=[];
 	public $staffArray=[];
 	public $topCompanyArray=[];
+	public $roleArray=[];
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
@@ -528,5 +537,22 @@ class DataManager{
 		}
 	}
 	
+	function getAllRole(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM ROLE;");
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Role();
+					$c->setRole($r);
+					array_push($this->roleArray,$c);
+				}
+			}
+		}
+	}
 }
 ?>

@@ -63,6 +63,7 @@ if(isset($_POST["back"])){
     <th>Street</th>
     <th>Postal Code</th>
     <th>Description</th>
+    <th>File</th>
     <th></th>
 	<th></th>
   </tr>	

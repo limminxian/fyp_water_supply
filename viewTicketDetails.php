@@ -1,148 +1,35 @@
+<!DOCTYPE html>
 <html>
-	<style>
-	* {
-    margin: 0;
-    padding: 0;
-  }
-   
-  body {
-    margin: 20px auto;
-    font-family: "Lato";
-    font-weight: 300;
-  }
-   
-  form {
-    padding: 15px 25px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-   
-  form label {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-   
-  input {
-    font-family: "Lato";
-  }
-   
-  a {
-    color: #0000ff;
-    text-decoration: none;
-  }
-   
-  a:hover {
-    text-decoration: underline;
-  }
-   
-  #wrapper {
-    margin: 0 auto;
-    padding-bottom: 20px;
-    background: #eee;
-    width: 600px;
-    max-width: 100%;
-    border: 2px solid #212121;
-    border-radius: 4px;
-  }
-   
-  #chatbox {
-    text-align: left;
-    margin: 0 auto;
-    margin-bottom: 25px;
-    padding: 10px;
-    background: #fff;
-    height: 200px;
-    width: 530px;
-    border: 1px solid #a7a7a7;
-    overflow: auto;
-    border-radius: 4px;
-    border-bottom: 4px solid #a7a7a7;
-  }
-   
-  #usermsg {
-    flex: 1;
-    border-radius: 4px;
-    border: 1px solid #ff9800;
-  }
-   
-  #name {
-    border-radius: 4px;
-    border: 1px solid #ff9800;
-    padding: 2px 8px;
-  }
-   
-  #submit,
-  #enter{
-    background: #ff9800;
-    border: 2px solid #e65100;
-    color: white;
-    padding: 4px 10px;
-    font-weight: bold;
-    border-radius: 4px;
-  }
-   
-  .error {
-    color: #ff0000;
-  }
-   
-  #menu {
-    padding: 15px 25px;
-    display: flex;
-  }
-   
-  #menu p.chat {
-    flex: 1;
-  }
-   
-  a#exit {
-    color: white;
-    background: #c62828;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-  }
-   
-  .msgln {
-    margin: 0 0 5px 0;
-  }
-   
-  .msgln span.left-info {
-    color: orangered;
-  }
-   
-  .msgln span.chat-time {
-    color: #666;
-    font-size: 60%;
-    vertical-align: super;
-  }
-   
-  .msgln b.user-name, .msgln b.user-name-left {
-    font-weight: bold;
-    background: #546e7a;
-    color: white;
-    padding: 2px 4px;
-    font-size: 90%;
-    border-radius: 4px;
-    margin: 0 5px 0 0;
-  }
-   
-  .msgln b.user-name-left {
-    background: orangered;
-  }
-	</style>
+
+    <head>
+        <meta charset="utf-8" />
+ 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="style.css">
+		<div id="nav-placeholder">
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script>
+		$(function(){
+		  $("#nav-placeholder").load("navBarCust.php");
+		});
+		</script>
+    </head>
 	<?php
 		include_once 'userClass.php';
-		?>
-		<form action="" method="post">
-			<input type="submit" name="logout" value="Logout" />
-		</form>
-		<?php
+		$_SESSION["page"]="customerservice";
 		$ticket = $_SESSION["ticket"];
 		//type of ticket
 		// $type = new Tickettype;
 		// $type->getAllTicketType();
 		$type = array("others","maintenance","payment","installation");
+		?>
+		<div class="formcontainer">
+		<?php
 		foreach($ticket as $key=>$a){
 			if(strcmp($key,"type")==0){
 				?>
@@ -171,6 +58,9 @@
 				echo "<p>".$key. ": " .$a."</p>";
 			}
 		}
+		?>
+		</div>
+		<?php
 		if(isset($_POST["type"])){
 			$ticket->changeType($_POST["type"]);
 			unset($_POST);
@@ -205,26 +95,20 @@
 		
 		$ticket->getAllChat();
 	?>
-    <head>
-        <meta charset="utf-8" />
- 
-        <title>Tuts+ Chat Application</title>
-        <meta name="description" content="Tuts+ Chat Application" />
-    </head>
     <body>
 	
-		<form action="" method="post">
+		<form action="" method="post" class="formcontainer">
 				<?php
 				// $ticettype = new Tickettype();
 				
 				if(in_array($ticket->type,array("maintenance","installation"))){
 				?>
-					<input type="submit" id="aprvTech" value="Approve to Technician" name="submit"/>
+					<input  class="formbutton" type="submit" id="aprvTech" value="Approve to Technician" name="submit"/>
 				<?php
 				}
 				else{
 				?>
-					<input type="submit" value="Close Ticket" name="close""/>
+					<input  class="formbutton" type="submit" value="Close Ticket" name="close""/>
 				<?php
 				}
 				?>
@@ -256,9 +140,9 @@
 			?>
             </div>
  
-            <form action="" method="post">
-                <input name="usermsg" type="text" id="usermsg" />
-				<input type="submit" id="submit" value="Send" name="submit"/>
+            <form class="replyTicket" action="" method="post">
+                <input class="replyInput" name="usermsg" type="text" id="usermsg" />
+				<input class="replyInput" type="submit" id="submit" value="Send" name="submit"/>
             </form>
         </div>
 		

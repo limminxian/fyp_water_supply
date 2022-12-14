@@ -6,10 +6,7 @@ include_once 'userClass.php';
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-</head>
-<body>
-
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css" type="text/css">
 <div id="nav-placeholder">
 </div>
 
@@ -21,6 +18,9 @@ $(function(){
   $("#nav-placeholder").load("navBarIndex.php");
 });
 </script>
+</head>
+<body>
+
 
 
 <div class="slideshow-container">
@@ -37,8 +37,8 @@ $(function(){
   <img src="img/homeslider3.png" class="slides" style="width:100%">
 </div>
 
-<a class="prev" onclick="plusSlides(-1)">❮</a>
-<a class="next" onclick="plusSlides(1)">❯</a>
+<a class="prev" onclick="plusSlides(-1)"><</a>
+<a class="next" onclick="plusSlides(1)">></a>
 
 </div>
 <br>
@@ -92,36 +92,35 @@ $(function(){
 ?>
 </div>
 <br>
+<br>
+<br>
 <div class="aboutContainer">
   <img src="img/homeAboutBack.jpg" style="width:100%;" class="about">
   <div class="text-block">
-    <h2>Who we are</h2>
-    <p>Get to know more about our company</p>
-	<p><button class="button" name="read">Read more</button></p>
+    <h1>Who we are</h1>
+    <h2>Get to know more about our company</h2>
+    <p>Our company provided both business owner and homeowner a platform to communicate with each other where homeowner could subscribe to business service for water supply.</p>
+	<br>
+	<div class="centerButton">
+		<button class="button" name="read">Read more</button>
+	</div>
   </div>
 </div>
 
 <br>
+<br>
 
 <div class="slideshow-container">
 <h2>What they say about us</h2>
-
+<br>
 <div class="reviewSlides fade">
 	<div class="review">
 		<div class="card">
-			<img src="img/business<?=$c->id?>.jpg" class="companyphoto" >
 			<div class="container">
-				<h2><?=$c->compName?></h2>
-				<?php
-				foreach(range(1,$c->noofstar) as $a){
-				?>
-					<img src="img/star.png" class="star">
-				<?php
-				}
-				?>
-				<p class="rating"><?=$c->noofrate?> subsribers</p>
-				<p><?=$c->description?></p>
-				<p><button class="button" name="learn">Learn more</button></p>
+				<h2>Jane</h2>
+				<h4>subscribe to company4</h4>
+				<p>Great software</p>
+				<p>Some comments....</p>
 			</div>
 		</div>
 	</div>
@@ -130,19 +129,11 @@ $(function(){
 <div class="reviewSlides fade">
 	<div class="review">
 		<div class="card">
-			<img src="img/business<?=$c->id?>.jpg" class="companyphoto" >
 			<div class="container">
-				<h2><?=$c->compName?></h2>
-				<?php
-				foreach(range(1,$c->noofstar) as $a){
-				?>
-					<img src="img/star.png" class="star">
-				<?php
-				}
-				?>
-				<p class="rating"><?=$c->noofrate?> subsribers</p>
-				<p><?=$c->description?></p>
-				<p><button class="button" name="learn">Learn more</button></p>
+				<h2>John</h2>
+				<h4>subscribe to company2</h4>
+				<p>Best software</p>
+				<p>Some comments....</p>
 			</div>
 		</div>
 	</div>
@@ -151,50 +142,51 @@ $(function(){
 <div class="reviewSlides fade">
 	<div class="review">
 		<div class="card">
-			<img src="img/business<?=$c->id?>.jpg" class="companyphoto" >
 			<div class="container">
-				<h2><?=$c->compName?></h2>
-				<?php
-				foreach(range(1,$c->noofstar) as $a){
-				?>
-					<img src="img/star.png" class="star">
-				<?php
-				}
-				?>
-				<p class="rating"><?=$c->noofrate?> subsribers</p>
-				<p><?=$c->description?></p>
-				<p><button class="button" name="learn">Learn more</button></p>
+				<h2>Dan</h2>
+				<h4>subscribe to company1</h4>
+				<p>Cheap</p>
+				<p>Some comments....</p>
 			</div>
 		</div>
 	</div>
 </div>
 
-<a class="prev" onclick="plusSlides(-1)">❮</a>
-<a class="next" onclick="plusSlides(1)">❯</a>
 
 </div>
 
 <script>
-let slideIndex = 0;
-showBannerSlides();
+let bannerSlideIndex = 0;
+let reviewSlideIndex = 0;
+showBannerSlides(bannerSlideIndex);
 showReviewSlides();
 
-function showBannerSlides() {
+function plusSlides(n) {
+  showBannerSlides(bannerSlideIndex += n);
+}
+
+function currentSlide(n) {
+  showBannerSlides(bannerSlideIndex = n);
+}
+
+
+function showBannerSlides(n) {
   let i;
   let slides = document.getElementsByClassName("bannerSlides");
   let dots = document.getElementsByClassName("dot");
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";  
   }
-  slideIndex++;
-  if (slideIndex > slides.length) {slideIndex = 1}    
+  bannerSlideIndex++;
+  if (bannerSlideIndex > slides.length) {bannerSlideIndex = 1}    
   for (i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " active";
+  slides[bannerSlideIndex-1].style.display = "block";  
+  dots[bannerSlideIndex-1].className += " active";
   setTimeout(showBannerSlides, 5000); // Change image every 2 seconds
 }
+
 
 function showReviewSlides() {
   let i;
@@ -202,9 +194,9 @@ function showReviewSlides() {
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";  
   }
-  slideIndex++;
-  if (slideIndex > slides.length) {slideIndex = 1}   
-  slides[slideIndex-1].style.display = "block";  
+  reviewSlideIndex++;
+  if (reviewSlideIndex > slides.length) {reviewSlideIndex = 1}   
+  slides[reviewSlideIndex-1].style.display = "block";  
   setTimeout(showReviewSlides, 5000); // Change image every 2 seconds
 }
 </script>

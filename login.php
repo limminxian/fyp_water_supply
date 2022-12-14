@@ -76,6 +76,7 @@ if(isset($_POST["submit"])) {
 			// '<?php echo $result[1]; ?'
 		}else{
 			$_SESSION["error"] = $result[1];
+			header("Refresh:0");
 		}
 	}
 }
