@@ -6,50 +6,16 @@ include_once 'userClass.php';
 
 <html>
 <title>IT for rent</title> 
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-  .error{
-  padding: 20px;
-  background-color: #D91D1D; /* red */
-  color: white;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
+<link rel="stylesheet" href="style.css">
 
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-#homeownerForm {
-	display: none;
-}
-	
-#companyForm {
-	display: none;
-}	
-
-</style>
-<h1>Register</h1>
+<h1>First time login</h1>
 <?php
 if (isset($_POST['submit'])) {
 	$password = $_POST['password'];
@@ -61,21 +27,20 @@ if (isset($_POST['submit'])) {
 
 ?>
 
-<div >
-<form action="" method="post" >
-First time user. Please set your password that is between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character.
+<div class="center bg-img">
+<form action="" method="post" class="formcontainer">
 
-Password: <input type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
+Password: <input class="form" type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
 
-Re-type Password: <input type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
+Re-type Password: <input class="form" type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
 
+
+<input class="formbutton" type="submit" name="submit" value="Submit" />
 </div>
 
 <br>
 
 <br>
-
-<input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
 </form>
 
 

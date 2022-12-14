@@ -1,114 +1,55 @@
 <html>
 <head>
-  <title>Login Page</title>
-  <style>
+<div id="nav-placeholder">
+</div>
 
-body{
-  font-family: arial;
-}
-
-button{
-  background-color: yellow;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  font-size: 16px;
-  font-weight:bold;
-  margin: 0 auto;
-    display: block;
-  cursor: pointer;
-}
-
-input {
-  padding: 10px;
-}
-
-button:hover {
-  background-color: lightgray;
-}
-
-/* Index Main Page */
-.template {
-  max-width: 700px;
-  margin: auto;
-  margin-top:150px;
-  background: white;
-  padding: 30px;
-  border-radius: 25px;
-  border: 5px solid #333F50;
-  
-}
-
-.signup {
-  padding: 20px;
-  background-color: #83FF9F; /* light green */
-  color: black;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
-
- </style>
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$(function(){
+  $("#nav-placeholder").load("navBarIndex.php");
+});
+</script>
  </head>
- 
+ <?php
+	include_once 'config.php';
+	include_once 'userClass.php';
+ ?>
  <body>
  <h1>Login</h1>
   <br>
+  <?php
+  if(isset($_SESSION["error"])){
+		echo "<div class='error'>".$_SESSION["error"]."</div>" ;
+		UNSET($_SESSION["error"]);
+  }
+	?>
   <br>
-  <div align="center">
-  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+  <div class="center bg-img">
+  <form action="" method="post" class="formcontainer">
   <p>
     <label for="email" >Email</label><br>
-    <input type="text" name="email">
+    <input class="form" type="text" name="email">
   </p>
   
   <p>
       <label for="password">Password</label><br>
-      <input type="password" name="password" autocomplete="off">
+      <input class="form" type="password" name="password" autocomplete="off">
  </p>
-    <p><button>Login</button></p>
-	<input type="button" onclick="window.location.href='signup.php';" value="Company Signup" />
+    <input class="formbutton" type="submit" name="submit" value="Login" />
  </form>
  
+
  <?php
-include_once 'config.php';
-include_once 'userClass.php';
 $check = true;
 
 createTables();
 createSuperadmin();
 
-if(isset($_SESSION["signup"]))
-{
-	echo "<div class='signup'>Sign up successfully please wait to be approved</div>" ;
-	UNSET($_SESSION["signup"]);
-}
-
 //Submission of the form
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
+if(isset($_POST["submit"])) {
 
 	//email validation
 	$email = preVal($_POST['email']);
@@ -132,8 +73,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$result = $a->validateLogin(array("email"=>$email,"password"=>$password));
 		if($result[0]){
 			header("Location:".$result[1].".php");
+			// '<?php echo $result[1]; ?'
 		}else{
-			echo $result[1];
+			$_SESSION["error"] = $result[1];
 		}
 	}
 }
@@ -144,5 +86,6 @@ function preVal($str) {
 }
 
 ?>
+
 </div>
 </body>

@@ -1,24 +1,31 @@
-<!DOCTYPE html>
 <html>
 <title>IT for rent</title> 
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
 
-<link rel="stylesheet" href="style.css">
-<div id="nav-placeholder">
-</div>
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script>
-$(function(){
-  $("#nav-placeholder").load("navBarSuper.php");
-});
-</script>
-
-</head>
-
+ h1{ 
+     background-color: #78aeff;
+     text-align: center; 
+     color: #0f2647;
+  }
+  
+  body{
+    margin: 0;
+    padding: 0;
+	vertical-align: middle;
+    font-family: sans-serif;
+    background-size: cover;
+	min-height:100vh;
+	width:100%; 
+	background-color: edf1f7;
+	background-position:center; 
+	background-size:cover; position:relative;
+	color:  #0f2647;
+  }
+  
+  input[type=button],input[type=submit],button {
+	  background-color: #78aeff;
+  }
+</style>
 <body>
 <h1>Accept/Reject company page</h1>
 <?php
@@ -30,13 +37,13 @@ if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
 	
-<br><input type="button" onclick="window.location.href='login.php';" value="Login" />
+<<br><br><input type="button" onclick="window.location.href='login.php';" value="Login" />
 
 <?php
 
 } 
 else{
-$_SESSION["page"]="manageCompanyRequest";
+
 $company = new DataManager();
 $company->getAllPendingCompany();
 	
@@ -99,7 +106,12 @@ foreach($company->companyArray as $c){
 		<button  value="<?=base64_encode(serialize($c))?>" name="reject"/>Reject</button>
 	</td>
   </tr><?php
-}?>
+}
+?>
+		<p>
+			<input type="submit" name="back" value="Back" />
+			<input type="submit" name="logout" value="Logout" />
+		</p>
 </form>
 </body>
 <?php }

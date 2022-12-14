@@ -2,50 +2,24 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {font-family: Arial;}
 
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
+<link rel="stylesheet" href="style.css">
+<div id="nav-placeholder">
+</div>
 
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$(function(){
+  $("#nav-placeholder").load("navBarCust.php");
+});
+</script>
 </head>
 <body>
 <?php 
 include_once 'userClass.php';
+$_SESSION["page"]="customerservice";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -70,14 +44,6 @@ if (isset($_POST["view"])){
 $ticket = new Staff();
 $ticket->getAllTicket();
 ?>
-<div class="topnav">
-  <a class="active" href="#manage">View ticket</a>
-  <a href='manageCompanyRequest.php'>Manage Homeowner Profile</a>
-  <form action="post">
-	<input type="submit" name="logout" value="Logout" />
-	</form>
-  
-</div>
 
 <table>
   <tr>
@@ -110,10 +76,6 @@ foreach($ticket->ticketArray as $t){
   <?php
 }
 ?>
-		<p>
-			<input type="submit" name="back" value="Back" />
-			<input type="submit" name="logout" value="Logout" />
-		</p>
 </form>
 </div>
 

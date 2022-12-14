@@ -15,7 +15,7 @@ class Role {
 		}
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`) VALUES(?,?,?);");
-		mysqli_stmt_bind_param($stmt,"ssd", $this->name,$this->description,$this->register);
+		mysqli_stmt_bind_param($stmt,"sss", $this->name,$this->description,$this->register);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($c);}
@@ -156,8 +156,6 @@ class Company extends User{
 	public $street;
 	public $postalcode;
 	public $description;
-	public $noofstar;
-	public $noofrate;
 	public $chemicalArray=[];
 	
 	function setCompany($company){
@@ -168,7 +166,10 @@ class Company extends User{
 	}
 	
 	function addCompany($company){
-		$this->setCompany($company);		
+		foreach($company as $key=>$value){
+			$this->$key = $value;
+		}
+		
 		$conn = getdb();
 		parent::addUser($company);
 		$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NAME`,`STREET`, `POSTALCODE`, `DESCRIPTION`, `ADMIN`) VALUES(?,?,?,?,?);");
@@ -234,7 +235,9 @@ class Homeowner extends User{
 	}
 	
 	function addHomeowner($homeowner){
-		$this->setHomeowner($homeowner);
+		foreach($homeowner as $key=>$value){
+			$this->$key = $value;
+		}
 		$this->code = rand(100000,999999);
 		$conn = getdb();
 		parent::addUser($homeowner);
@@ -292,7 +295,10 @@ class Staff extends User{
 	}
 	
 	function addStaff($staff){
-		$this->setStaff($staff);
+		foreach($staff as $key=>$value){
+			$this->$key = $value;
+		}
+		
 		$conn = getdb();
 		if(parent::addUser($staff)){
 			$stmt = mysqli_prepare($conn,"INSERT INTO `Staff` (`ID`, `COMPANY`) SELECT ?,ID FROM COMPANY WHERE ADMIN=?;");
@@ -300,7 +306,6 @@ class Staff extends User{
 			mysqli_stmt_execute($stmt);
 			mysqli_stmt_close($stmt);
 			$_SESSION["addUser"]=true;
-			//check duplicate key
 			header("Location:companyAdmin.php");
 		}
 	}
@@ -316,7 +321,7 @@ class Staff extends User{
 	
 	function getAllTicket(){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT T.ID, U.NAME, T.DATE, P.NAME AS TYPE, T.STATUS, T.DESCRIPTION FROM `USERS` U, `TICKET` T, `TICKETTYPE` P, `STAFF` S WHERE U.ID = T.HOMEOWNER AND T.TYPE = P.ID AND T.CUSTOMERSERVICE = S.ID AND T.STATUS='PENDING' AND S.ID = ?;");
+		$stmt = mysqli_prepare($conn,"SELECT T.ID, U.NAME, T.DATE, P.NAME AS TYPE, T.STATUS, T.DESCRIPTION FROM `USERS` U, `TICKET` T, `TICKETTYPE` P, `STAFF` S WHERE U.ID = T.HOMEOWNER AND T.TYPE = P.ID AND T.CUSTOMERSERVICE = S.ID AND T.STATUS='PENDIN' AND S.ID = ?;");
 		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
@@ -372,16 +377,6 @@ class Ticket{
 		}
 	}
 	
-	function closeTicket(){
-		$conn = getdb();
-		$stmt = mysqli_prepare($conn, "UPDATE `TICKET` SET `STATUS`= 'CLOSE' WHERE `ID` =?;" );
-		mysqli_stmt_bind_param($stmt,"d",$this->id);
-		mysqli_stmt_execute($stmt);
-		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($conn);
-		}
-	}
-	
 	function addChat($text){
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `CHAT` (`TICKET`,`SENDER`,`TEXT`) VALUES (?,?,?)");
@@ -389,7 +384,7 @@ class Ticket{
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($conn);
-		}
+			}
 	}
 	
 	function changeType($type){
@@ -400,34 +395,10 @@ class Ticket{
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
 			$_SESSION["errorView"]=mysqli_error($conn);
-		}
+			}
 	}
 }
 
-class Tikcettype{
-	public $id;
-	public $name;
-	public $description;
-	public $toTech;
-	
-	function setTicketType($tickettype){
-		foreach($tickettype as $key=>$value){
-			$lowerKey = strtolower($key);
-			$this->$lowerKey = $value;
-		}
-	}
-	
-	function addTicketType($tickettype){
-		$this->setTicketType($tickettype);
-		$conn = getdb();
-		$stmt = mysqli_prepare($conn, "INSERT INTO `TICKETTYPE` (`NAME`,`DESCRIPTION`,`TOTECH`) VALUES (?,?,?);" );
-		mysqli_stmt_bind_param($stmt,"ssd",$this->name,$this->description,$this->toTech);
-		mysqli_stmt_execute($stmt);
-		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($conn);
-		}
-	}
-}
 
 class Chat{
 	public $date;
@@ -456,7 +427,10 @@ class Chemical{
 	}
 	
 	function addChemical($chemical){
-		$this->setChemical($chemical);
+		foreach($chemical as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"INSERT INTO `CHEMICAL` (`NAME`,`AMOUNT`,`COMPANY`) SELECT ?,?,COMPANY FROM `STAFF` WHERE `ID`=?");
 		mysqli_stmt_bind_param($stmt,"sdd",$this->name, $this->amount,$_SESSION['loginId']);
@@ -470,7 +444,7 @@ class Chemical{
 class DataManager{
 	public $companyArray=[];
 	public $staffArray=[];
-	public $topCompanyArray=[];
+	public $ticketArray=[];
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
@@ -504,25 +478,6 @@ class DataManager{
 					$s = new Staff();
 					$s->setStaff($r);
 					array_push($this->staffArray,$s);
-				}
-			}
-		}
-	}
-	
-	function getTopCompany($count){
-		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT * FROM COMPANY ORDER BY NOOFSTAR DESC, NOOFRATE DESC LIMIT ?;");
-		mysqli_stmt_bind_param($stmt,"d",$count);
-		mysqli_stmt_execute($stmt);
-		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
-		else{
-			$result = mysqli_stmt_get_result($stmt);		
-			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
-				foreach ($rows as $r) {
-					$c = new Company();
-					$c->setCompany($r);
-					array_push($this->topCompanyArray,$c);
 				}
 			}
 		}

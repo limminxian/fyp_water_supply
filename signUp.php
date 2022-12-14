@@ -2,55 +2,6 @@
 <?php
 include_once 'config.php';
 include_once 'userClass.php';
-?>
-
-<html>
-<title>IT for rent</title> 
-
-  <style>
-  .error{
-  padding: 20px;
-  background-color: #D91D1D; /* red */
-  color: white;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
-
-#homeownerForm {
-	display: none;
-}
-	
-#companyForm {
-	display: none;
-}	
-
-</style>
-<h1>Register</h1>
-<?php
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$email = $_POST['email'];
@@ -85,9 +36,24 @@ if (isset($_POST['submit'])) {
   
 
 ?>
+<html>
+<head>
+<div id="nav-placeholder">
+</div>
 
-<div >
-<form action="" method="post" >
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$(function(){
+  $("#nav-placeholder").load("navBarIndex.php");
+});
+</script>
+
+</head>
+<div class="center bg-img">
+<form action="" method="post" class="formcontainer">
 
 Role:
 <input type="radio" value="companyadmin" id="companyadmin" name="role" onclick="companyFuntion()" required>
@@ -96,43 +62,43 @@ Role:
 
 <input type="radio" value="homeowner" id="homeowner" name="role" onclick="homeownerFuntion()" >
  
- <label for="homeowner">homeowner</label>
+<label for="homeowner">homeowner</label>
  <br>
  
-Userame: <input type="text" name="name" placeholder="Your Name" required ><br>
+Userame: 
+<input class="form" type="text" name="name" placeholder="Your Name" required ><br>
 
-Password: <input type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required ><br>
-Password requirements: Between 8 to 16 characters, at least one uppercase, at least one lowercase, at least one digit, at least one special character
+Password: <input class="form" type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required >
 <br>
-Re-type Password: <input type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
+Re-type Password: <input class="form" type="password" id="repassword" name="repassword" onkeyup="checkPassword()" placeholder="Re-type Password" required ><br>
 
-Phone Number: <input type="text" name="phonenumber" placeholder="Phone Number" oninvalid="this.setCustomValidity('Please insert a valid phone number that starts with 6, 8 or 9 and includes 8 digits');" oninput="setCustomValidity('')" pattern = "^(8|9)\d{7}$" required><br>
+Phone Number: <input class="form" type="text" name="phonenumber" placeholder="Phone Number" oninvalid="this.setCustomValidity('Please insert a valid phone number that starts with 6, 8 or 9 and includes 8 digits');" oninput="setCustomValidity('')" pattern = "^(8|9)\d{7}$" required><br>
 
-E-mail: <input type="email" name="email" placeholder="E-mail Address" required ><br>
+E-mail: <input class="form" type="email" name="email" placeholder="E-mail Address" required ><br>
 
-Street: <input type="text" name="street" placeholder="Street" required><br>
+Street: <input class="form" type="text" name="street" placeholder="Street" required><br>
 
-Postal Code: <input type="text" name="postal" placeholder="Postal code" oninvalid="this.setCustomValidity('Please insert a valid postal code that includes 6 digits');" pattern = "^[1-9]\d{5}$" oninput="setCustomValidity('')" required ><br>
+Postal Code: <input class="form" type="text" name="postal" placeholder="Postal code" oninvalid="this.setCustomValidity('Please insert a valid postal code that includes 6 digits');" pattern = "^[1-9]\d{5}$" oninput="setCustomValidity('')" required ><br>
 
 <div id="companyForm">
 
-Company Name: <input type="text" class="compForm" name="compName" placeholder="Compant Name" required ><br>
+Company Name: <input type="text" class="form compForm" name="compName" placeholder="Compant Name" required ><br>
 
-Decription of Business: <input type="text" class="compForm" name="description" placeholder="Description" ><br>
+Decription of Business: <input type="text" class="form compForm" name="description" placeholder="Description" ><br>
 
-UEN: <input type="text" class="compForm" name="uen" placeholder="UEN" required ><br>
+UEN: <input type="text" class="form compForm" name="uen" placeholder="UEN" required ><br>
 
 </div>
 
 <div id="homeownerForm">
 
-Block: <input type="text" class="homeForm" name="block" placeholder="block" required ><br>
+Block: <input type="text" class="form homeForm" name="block" placeholder="block" required ><br>
 
-Unit no: <input type="number" class="homeForm" name="unit" placeholder="unit no" required><br>
+Unit no: <input type="number" class="form homeForm" name="unit" placeholder="unit no" required><br>
 
 <label for="house">House type:</label>
 
-<select name="house" id="house" class="homeForm"  required>
+<select name="house" id="house" class="form homeForm"  required>
   <option value="oneRoomFlat">1-Room Flat</option>
   <option value="twoRoomFlat">2-Room Flat</option>
   <option value="threeRoomFlat">3-Room Flat</option>
@@ -149,7 +115,7 @@ Unit no: <input type="number" class="homeForm" name="unit" placeholder="unit no"
 </select>
 <br>
 
-No. of people: <input type="number" class="homeForm" name="people" placeholder="No of people" required><br>
+No. of people: <input type="number" class="form homeForm" name="people" placeholder="No of people" required><br>
 
 </div>
 
@@ -157,8 +123,7 @@ No. of people: <input type="number" class="homeForm" name="people" placeholder="
 
 <br>
 
-<input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
-<input type="button" onclick="window.location.href='login.php';" value="Login" />
+<input class="formbutton" type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
 
 </form>
 

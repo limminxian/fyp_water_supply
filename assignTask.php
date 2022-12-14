@@ -11,3 +11,14 @@ Array
 )
 
 compare technician with the date homeowner chose and assign to the one with lesser task
+
+showing which date is allowed
+
+INSERT INTO table (id, name, age) VALUES(1, "A", 19) ON DUPLICATE KEY UPDATE    
+name="A", age=19
+
+comment table
+homeowner company rating text
+
+rate table
+company totalrate rating
