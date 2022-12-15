@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/taskCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="8dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/homeownerTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="2sp"
+            android:layout_marginBottom="5sp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/serviceTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/descTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/addressTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/statusTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="10sp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_marginTop="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_edit"
+            android:background="@null"
+            android:layout_gravity="right"
+            android:layout_marginRight="10sp"/>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
