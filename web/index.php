@@ -94,6 +94,12 @@ $(function(){
 <br>
 <br>
 <br>
+<h2>Homeowner location
+<br>
+<img src="img/homeownerlocation.png" style="width:100%;">
+<br>
+<br>
+<br>
 <div class="aboutContainer">
   <img src="img/homeAboutBack.jpg" style="width:100%;" class="about">
   <div class="text-block">

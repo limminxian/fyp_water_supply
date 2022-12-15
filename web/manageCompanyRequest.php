@@ -92,6 +92,7 @@ foreach($company->companyArray as $c){
 				<?=$c->$prop?>
 			</td>
 		<?php }
+		
 	?>
 	<td>
 		<button  value="<?=base64_encode(serialize($c))?>" name="accept"/>Accept</button>
