@@ -23,10 +23,10 @@
     </string-array>
     <string-array name="address">
         <item>Blk 322 Anson Road #0432 345322</item>
-        <item>Blk 22 Bendemeer Road #1134 342122</item>
-        <item>Blk 12 Serangoon North #0219 340012</item>
-        <item>Blk 123 Anson Road #0312 321123</item>
-        <item>Blk 13 Farrer Park #02-11 321013</item>
+        <item>Blk 322 Anson Road #0532 345322</item>
+        <item>Blk 322 Anson Road #0632 345322</item>
+        <item>Blk 322 Anson Road #0732 345322</item>
+        <item>Blk 322 Anson Road #0832 345322</item>
     </string-array>
     <string-array name="status">
         <item>Open</item>
@@ -34,5 +34,15 @@
         <item>Open</item>
         <item>Close</item>
         <item>Close</item>
+    </string-array>
+    <string-array name="area_array">
+        <item>North</item>
+        <item>East</item>
+        <item>West</item>
+        <item>South</item>
+        <item>North East</item>
+        <item>North West</item>
+        <item>South East</item>
+        <item>South West</item>
     </string-array>
 </resources>

@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,14 +24,20 @@ public class viewWaterUsageActivity extends AppCompatActivity {
     ImageButton logoutBtn;
     TextView month;
     TextView month1;
+    Spinner areaSpinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_water_usage);
+
+        //AREA SPINNER
+        areaSpinner = findViewById(R.id.areaSpinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.area_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        areaSpinner.setAdapter(spinnerAdapter);
+
         name = findViewById(R.id.usernameView);
         logoutBtn = findViewById(R.id.logoutButton);
-        month = findViewById(R.id.waterUsageTV);
-        month1 = findViewById(R.id.waterUsageTV1);
         Intent intent = getIntent();
         String username = intent.getStringExtra("Username String");
         name.setText(String.format("Hello, %s", username));
@@ -37,8 +45,6 @@ public class viewWaterUsageActivity extends AppCompatActivity {
         String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
         String[] splitDate = currentDate.split(",");
         String[] splitMonth = splitDate[0].split(" ");
-        month.setText(String.format("Water usage for %s : litres", splitMonth[0]));
-        month1.setText(String.format("Water usage for %s : 123 litres", splitMonth[0]));
         bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.nearMe);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
