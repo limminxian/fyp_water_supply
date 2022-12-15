@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".viewWaterUsageActivity"
+    android:background="#f1f1f1">
+
+    <TextView
+        android:id="@+id/usernameView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="@color/black"/>
+
+    <ImageButton
+        android:id="@+id/logoutButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/ic_logout"
+        android:background="@null"
+        android:layout_alignRight="@+id/usernameView"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_marginTop="60dp"
+        android:text="Water Usage"
+        android:textColor="@color/black"
+        android:textAlignment="center"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/waterUsageAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="8dp">
+
+        <TextView
+            android:id="@+id/addressTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address: Blk 322 Anson Road #04-32 345322 "
+            android:layout_marginTop="2sp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10sp"
+            android:layout_marginBottom="5sp"
+            android:fontFamily="@font/alegreya_sans"/>
+
+        <TextView
+            android:id="@+id/waterUsageTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10sp"
+            android:fontFamily="@font/alegreya_sans"/>
+
+        <Button
+            android:id="@+id/AddButton"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10sp"
+            android:text="Add"
+            android:textColor="#ffffff"
+            android:background="@color/black"
+            android:fontFamily="@font/alegreya_sans"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/waterUsageEdel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="8dp">
+
+        <TextView
+            android:id="@+id/addressTv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address: Blk 342 Anson Road #03-32 345342 "
+            android:layout_marginTop="2sp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10sp"
+            android:layout_marginBottom="5sp"
+            android:fontFamily="@font/alegreya_sans"/>
+
+        <TextView
+            android:id="@+id/waterUsageTV1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10sp"
+            android:fontFamily="@font/alegreya_sans"/>
+
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_marginTop="35dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="35sp"
+            android:background="@null"
+            android:src="@drawable/ic_edit"
+            android:layout_marginBottom="10dp"/>
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_marginTop="35dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:src="@drawable/ic_delete"
+            android:layout_marginBottom="10dp"/>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue_200"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:menu="@menu/menu"/>
+
+</RelativeLayout>
