@@ -23,16 +23,16 @@
         android:background="@null"
         android:layout_alignRight="@+id/usernameView"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:layout_marginTop="60dp"
-        android:text="Blocks"
-        android:paddingStart="15dp"
-        android:textColor="@color/black"
-        android:textAlignment="textStart"/>
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="25dp"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:text="Blocks"-->
+<!--        android:paddingStart="15dp"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textAlignment="textStart"/>-->
 
     <TextView
         android:id="@+id/textView2"
