@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,11 +22,19 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     TextView name;
     ImageButton logoutBtn;
+    Spinner areaSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_assigned_tasks);
+
+        //AREA SPINNER
+        areaSpinner = findViewById(R.id.areaSpinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.area_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        areaSpinner.setAdapter(spinnerAdapter);
+
         name = findViewById(R.id.usernameView);
         logoutBtn = findViewById(R.id.logoutButton);
         Intent intent = getIntent();

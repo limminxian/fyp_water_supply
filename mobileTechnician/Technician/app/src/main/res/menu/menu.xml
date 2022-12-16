@@ -6,6 +6,6 @@
         android:icon="@drawable/ic_task" />
     <item
         android:id="@+id/nearMe"
-        android:title="View places near me"
-        android:icon="@drawable/ic_near_me" />
+        android:title="Water Usage"
+        android:icon="@drawable/ic_water_usage" />
 </menu>
