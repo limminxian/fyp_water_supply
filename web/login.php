@@ -45,8 +45,6 @@ $(function(){
  <?php
 $check = true;
 
-createTables();
-createSuperadmin();
 
 //Submission of the form
 if(isset($_POST["submit"])) {
