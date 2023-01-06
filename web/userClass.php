@@ -231,7 +231,7 @@ class Homeowner extends User{
 	public $street;
 	public $postalcode;
 	public $housetype;
-	public $people;
+	public $noofpeople;
 	public $code;
 	
 	function setHomeowner($homeowner){
@@ -476,10 +476,12 @@ class Chemical{
 }
 
 class DataManager{
+	public $pendingCompanyArray=[];
 	public $companyArray=[];
 	public $staffArray=[];
 	public $topCompanyArray=[];
 	public $roleArray=[];
+	public $homeownerArray=[];
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
@@ -493,7 +495,43 @@ class DataManager{
 				foreach ($rows as $r) {
 					$c = new Company();
 					$c->setCompany($r);
+					array_push($this->pendingCompanyArray,$c);
+				}
+			}
+		}
+	}
+	
+	function getAllCompany(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USERS` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN'AND U.ID = C.ADMIN;");
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Company();
+					$c->setCompany($r);
 					array_push($this->companyArray,$c);
+				}
+			}
+		}
+	}
+	
+	function getAllHomeowner(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,BLOCKNO,UNITNO,STREET,POSTALCODE,HOUSETYPE,NOOFPEOPLE,STATUS FROM `USERS` U, `HOMEOWNER` H, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='HOMEOWNER' AND U.ID = H.ID;");
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$h = new Homeowner();
+					$h->setHomeowner($r);
+					array_push($this->homeownerArray,$h);
 				}
 			}
 		}

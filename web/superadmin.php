@@ -44,13 +44,100 @@ else{
 </div>
 
 <div id="Company" class="tabcontent">
-  <h3>Company</h3>
-  <p>Company</p>
+	<?php
+	$company = new DataManager();
+	$company->getAllCompany();
+	?>
+	<br>
+	<table>
+	  <tr>
+		<th>Company Admin</th>
+		<th>Name</th>
+		<th>Number</th>
+		<th>Email</th>
+		<th>Street</th>
+		<th>Postal Code</th>
+		<th>Description</th>
+		<th>Status</th>
+		<th></th>
+		<th></th>
+	  </tr>	
+	  <form action="" method="post">
+	<?php
+	foreach($company->companyArray as $c){
+		?>
+	  <tr>
+		<?php
+			$properties = array('id', 'name', 'number', 'email', 'street', 'postalcode', 'description', 'status');
+			foreach ($properties as $prop) {?>
+				<td>
+					<?=$c->$prop?>
+				</td>
+			<?php }
+		?>
+		<td>
+			<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+		</td>
+		<td>
+			<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+		</td>
+		</tr>
+	  <?php
+	}
+	?>
+
+	</form>
+	</table>
 </div>
 
 <div id="Homeowner" class="tabcontent">
-  <h3>Homeowner</h3>
-  <p>Homeowner</p> 
+	    
+    <?php
+	$homeowner = new DataManager();
+	$homeowner->getAllHomeowner();
+	?>
+	<br>
+	<table>
+	  <tr>
+		<th>Company Admin</th>
+		<th>Name</th>
+		<th>Number</th>
+		<th>Email</th>
+		<th>Unit No</th>
+		<th>Street</th>
+		<th>Postal Code</th>
+		<th>House Type</th>
+		<th>No of people</th>
+		<th>Status</th>
+		<th></th>
+		<th></th>
+	  </tr>	
+	  <form action="" method="post">
+	<?php
+	foreach($homeowner->homeownerArray as $h){
+		?>
+	  <tr>
+		<?php
+			$properties = array('id', 'name', 'number', 'email', 'unitno', 'street', 'postalcode', 'housetype', 'noofpeople', 'status' );
+			foreach ($properties as $prop) {?>
+				<td>
+					<?=$h->$prop?>
+				</td>
+			<?php }
+		?>
+		<td>
+			<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+		</td>
+		<td>
+			<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+		</td>
+		</tr>
+	  <?php
+	}
+	?>
+
+	</form>
+	</table>
 </div>
 
 <script>
