@@ -58,40 +58,16 @@
             app:layout_constraintVertical_bias="0.125" />
 
         <TextView
-            android:id="@+id/usernameMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Username:"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.197"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileTitle" />
-
-        <TextView
-            android:id="@+id/usernameTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="username"
-            android:fontFamily="serif"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/usernameMsg"
-            app:layout_constraintHorizontal_bias="0.124"
-            app:layout_constraintStart_toStartOf="@+id/usernameMsg"
-            app:layout_constraintTop_toBottomOf="@+id/usernameMsg"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
             android:id="@+id/nameMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/usernameTxt"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/usernameTxt"
-            app:layout_constraintTop_toBottomOf="@+id/usernameTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.197"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileTitle"
+            app:layout_constraintVertical_bias="0.037" />
 
         <TextView
             android:id="@+id/nameTxt"

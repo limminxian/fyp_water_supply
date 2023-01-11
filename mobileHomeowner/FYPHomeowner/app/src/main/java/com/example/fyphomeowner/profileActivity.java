@@ -6,23 +6,50 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class profileActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView imageMenuView;
+    private String name;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+
+        //if user is logged out, redirect them to the login activity
+        if (sharedPreferences.getString("logged", "false").equals("false")) {
+            openLoginPage();
+        }
+
+        fetchData();
+        Log.d("success", "name is " + name);
+
 
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -72,6 +99,49 @@ public class profileActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void fetchData(){
+        //CONNECT DB
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "http://192.168.0.106/login-registration-android/profileRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //changing the response to a JSONobject because the php file is response is a JSON file
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if (status.equals("success")){
+                                name = jsonObject.getString("name");
+                                Log.d("not success yet", "name is " + name);
+                            }
+                            else {
+                                Log.d("error", message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferences.getString("userID",""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+
+
 
     //REDIRECT METHODS
     public void openHomePage(){
