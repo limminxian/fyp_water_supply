@@ -18,7 +18,7 @@
 <body>
 <?php 
 include_once 'userClass.php';
-$_SESSION["page"]="manageRole";
+$_SESSION["page"]="manageServiceSuperadmin";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -39,7 +39,7 @@ $role->getAllRole();
 ?>
 <br>
 
-<a class="rightButton" href="createRole.php">Add new role</a>
+<a class="rightButton" href="createRole.php">Add new service</a>
 
 <table>
   <tr>

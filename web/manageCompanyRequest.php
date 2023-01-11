@@ -82,7 +82,7 @@ if (isset($_POST["reject"])){
 ?>
   <form action="" method="post">
 <?php
-foreach($company->companyArray as $c){
+foreach($company->pendingCompanyArray as $c){
 	?>
   <tr>
 	<?php
@@ -103,6 +103,7 @@ foreach($company->companyArray as $c){
   </tr><?php
 }?>
 </form>
+</table>
 </body>
 <?php }
 ?>

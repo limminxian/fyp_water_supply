@@ -15,5 +15,9 @@ $(function(){
 <img src="img/QRcode.png" >
 <?php
 session_start();
+if(isset($_POST["logout"])){
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 $_SESSION["page"]="downloadTech";
 ?>
