@@ -33,7 +33,7 @@ public class verificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verification);
         verificationBtn = findViewById(R.id.verificationBtn);
         verificationCode = findViewById(R.id.verificationTxt);
-        sharedPreferences = getSharedPreferences("registrationPref", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("verificationPref", MODE_PRIVATE);
 
 
         verificationBtn.setOnClickListener(new View.OnClickListener() {

@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
-            android:text="Hello,"
+            android:text="Hello, "
             android:textColor="#04C9E1"
             android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -269,10 +269,8 @@
             app:layout_constraintTop_toBottomOf="@+id/houseTypeMsg"
             app:layout_constraintVertical_bias="0.05" />
 
-
-
         <TextView
-            android:id="@+id/householdSizeMsg2"
+            android:id="@+id/householdSizeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
@@ -291,6 +289,7 @@
             android:backgroundTint="#02628E"
             android:text="Edit Profile"
             android:textAllCaps="false"
+            android:onClick="openEditProfilePage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.518"
@@ -315,7 +314,7 @@
             android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/householdSizeMsg2"
+            app:layout_constraintEnd_toEndOf="@+id/householdSizeTxt"
             app:layout_constraintHorizontal_bias="0.013"
             app:layout_constraintStart_toStartOf="@+id/householdSizeMsg"
             app:layout_constraintTop_toBottomOf="@+id/householdSizeMsg"

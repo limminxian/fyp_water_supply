@@ -28,9 +28,13 @@ import java.util.Map;
 
 public class loginActivity extends AppCompatActivity implements View.OnClickListener{
 
-    EditText emailTxt;
-    EditText passwordTxt;
-    SharedPreferences sharedPreferences;
+    private EditText emailTxt;
+    private EditText passwordTxt;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences verificationSharedPreferences;
+    private Button loginBtn;
+    private Button verificationBtn;
+    private Button registerPageBtn;
 
     @Override
     public void onClick(View view){
@@ -51,17 +55,25 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onResponse(String response) {
                             try{
-                                //Log.i("tagconvertstr", "["+response+"]");
+                                Log.i("tagconvertstr", "["+response+"]");
                                 JSONObject jsonObject = new JSONObject(response);
                                 String status = jsonObject.getString("status");
                                 String message = jsonObject.getString("message");
-                                String userID = jsonObject.getString("userID");
                                 if(status.equals("success")){
+                                    String userID = jsonObject.getString("userID");
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("logged", "true");
                                     editor.putString("userID", userID);
                                     editor.apply();
                                     openHomePage();
+                                }
+                                else if(status.equals("verify")){
+                                    String email = jsonObject.getString("email");
+                                    verificationBtn.setVisibility(View.VISIBLE);
+                                    SharedPreferences.Editor editor = verificationSharedPreferences.edit();
+                                    editor.putString("email", email);
+                                    editor.apply();
+                                    Toast.makeText(loginActivity.this, "Please verify acc first", Toast.LENGTH_SHORT).show();
                                 }
                                 else{
                                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -92,6 +104,9 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                 //end of creating post req
 
                 break;
+            case R.id.verificationBtn:
+                openVerificationPage();
+                break;
             case R.id.registerPageBtn:
                 openRegisterPage();
                 break;
@@ -104,11 +119,17 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Button loginBtn = findViewById(R.id.loginBtn);
-        Button registerPageBtn = findViewById(R.id.registerPageBtn);
+        loginBtn = findViewById(R.id.loginBtn);
+        verificationBtn = findViewById(R.id.verificationBtn);
+        registerPageBtn = findViewById(R.id.registerPageBtn);
+
         sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        verificationSharedPreferences = getSharedPreferences("verificationPref", MODE_PRIVATE);
+
         registerPageBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
+        verificationBtn.setOnClickListener(this);
+        verificationBtn.setVisibility(View.GONE);
 
         //if user is logged in, then redirect to the main activity
         if (sharedPreferences.getString("logged","false").equals("true")){
@@ -135,6 +156,11 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
     public void openHomePage(){
         Intent intent = new Intent(this, dashboardActivity.class);
+        startActivity(intent);
+    }
+
+    public void openVerificationPage(){
+        Intent intent = new Intent(this,  verificationActivity.class);
         startActivity(intent);
     }
 }

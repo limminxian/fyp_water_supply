@@ -57,7 +57,7 @@ public class registerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         houseTypesSpinner = findViewById(R.id.houseTypesSpinner);
         householdSizePicker = findViewById(R.id.householdSizePicker);
-        sharedPreferences = getSharedPreferences("registrationPref", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("verificationPref", MODE_PRIVATE);
 
         //RE-ENTER PASSWORD LISTENER        [prompts user for same re-enter password]
         //Define password edittext variables
@@ -92,7 +92,7 @@ public class registerActivity extends AppCompatActivity {
         //NUMBER PICKER
         //Set min max for the number picker
         householdSizePicker.setMinValue(1);
-        householdSizePicker.setMaxValue(10);
+        householdSizePicker.setMaxValue(20);
         //set what to when the number changes
         householdSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -148,6 +148,7 @@ public class registerActivity extends AppCompatActivity {
                 //paramV.put("username", String.valueOf(usernameTxt.getText()));
                 paramV.put("name", String.valueOf(nameTxt.getText()));
                 paramV.put("password", String.valueOf(passwordTxt.getText()));
+                paramV.put("retypePassword", String.valueOf(retypePasswordTxt.getText()));
                 paramV.put("email", String.valueOf(emailTxt.getText()));
                 paramV.put("street", String.valueOf(streetTxt.getText()));
                 paramV.put("blockNo", String.valueOf(blockNoTxt.getText()));
