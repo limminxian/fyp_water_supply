@@ -29,24 +29,23 @@ if( !empty($_POST['name']) &&
 	$verificationCode = null;
 	
     if ($connection) {
+		//find homeowner roles ID
+		$getRoleSQL = "SELECT ID FROM ROLE WHERE NAME = 'homeowner'";
+		$roleSQL = mysqli_query($connection, $getRoleSQL);
+		$userRole = mysqli_fetch_row($roleSQL)[0];
+		
+		//Create the user in the db. Status pending until email verified
+		$createUserSQL = "INSERT INTO USERS (NAME, NUMBER, EMAIL, PASSWORD, TYPE, STATUS)
+							VALUES('".$name."',
+									'".$phoneNo."',
+									'".$email."',
+									'".$password."',
+									'".$userRole."',
+									'PENDING')";
 		
 		if($password == $retypePassword){
 		
 			$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-			
-					//find homeowner roles ID
-			$getRoleSQL = "SELECT ID FROM ROLE WHERE NAME = 'homeowner'";
-			$roleSQL = mysqli_query($connection, $getRoleSQL);
-			$userRole = mysqli_fetch_row($roleSQL)[0];
-			
-			//Create the user in the db. Status pending until email verified
-			$createUserSQL = "INSERT INTO USERS (NAME, NUMBER, EMAIL, PASSWORD, TYPE, STATUS)
-								VALUES('".$name."',
-										'".$phoneNo."',
-										'".$email."',
-										'".$password."',
-										'".$userRole."',
-										'PENDING')";
 		
 			if(mysqli_query($connection, $createUserSQL)){
 				

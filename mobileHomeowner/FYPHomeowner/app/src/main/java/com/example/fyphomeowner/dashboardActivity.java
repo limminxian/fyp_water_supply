@@ -94,6 +94,7 @@ public class dashboardActivity extends AppCompatActivity implements View.OnClick
                         openLoginPage();
                         editor.putString("logged", "false");
                         editor.apply();
+                        finish();
                         break;
                     default:
                         break;

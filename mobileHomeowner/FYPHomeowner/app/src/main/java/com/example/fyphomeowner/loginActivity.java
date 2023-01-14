@@ -1,6 +1,7 @@
 package com.example.fyphomeowner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 import android.content.Intent;
@@ -9,8 +10,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -35,12 +38,21 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginBtn;
     private Button verificationBtn;
     private Button registerPageBtn;
+    private TextView forgotPasswordMsg;
+    private Button forgotPasswordBtn;
+    InputMethodManager imm;
 
     @Override
     public void onClick(View view){
         switch(view.getId()){
             case R.id.loginBtn:
-                // verify login method
+                //CLOSE KEYBOARD
+                try{
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+                catch(Exception e){
+                }
+
                 emailTxt = findViewById(R.id.emailTxt);
                 passwordTxt = findViewById(R.id.passwordTxt);
                 String email = String.valueOf(emailTxt.getText());
@@ -48,7 +60,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
                 //Creating a post request
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://192.168.1.168/fyp/loginRequest.php";
+                String url ="http://192.168.56.1/fyp/loginRequest.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
@@ -74,6 +86,13 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                     editor.putString("email", email);
                                     editor.apply();
                                     Toast.makeText(loginActivity.this, "Please verify acc first", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(status.equals("wrong password")){
+
+                                    forgotPasswordMsg.setVisibility(View.VISIBLE);
+                                    forgotPasswordBtn.setVisibility(View.VISIBLE);
+
+                                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
                                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
@@ -122,7 +141,9 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn = findViewById(R.id.loginBtn);
         verificationBtn = findViewById(R.id.verificationBtn);
         registerPageBtn = findViewById(R.id.registerPageBtn);
-
+        forgotPasswordMsg = findViewById(R.id.forgotPasswordMsg);
+        forgotPasswordBtn = findViewById(R.id.forgotPasswordBtn);
+        imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
         verificationSharedPreferences = getSharedPreferences("verificationPref", MODE_PRIVATE);
 
@@ -130,6 +151,8 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn.setOnClickListener(this);
         verificationBtn.setOnClickListener(this);
         verificationBtn.setVisibility(View.GONE);
+        forgotPasswordMsg.setVisibility(View.GONE);
+        forgotPasswordBtn.setVisibility(View.GONE);
 
         //if user is logged in, then redirect to the main activity
         if (sharedPreferences.getString("logged","false").equals("true")){
