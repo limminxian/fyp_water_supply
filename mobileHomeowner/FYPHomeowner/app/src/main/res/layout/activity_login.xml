@@ -24,11 +24,11 @@
         app:layout_constraintVertical_bias="0.15" />
 
     <EditText
-        android:id="@+id/usernameTxt"
+        android:id="@+id/emailTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="username"
+        android:hint="email"
         android:inputType="textPersonName"
         android:textColor="#0583BC"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/emailTxt"
         app:layout_constraintVertical_bias="0.04" />
 
     <TextView
@@ -80,6 +80,49 @@
         app:layout_constraintStart_toEndOf="@+id/registerMsg"
         app:layout_constraintTop_toTopOf="@+id/registerMsg"
         app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/forgotPasswordMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="forgot password?"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerMsg"
+        app:layout_constraintVertical_bias="0.208" />
+
+
+    <Button
+        android:id="@+id/forgotPasswordBtn"
+        android:layout_width="112dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="10dp"
+        android:backgroundTint="#02628E"
+        android:text="Click here"
+        android:textAllCaps="false"
+        android:textColorLink="#9C2E2E"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/forgotPasswordMsg"
+        app:layout_constraintStart_toEndOf="@+id/forgotPasswordMsg"
+        app:layout_constraintTop_toTopOf="@+id/forgotPasswordMsg" />
+
+    <Button
+        android:id="@+id/verificationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="38dp"
+        android:backgroundTint="#d12828"
+        android:text="Verify account"
+        android:textAllCaps="false"
+        android:textColorLink="#8f3232"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/loginBtn"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="@+id/loginBtn"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/loginBtn"

@@ -3,8 +3,10 @@ package com.example.fyphomeowner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,15 +19,23 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import kotlin.jvm.Volatile;
 
 
 public class registerActivity extends AppCompatActivity {
     //Define variables
-    private EditText usernameTxt;
-    private EditText passwordTxt;           //need encrypt
+    private EditText passwordTxt;
     private EditText retypePasswordTxt;     //need validate against pwd
     private EditText emailTxt;
     private EditText streetTxt;
@@ -38,15 +48,16 @@ public class registerActivity extends AppCompatActivity {
     private int householdSizeVal;
     private Spinner houseTypesSpinner;              //need to implement get the information
     private NumberPicker householdSizePicker;
-    public static ArrayList<Homeowner> tempHomeownerDB;
+    //public static ArrayList<Homeowner> tempHomeownerDB;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         houseTypesSpinner = findViewById(R.id.houseTypesSpinner);
         householdSizePicker = findViewById(R.id.householdSizePicker);
+        sharedPreferences = getSharedPreferences("verificationPref", MODE_PRIVATE);
 
         //RE-ENTER PASSWORD LISTENER        [prompts user for same re-enter password]
         //Define password edittext variables
@@ -81,7 +92,7 @@ public class registerActivity extends AppCompatActivity {
         //NUMBER PICKER
         //Set min max for the number picker
         householdSizePicker.setMinValue(1);
-        householdSizePicker.setMaxValue(10);
+        householdSizePicker.setMaxValue(20);
         //set what to when the number changes
         householdSizePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -92,8 +103,7 @@ public class registerActivity extends AppCompatActivity {
     }
 
     public void onRegisterBtnClick(View view) {
-        usernameTxt = findViewById(R.id.usernameTxt);
-        passwordTxt = findViewById(R.id.passwordTxt);
+        passwordTxt = findViewById(R.id.passwordTxt);                   //implement retype password verification in php file
         retypePasswordTxt = findViewById(R.id.retypePasswordTxt);
         emailTxt = findViewById(R.id.emailTxt);
         streetTxt = findViewById(R.id.streetTxt);
@@ -105,49 +115,97 @@ public class registerActivity extends AppCompatActivity {
         houseTypeVal = houseTypesSpinner.getSelectedItem().toString();
         householdSizeVal = householdSizePicker.getValue();
 
-        ArrayList<EditText> inputs = new ArrayList<EditText>();
-        inputs.add(usernameTxt);
-        inputs.add(passwordTxt);
-        inputs.add(retypePasswordTxt);
-        inputs.add(emailTxt);
-        inputs.add(streetTxt);
-        inputs.add(blockNoTxt);
-        inputs.add(unitNoTxt);
-        inputs.add(postalCodeTxt);
-        inputs.add(phoneNoTxt);
-        inputs.add(nameTxt);
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "http://192.168.1.168/fyp/registerRequest.php";
 
-        if(verifyReEnterPassword(passwordTxt.getText().toString(), retypePasswordTxt.getText().toString())){
-            if(checkNull(inputs)){
-                //Toast.makeText(this, String.valueOf(householdSizeVal), Toast.LENGTH_SHORT).show();
-                // Verify email
-                // Add popup for email 2FA
-                showPopupWindowClick(view);
-                // Verify 2FA code
-                // Success message, then link to login page
-//                Homeowner homeowner = createAcc(nameTxt, emailTxt, passwordTxt, phoneNoTxt, streetTxt, blockNoTxt, unitNoTxt, postalCodeTxt, houseTypeVal, householdSizeVal);
-//                tempHomeownerDB.add(homeowner);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //checking response for success directly because php file echos "success"
+                        if (response.equals("success")) {
+                            //Store the email of user to the verification page
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("email", String.valueOf(emailTxt.getText()));
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), "Registrations successful", Toast.LENGTH_SHORT).show();
+                            showPopupWindowClick(view);
+                            Log.d("tag", "verification page opening");
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
-        }
+        }) {
+            //Sends data towards the php file to process
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                //paramV.put("username", String.valueOf(usernameTxt.getText()));
+                paramV.put("name", String.valueOf(nameTxt.getText()));
+                paramV.put("password", String.valueOf(passwordTxt.getText()));
+                paramV.put("retypePassword", String.valueOf(retypePasswordTxt.getText()));
+                paramV.put("email", String.valueOf(emailTxt.getText()));
+                paramV.put("street", String.valueOf(streetTxt.getText()));
+                paramV.put("blockNo", String.valueOf(blockNoTxt.getText()));
+                paramV.put("unitNo", String.valueOf(unitNoTxt.getText()));
+                paramV.put("postalCode", String.valueOf(postalCodeTxt.getText()));
+                paramV.put("phoneNo", String.valueOf(phoneNoTxt.getText()));
+                paramV.put("houseType", houseTypeVal);
+                paramV.put("householdSize", String.valueOf(householdSizeVal));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+
+//        ArrayList<EditText> inputs = new ArrayList<EditText>();
+//        inputs.add(usernameTxt);
+//        inputs.add(passwordTxt);
+//        inputs.add(retypePasswordTxt);
+//        inputs.add(emailTxt);
+//        inputs.add(streetTxt);
+//        inputs.add(blockNoTxt);
+//        inputs.add(unitNoTxt);
+//        inputs.add(postalCodeTxt);
+//        inputs.add(phoneNoTxt);
+//        inputs.add(nameTxt);
+//
+//        if(verifyReEnterPassword(passwordTxt.getText().toString(), retypePasswordTxt.getText().toString())){
+//            if(checkNull(inputs)){
+//                //Toast.makeText(this, String.valueOf(householdSizeVal), Toast.LENGTH_SHORT).show();
+//                // Verify email
+//                // Add popup for email 2FA
+//                showPopupWindowClick(view);
+//                // Verify 2FA code
+//                // Success message, then link to login page
+////                Homeowner homeowner = createAcc(nameTxt, emailTxt, passwordTxt, phoneNoTxt, streetTxt, blockNoTxt, unitNoTxt, postalCodeTxt, houseTypeVal, householdSizeVal);
+////                tempHomeownerDB.add(homeowner);
+//            }
+//        }
+
     }
 
-    public boolean checkNull(ArrayList<EditText> inputs){
-        boolean bool = false;
-
-        for(int i = 0; i < inputs.size(); i++){
-            EditText currInput = inputs.get(i);
-
-            if(!TextUtils.isEmpty(currInput.getText().toString())){
-                bool = true;
-            }
-            else{
-                Toast.makeText(this,"Empty field, please fill in.", Toast.LENGTH_SHORT).show();
-                bool = false;
-                break;
-            }
-        }
-        return bool;
-    }
+//    public boolean checkNull(ArrayList<EditText> inputs){
+//        boolean bool = false;
+//
+//        for(int i = 0; i < inputs.size(); i++){
+//            EditText currInput = inputs.get(i);
+//
+//            if(!TextUtils.isEmpty(currInput.getText().toString())){
+//                bool = true;
+//            }
+//            else{
+//                Toast.makeText(this,"Empty field, please fill in.", Toast.LENGTH_SHORT).show();
+//                bool = false;
+//                break;
+//            }
+//        }
+//        return bool;
+//    }
 
     public boolean verifyReEnterPassword(String pwd, String repwd){
         boolean bool;
@@ -162,21 +220,21 @@ public class registerActivity extends AppCompatActivity {
         return bool;
     }
 
-    public Homeowner createAcc(EditText name, EditText email, EditText password, EditText phoneNoTxt, EditText street, EditText blkNo, EditText unitNo,
-                               EditText postalCodeTxt, String houseTypeString, int householdSize){
-
-        int phoneNo = Integer.parseInt(phoneNoTxt.getText().toString());
-        int postalCode = Integer.parseInt(postalCodeTxt.getText().toString());
-        Status status = Status.notValidated;
-        Role type = Role.homeowner;
-        Company subscribedCompany = null;
-        HouseType houseType = HouseType.valueOf(houseTypeString);
-
-        Homeowner homeowner = new Homeowner(name.getText().toString(), email.getText().toString(), password.getText().toString(), status, type,
-                phoneNo, street.getText().toString(), blkNo.getText().toString(), unitNo.getText().toString(), postalCode, houseType, householdSize, subscribedCompany);
-
-        return homeowner;
-    }
+//    public Homeowner createAcc(EditText name, EditText email, EditText password, EditText phoneNoTxt, EditText street, EditText blkNo, EditText unitNo,
+//                               EditText postalCodeTxt, String houseTypeString, int householdSize){
+//
+//        int phoneNo = Integer.parseInt(phoneNoTxt.getText().toString());
+//        int postalCode = Integer.parseInt(postalCodeTxt.getText().toString());
+//        Status status = Status.notValidated;
+//        Role type = Role.homeowner;
+//        Company subscribedCompany = null;
+//        HouseType houseType = HouseType.valueOf(houseTypeString);
+//
+//        Homeowner homeowner = new Homeowner(name.getText().toString(), email.getText().toString(), password.getText().toString(), status, type,
+//                phoneNo, street.getText().toString(), blkNo.getText().toString(), unitNo.getText().toString(), postalCode, houseType, householdSize, subscribedCompany);
+//
+//        return homeowner;
+//    }
 
     //Popup window method
     public void showPopupWindowClick(View view) {

@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +27,16 @@ public class dashboardActivity extends AppCompatActivity implements View.OnClick
     private CardView cardTickets;
     private CardView cardViewBusinesses;
 
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         //CardView onClickListener
         cardProfile = findViewById(R.id.cardProfile);
@@ -86,6 +92,9 @@ public class dashboardActivity extends AppCompatActivity implements View.OnClick
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;

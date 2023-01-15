@@ -22,21 +22,6 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <EditText
-        android:id="@+id/usernameTxt"
-        android:layout_width="355dp"
-        android:layout_height="37dp"
-        android:ems="10"
-        android:hint="username"
-        android:inputType="textPersonName"
-        android:textColor="#0583BC"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/registrationTitle"
-        app:layout_constraintStart_toStartOf="@+id/registrationTitle"
-        app:layout_constraintTop_toBottomOf="@+id/registrationTitle"
-        app:layout_constraintVertical_bias="0.032" />
-
-    <EditText
         android:id="@+id/passwordTxt"
         android:layout_width="355dp"
         android:layout_height="37dp"
@@ -46,11 +31,11 @@
         android:textColor="#0583BC"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/usernameTxt"
+        app:layout_constraintEnd_toEndOf="@+id/nameTxt"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/usernameTxt"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTxt"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintStart_toStartOf="@+id/nameTxt"
+        app:layout_constraintTop_toBottomOf="@+id/nameTxt"
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/retypePasswordTxt"
@@ -158,10 +143,11 @@
         android:textColor="#0583BC"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/nameTxt"
-        app:layout_constraintStart_toStartOf="@+id/nameTxt"
-        app:layout_constraintTop_toBottomOf="@+id/nameTxt"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintEnd_toEndOf="@+id/retypePasswordTxt"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/retypePasswordTxt"
+        app:layout_constraintTop_toBottomOf="@+id/retypePasswordTxt"
+        app:layout_constraintVertical_bias="0.029" />
 
     <EditText
         android:id="@+id/nameTxt"
@@ -173,11 +159,10 @@
         android:textColor="#0583BC"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/retypePasswordTxt"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/retypePasswordTxt"
-        app:layout_constraintTop_toBottomOf="@+id/retypePasswordTxt"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintEnd_toEndOf="@+id/registrationTitle"
+        app:layout_constraintStart_toStartOf="@+id/registrationTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.144" />
 
     <Spinner
         android:id="@+id/houseTypesSpinner"
