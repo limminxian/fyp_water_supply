@@ -11,14 +11,14 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script>
 	$(function(){
-	  $("#nav-placeholder").load("navBarSuper.php");
+	  $("#nav-placeholder").load("navBarTech.php");
 	});
 	</script>
 </head>
 <body>
 <?php 
 include_once 'userClass.php';
-$_SESSION["page"]="manageServiceSuperadmin";
+$_SESSION["page"]="viewEquipment";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -30,49 +30,52 @@ if(!isset($_SESSION['loginId'])){
 } 
 else{
 	if(isset($_POST["logout"])){
-		unset($_SESSION["loginId"]);
-		header("Location: login.php");
-	}
+	unset($_SESSION["loginId"]);
+	header("Location: login.php");
+}
 
-	if (isset($_POST["edit"])){
-		$t = unserialize(base64_decode($_POST["edit"]));
-		$_SESSION["service"]=$t;
-		header("Location: editServiceDetails.php");
-	}
-	
-$service = new DataManager();
-$service->getAllService();
+if (isset($_POST["view"])){
+	$t = unserialize(base64_decode($_POST["view"]));
+	$_SESSION["equiptype"]=$t;
+	header("Location: viewEquipmentStock.php");
+}
+
+$equipment = new Company();
+$equipment->getAllequipment();
 ?>
 <br>
-
-<a class="rightButton" href="createService.php">Add new service</a>
-
 <table>
   <tr>
     <th>ID</th>
     <th>Name</th>
-    <th>Description</th>
+    <th>Stock</th>
     <th></th>
     <th></th>
+    <th></th>
+	<th></th>
   </tr>	
   <form action="" method="post">
+  	<a class="rightButton" href="addChemical.php">Add new equipment</a>
 <?php
-foreach($service->serviceArray as $r){
+foreach($equipment->equipmentArray as $c){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'description');
+		$properties = array('id', 'name', 'amount');
 		foreach ($properties as $prop) {?>
 			<td>
-				<?=$r->$prop?>
+				<?=$c->$prop?>
 			</td>
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="view"/>View equipment stock</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+	</td>
+	<td>
+		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
 	</td>
 	</tr>
   <?php
@@ -80,7 +83,6 @@ foreach($service->serviceArray as $r){
 ?>
 
 </form>
-</table>
 </div>
 
 <?php 

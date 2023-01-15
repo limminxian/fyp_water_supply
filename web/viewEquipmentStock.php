@@ -11,14 +11,14 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script>
 	$(function(){
-	  $("#nav-placeholder").load("navBarSuper.php");
+	  $("#nav-placeholder").load("navBarTech.php");
 	});
 	</script>
 </head>
 <body>
 <?php 
 include_once 'userClass.php';
-$_SESSION["page"]="manageServiceSuperadmin";
+$_SESSION["page"]="viewEquipment";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -34,45 +34,46 @@ else{
 		header("Location: login.php");
 	}
 
-	if (isset($_POST["edit"])){
-		$t = unserialize(base64_decode($_POST["edit"]));
-		$_SESSION["service"]=$t;
-		header("Location: editServiceDetails.php");
-	}
-	
-$service = new DataManager();
-$service->getAllService();
+$equipment = new Equipment();
+$equipment->getAllEquipment($_SESSION["equiptype"]->id);
+if (isset($_POST["add"])){
+	header("Location: addEquipmentStock.php");
+}
+
+if (isset($_POST["csv"])){
+	header("Location: addEquipmentCSV.php");
+}
+
 ?>
 <br>
-
-<a class="rightButton" href="createService.php">Add new service</a>
-
 <table>
   <tr>
     <th>ID</th>
-    <th>Name</th>
-    <th>Description</th>
+    <th>serial</th>
+    <th>purchasedate</th>
     <th></th>
     <th></th>
   </tr>	
   <form action="" method="post">
+  	<button name="add"/>Add new stock</button>
+  	<button name="csv"/>Add new stocks by batch (CSV)</button>
 <?php
-foreach($service->serviceArray as $r){
+foreach($equipment->equipmentArray as $c){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'description');
+		$properties = array('id', 'serial', 'purchasedate');
 		foreach ($properties as $prop) {?>
 			<td>
-				<?=$r->$prop?>
+				<?=$c->$prop?>
 			</td>
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
 	</td>
 	</tr>
   <?php
@@ -80,7 +81,6 @@ foreach($service->serviceArray as $r){
 ?>
 
 </form>
-</table>
 </div>
 
 <?php 

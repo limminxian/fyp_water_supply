@@ -11,14 +11,14 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script>
 	$(function(){
-	  $("#nav-placeholder").load("navBarSuper.php");
+	  $("#nav-placeholder").load("navBarComp.php");
 	});
 	</script>
 </head>
 <body>
 <?php 
 include_once 'userClass.php';
-$_SESSION["page"]="manageServiceSuperadmin";
+$_SESSION["page"]="manageServiceCompany";
 if(!isset($_SESSION['loginId'])){
 	echo "Not allowed! Please login!";
 	?>
@@ -40,19 +40,26 @@ else{
 		header("Location: editServiceDetails.php");
 	}
 	
-$service = new DataManager();
+	if (isset($_POST["rates"])){
+		$t = unserialize(base64_decode($_POST["rates"]));
+		$_SESSION["service"]=$t;
+		header("Location: viewServiceRates.php");
+	}
+	
+$service = new Company();
 $service->getAllService();
 ?>
 <br>
 
-<a class="rightButton" href="createService.php">Add new service</a>
+<a class="rightButton" href="createServiceComp.php">Add new service</a>
 
 <table>
   <tr>
-    <th>ID</th>
     <th>Name</th>
     <th>Description</th>
-    <th></th>
+    <th>Latest rate</th>
+	<th></th>
+	<th></th>
     <th></th>
   </tr>	
   <form action="" method="post">
@@ -61,21 +68,32 @@ foreach($service->serviceArray as $r){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'description');
+		$properties = array('name', 'description', 'rate');
+		
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$r->$prop?>
 			</td>
-		<?php }
-	?>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
-	</td>
-	</tr>
-  <?php
+		<?php }?>
+			<td>
+				<button  value="<?=base64_encode(serialize($r))?>" name="rates"/>rates</button>
+			</td>
+			<?php
+		if(strcmp($r->createdby,"1")!=0){
+			
+			?>
+			<td>
+				<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
+			</td>
+			<td>
+				<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
+			</td>
+			<?php
+		}
+		else{?>
+			<td></td><td></td></tr>
+			<?php
+		}
 }
 ?>
 

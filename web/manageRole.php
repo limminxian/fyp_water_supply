@@ -30,9 +30,15 @@ if(!isset($_SESSION['loginId'])){
 } 
 else{
 	if(isset($_POST["logout"])){
-	unset($_SESSION["loginId"]);
-	header("Location: login.php");
-}
+		unset($_SESSION["loginId"]);
+		header("Location: login.php");
+	}
+	
+	if (isset($_POST["edit"])){
+		$t = unserialize(base64_decode($_POST["edit"]));
+		$_SESSION["role"]=$t;
+		header("Location: editRoleDetails.php");
+	}
 
 $role = new DataManager();
 $role->getAllRole();
@@ -64,10 +70,10 @@ foreach($role->roleArray as $r){
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
 	</td>
 	</tr>
   <?php

@@ -35,7 +35,53 @@ else{
 	unset($_SESSION["loginId"]);
 	header("Location: login.php");
 	}
+	
 	$_SESSION["page"]="superadmin";
+	
+	if(isset($_POST["clear"])){
+		unset($_POST["searchtext"]);
+		unset($_SESSION["search"]);
+	}
+	
+	if (isset($_POST["editComp"])){
+		$t = unserialize(base64_decode($_POST["editComp"]));
+		$_SESSION["company"]=$t;
+		header("Location: editCompanyDetails.php");;
+	}
+	
+	if (isset($_POST["editHome"])){
+		$t = unserialize(base64_decode($_POST["editHome"]));
+		$_SESSION["homeowner"]=$t;
+		header("Location: editHomeownerDetails.php");;
+	}
+	
+	if (isset($_POST["deleteComp"])){
+		$t = unserialize(base64_decode($_POST["deleteComp"]));
+		echo '
+		<script>
+		  let text = "Confirm delete?";
+		  if (confirm(text) == true) {
+			  ';echo($t->deleteCompany());echo'
+			  }
+		</script>';
+	}
+	
+	if (isset($_POST["deleteHome"])){
+		echo '<script>
+		confirm("home");
+		</script>';
+	}
+	
+	$company = new DataManager();
+	$homeowner = new DataManager();
+	
+	if(isset($_POST["search"]) and isset($_POST["searchtext"]) and ($_POST["searchtext"]!="")){$_SESSION["search"]=$_POST["searchtext"];}
+	if (isset($_SESSION["search"])){
+		$company->getSearchCompany($_SESSION["search"]);
+	}
+	else{
+		$company->getAllCompany();
+	}
 ?>
 
 <div class="tab">
@@ -44,10 +90,11 @@ else{
 </div>
 
 <div id="Company" class="tabcontent">
-	<?php
-	$company = new DataManager();
-	$company->getAllCompany();
-	?>
+	<form action="" method="post">
+		<input type="text" name="searchtext" placeholder="use space for multiple string" value="<?php if (isset($_SESSION["search"])) echo $_SESSION["search"] ;?>" />
+		<input type="submit" name="search" value="search" />
+		<input type="submit" name="clear" value="clear" />
+	</form>
 	<br>
 	<table>
 	  <tr>
@@ -76,10 +123,10 @@ else{
 			<?php }
 		?>
 		<td>
-			<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+			<button  value="<?=base64_encode(serialize($c))?>" name="editComp"/>edit</button>
 		</td>
 		<td>
-			<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+			<button  value="<?=base64_encode(serialize($c))?>" name="deleteComp"/>delete</button>
 		</td>
 		</tr>
 	  <?php
@@ -91,15 +138,18 @@ else{
 </div>
 
 <div id="Homeowner" class="tabcontent">
-	    
+
+	<form action="" method="post">
+		<input type="text" name="searchtext" placeholder="use space for multiple string" value="<?php if (isset($_SESSION["search"])) echo $_SESSION["search"] ;?>" />
+		<input type="submit" name="search" value="search" />
+	</form>
     <?php
-	$homeowner = new DataManager();
 	$homeowner->getAllHomeowner();
 	?>
 	<br>
 	<table>
 	  <tr>
-		<th>Company Admin</th>
+		<th>ID</th>
 		<th>Name</th>
 		<th>Number</th>
 		<th>Email</th>
@@ -126,10 +176,10 @@ else{
 			<?php }
 		?>
 		<td>
-			<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+			<button  value="<?=base64_encode(serialize($h))?>" name="editHome"/>edit</button>
 		</td>
 		<td>
-			<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+			<button  value="<?=base64_encode(serialize($h))?>" name="deleteHome"/>delete</button>
 		</td>
 		</tr>
 	  <?php
@@ -141,6 +191,8 @@ else{
 </div>
 
 <script>
+
+
 function openUser(evt, user) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
@@ -157,6 +209,8 @@ function openUser(evt, user) {
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
+
+
 </script>
 <?php 
 }

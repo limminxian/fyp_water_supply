@@ -41,6 +41,137 @@ class Role {
 		$result = mysqli_stmt_get_result($stmt);
 		return mysqli_fetch_array($result, MYSQLI_NUM)[0];
 	}
+	
+	function updateRole($role){
+		foreach($role as $key=>$value){
+			$this->$key = $value;
+		}
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"UPDATE `ROLE` SET `NAME` = ? ,`DESCRIPTION` = ?,`REGISTER` = ? WHERE ID = ? ;");
+		mysqli_stmt_bind_param($stmt,"ssdd", $this->name,$this->description,$this->register,$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			mysqli_stmt_close($stmt);
+			$_SESSION["update"]=true;
+		}
+	}
+}
+
+class Service {
+	// Properties
+	public $id;
+	public $name;
+	public $description;
+	public $ratesArray=[];
+	public $createdby;
+
+	// Methods
+	
+	function setService($service){
+		foreach($service as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addService($service) {
+		foreach($service as $key=>$value){
+			$this->$key = $value;
+		}
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `SERVICETYPE` (`NAME`,`DESCRIPTION`,`CREATEDBY`) VALUES(?,?,?);");
+		mysqli_stmt_bind_param($stmt,"ssd", $this->name,$this->description,$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			mysqli_stmt_close($stmt);
+			$_SESSION["add"]=true;
+		}
+	}
+	
+	function getAllRate($service){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "SELECT * FROM `SERVICERATE` WHERE SERVICE=? and COMPANY=?;" );
+		mysqli_stmt_bind_param($stmt,"dd", $service->id,$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		//return mysqli_fetch_array($result, MYSQLI_NUM)[0];
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->ratesArray=[];
+				foreach ($rows as $r) {
+					$c = new Rate();
+					$c->setRate($r);
+					array_push($this->ratesArray,$c);
+				}
+			}
+	}
+	
+	function updateService($service){
+		foreach($service as $key=>$value){
+			$this->$key = $value;
+		}
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"UPDATE `SERVICETYPE` SET `NAME` = ? ,`DESCRIPTION` = ? WHERE ID = ? ;");
+		mysqli_stmt_bind_param($stmt,"ssd", $this->name,$this->description,$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			mysqli_stmt_close($stmt);
+			$_SESSION["update"]=true;
+		}
+	}
+}
+
+class Rate {
+	// Properties
+	public $effectdate;
+	public $service;
+	public $rate;
+	public $company;
+
+	// Methods
+	
+	function setRate($rate){
+		foreach($rate as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addRate($r) {
+		$conn = getdb();
+		echo $r["effectdate"];
+		$stmt = mysqli_prepare($conn,"INSERT INTO `SERVICERATE` (`EFFECTDATE`,`SERVICE`,`RATE`,`COMPANY`) VALUES(?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"sddd", $r["effectdate"],$r["service"],$r["rate"],$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($c);}
+		else{
+			mysqli_stmt_close($stmt);
+			$_SESSION["add"]=true;
+		}
+	}
+	
+	function getRate($service){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "SELECT * FROM `SERVICERATE` WHERE SERVICE=? and COMPANY=?;" );
+		mysqli_stmt_bind_param($stmt,"dd", $service->id,$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		//return mysqli_fetch_array($result, MYSQLI_NUM)[0];
+			$rates=[];
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Rate();
+					$c->setRate($r);
+					array_push($this->rateArray,$c);
+				}
+			}
+	}
 }
 
 class User{
@@ -158,6 +289,7 @@ class User{
 class Company extends User{
 
 	//properties
+	//public $id;
 	public $id;
 	public $compName;
 	public $number;
@@ -167,6 +299,10 @@ class Company extends User{
 	public $noofstar;
 	public $noofrate;
 	public $chemicalArray=[];
+	public $equipmentArray=[];
+	public $staffArray=[];
+	public $homeownerArray=[];
+	public $serviceArray=[];
 	
 	function setCompany($company){
 		foreach($company as $key=>$value){
@@ -220,6 +356,103 @@ class Company extends User{
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
 	}
+	
+	function getAllEquipment(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM `EQUIPTYPE` WHERE COMPANY = (SELECT COMPANY FROM STAFF WHERE ID=?);");
+		mysqli_stmt_bind_param($stmt,"d", $_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->equipmentArray=[];
+				foreach ($rows as $r) {
+					$c = new Equipment();
+					$c->setEquipment($r);
+					array_push($this->equipmentArray,$c);
+				}
+			}
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+	}
+	
+	function changeStatus($status){
+		$this->status=$status;
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "UPDATE `USERS` SET `STATUS`= ? WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"sd",$this->status,$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
+	
+	function deleteCompany(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "DELETE FROM COMPANY WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"d",$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
+	
+	function getAllStaff(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID,U.NAME,EMAIL,R.NAME AS 'ROLE',STATUS FROM `USERS` U, `STAFF` S, `COMPANY` C, `ROLE` R WHERE R.`NAME` in ('customerservice','technician') AND U.ID=S.ID AND C.ADMIN=? AND S.COMPANY = C.ID AND R.ID = U.TYPE ORDER BY U.ID;");
+		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$s = new Staff();
+					$s->setStaff($r);
+					array_push($this->staffArray,$s);
+				}
+			}
+		}
+	}
+	
+	function getAllHomeowner($companyId){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,U.NUMBER,U.EMAIL,BLOCKNO,UNITNO,H.STREET,H.POSTALCODE,HOUSETYPE,NOOFPEOPLE,U.STATUS,CARD FROM `USERS` U, `HOMEOWNER` H, `ROLE` R, `COMPANY` C WHERE U.`TYPE`= R.ID AND R.NAME ='HOMEOWNER' AND U.ID = H.ID AND H.SUBSCRIBE=C.ID AND C.ID=?;");
+		mysqli_stmt_bind_param($stmt,"d",$companyId);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$h = new Homeowner();
+					$h->setHomeowner($r);
+					array_push($this->homeownerArray,$h);
+				}
+			}
+		}
+	}
+	
+	function getAllService(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT S.*, R.* FROM SERVICETYPE S LEFT JOIN (SELECT EFFECTDATE,RATE,SERVICE FROM SERVICERATE WHERE COMPANY=? ORDER BY EFFECTDATE DESC LIMIT 1)R ON R.SERVICE=S.ID WHERE CREATEDBY IN (1,?) ;");
+		mysqli_stmt_bind_param($stmt,"dd",$_SESSION["loginId"],$_SESSION["loginId"]);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->serviceArray=[];
+				foreach ($rows as $r) {
+					$c = new Service();
+					$c->setService($r);
+					array_push($this->serviceArray,$c);
+				}
+			}
+		}
+	}
 }
 
 class Homeowner extends User{
@@ -233,6 +466,8 @@ class Homeowner extends User{
 	public $housetype;
 	public $noofpeople;
 	public $code;
+	public $area;
+	public $card;
 	
 	function setHomeowner($homeowner){
 		foreach($homeowner as $key=>$value){
@@ -243,11 +478,19 @@ class Homeowner extends User{
 	
 	function addHomeowner($homeowner){
 		$this->setHomeowner($homeowner);
+		$a = array("north"=>array("69","70","71","72","73","75","76"),"northeast"=>array("53","54","55","56","57","79","80","82"),"central"=>array("01","02","03","04","05","06","07","08","09","10","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","58","59","77","78"),"east"=>array("42","43","44","45","46","47","48","49","50","51","52","81"),"west"=>array("11","12","13","60","61","62","63","64","65","66","67","68"));
+		foreach($a as $key=>$value){
+			if (in_array(substr($this->postalcode,0,2),$value)){
+				$this->area=$key;
+			}
+			//echo substr($this->postalcode,0,2);
+		}
 		$this->code = rand(100000,999999);
-		$conn = getdb();
 		parent::addUser($homeowner);
-		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`, `CODE`) VALUES(?,?,?,?,?,?,?,?);");
-		mysqli_stmt_bind_param($stmt,"dsssdsdd",$this->id, $this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people,$this->code);
+		$conn = getdb();
+		//parent::addUser($homeowner);
+		$stmt = mysqli_prepare($conn,"INSERT INTO `HOMEOWNER` (`ID`, `BLOCKNO`, `UNITNO`, `STREET`, `POSTALCODE`, `HOUSETYPE`, `NOOFPEOPLE`, `CODE`, `AREA`) VALUES(?,?,?,?,?,?,?,?,?);");
+		mysqli_stmt_bind_param($stmt,"dsssdsdds",$this->id, $this->block,$this->unitno,$this->street,$this->postalcode,$this->housetype,$this->people,$this->code,$this->area);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		// mail($this->email,"My subject","try");
@@ -285,6 +528,26 @@ class Homeowner extends User{
 		return TRUE;
 	}
 	
+	function changeStatus($status){
+		$this->status=$status;
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "UPDATE `USERS` SET `STATUS`= ? WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"sd",$this->status,$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
+	
+	function deleteHomeowner(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "DELETE FROM HOMEOWNER WHERE `ID` =?;" );
+		mysqli_stmt_bind_param($stmt,"d",$this->id);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
 }
 
 class Staff extends User{
@@ -340,6 +603,15 @@ class Staff extends User{
 				}
 			}
 		}
+	}
+	
+	function getCompany($staffId){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn, "SELECT COMPANY FROM `STAFF` WHERE ID=?;" );
+		mysqli_stmt_bind_param($stmt,"d", $staffId);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		return mysqli_fetch_array($result, MYSQLI_NUM)[0];
 	}
 }
 
@@ -475,20 +747,94 @@ class Chemical{
 	}
 }
 
+class Equipment{
+	public $id;
+	public $name;
+	public $amount;
+	public $company;
+	public $equipmentArray=[];
+	
+	function setEquipment($equipment){
+		foreach($equipment as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addEquipment($equipment){
+		$this->setEquipment($equipment);
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `EQUIPMENT` (`NAME`,`AMOUNT`,`COMPANY`) SELECT ?,?,COMPANY FROM `STAFF` WHERE `ID`=?");
+		mysqli_stmt_bind_param($stmt,"sdd",$this->name, $this->amount,$_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);
+		}
+	}
+	
+	function getAllEquipment($type){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM `EQUIPSTOCK` WHERE TYPE = ?;");
+		mysqli_stmt_bind_param($stmt,"d", $type);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->equipmentArray=[];
+				foreach ($rows as $r) {
+					$c = new EquipmentStock();
+					$c->setEquipment($r);
+					array_push($this->equipmentArray,$c);
+				}
+			}
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+	}
+}
+
+class EquipmentStock{
+	public $type;
+	public $id;
+	public $serial;
+	public $purchasedate;
+	
+	function setEquipment($equipment){
+		foreach($equipment as $key=>$value){
+			$lowerKey = strtolower($key);
+			$this->$lowerKey = $value;
+		}
+	}
+	
+	function addEquipmentStock($equipment){
+		$this->setEquipment($equipment);
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"INSERT INTO `EQUIPSTOCK` (`TYPE`,`SERIAL`,`PURCHASEDATE`,`COMPANY`) SELECT ?,?,CURRENT_DATE,COMPANY FROM `STAFF` WHERE `ID`=?");
+		mysqli_stmt_bind_param($stmt,"dsd",$this->type, $this->serial,$_SESSION['loginId']);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorAddStock"]=mysqli_error($conn);
+		}
+	}
+}
+
 class DataManager{
 	public $pendingCompanyArray=[];
 	public $companyArray=[];
-	public $staffArray=[];
 	public $topCompanyArray=[];
+	public $searchCompanyArray=[];
+	
 	public $roleArray=[];
+	public $serviceArray=[];
+	
 	public $homeownerArray=[];
+	
+	
 	
 	function getAllPendingCompany(){
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USERS` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN' AND U.`STATUS` = 'PENDING' AND U.ID = C.ADMIN;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
 			$result = mysqli_stmt_get_result($stmt);		
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
@@ -506,7 +852,7 @@ class DataManager{
 		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USERS` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN'AND U.ID = C.ADMIN;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
 			$result = mysqli_stmt_get_result($stmt);		
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
@@ -524,7 +870,7 @@ class DataManager{
 		$stmt = mysqli_prepare($conn,"SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,BLOCKNO,UNITNO,STREET,POSTALCODE,HOUSETYPE,NOOFPEOPLE,STATUS FROM `USERS` U, `HOMEOWNER` H, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='HOMEOWNER' AND U.ID = H.ID;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
 			$result = mysqli_stmt_get_result($stmt);		
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
@@ -537,20 +883,28 @@ class DataManager{
 		}
 	}
 	
-	function getAllStaff(){
+	function getSearchHomeowner($search){
 		$conn = getdb();
-		$stmt = mysqli_prepare($conn,"SELECT U.ID,U.NAME,EMAIL,R.NAME AS 'ROLE',STATUS FROM `USERS` U, `STAFF` S, `COMPANY` C, `ROLE` R WHERE R.`NAME` in ('customerservice','technician') AND U.ID=S.ID AND C.ADMIN=? AND S.COMPANY = C.ID AND R.ID = U.TYPE ORDER BY U.ID;");
-		mysqli_stmt_bind_param($stmt,"d",$_SESSION["loginId"]);
+		
+		$s = explode(" ", $search);
+		$sql = "SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,BLOCKNO,UNITNO,STREET,POSTALCODE,HOUSETYPE,NOOFPEOPLE,STATUS FROM `USERS` U, `HOMEOWNER` H, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='HOMEOWNER' AND U.ID = H.ID AND CONCAT_WS('',U.ID,U.NAME, BLOCKNO,STREET,POSTALCODE,HOUSETYPE) LIKE '%".$s[0]."%'";
+		if(count($s)>1){
+			for($i=1;$i<count($s);$i++){
+				$sql .=" AND CONCAT_WS('',U.ID,U.NAME, BLOCKNO,STREET,POSTALCODE,HOUSETYPE) LIKE '%".$s[$i]."%'";
+			}
+		}
+		
+		$stmt = mysqli_prepare($conn,$sql);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
-			$result = mysqli_stmt_get_result($stmt);		
+			$result = mysqli_stmt_get_result($stmt);
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
 				foreach ($rows as $r) {
-					$s = new Staff();
-					$s->setStaff($r);
-					array_push($this->staffArray,$s);
+					$h = new Homeowner();
+					$h->setHomeowner($r);
+					array_push($this->homeownerArray,$h);
 				}
 			}
 		}
@@ -562,7 +916,7 @@ class DataManager{
 		mysqli_stmt_bind_param($stmt,"d",$count);
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
 			$result = mysqli_stmt_get_result($stmt);		
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
@@ -575,12 +929,39 @@ class DataManager{
 		}
 	}
 	
+	function getSearchCompany($search){
+		$conn = getdb();
+		
+		$s = explode(" ", $search);
+		$sql = "SELECT U.ID AS ID,U.NAME,NUMBER,EMAIL,STREET,POSTALCODE,C.DESCRIPTION,STATUS FROM `USERS` U, `COMPANY` C, `ROLE` R WHERE U.`TYPE`= R.ID AND R.NAME ='COMPANYADMIN'AND U.ID = C.ADMIN AND CONCAT_WS('',U.ID,U.NAME, STREET,POSTALCODE,C.DESCRIPTION) LIKE '%".$s[0]."%'";
+		if(count($s)>1){
+			for($i=1;$i<count($s);$i++){
+				$sql .=" AND CONCAT_WS('',U.ID,U.NAME, STREET,POSTALCODE,C.DESCRIPTION) LIKE '%".$s[$i]."%'";
+			}
+		}
+		
+		$stmt = mysqli_prepare($conn,$sql);
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Company();
+					$c->setCompany($r);
+					array_push($this->companyArray,$c);
+				}
+			}
+		}
+	}
+	
 	function getAllRole(){
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn,"SELECT * FROM ROLE;");
 		mysqli_stmt_execute($stmt);
 		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
-			$_SESSION["errorView"]=mysqli_error($c);}
+			$_SESSION["errorView"]=mysqli_error($conn);}
 		else{
 			$result = mysqli_stmt_get_result($stmt);		
 			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
@@ -588,6 +969,24 @@ class DataManager{
 					$c = new Role();
 					$c->setRole($r);
 					array_push($this->roleArray,$c);
+				}
+			}
+		}
+	}
+	
+	function getAllService(){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT * FROM SERVICETYPE WHERE CREATEDBY=1;");
+		mysqli_stmt_execute($stmt);
+		if(mysqli_error($conn)!="" and !empty(mysqli_error($conn))){
+			$_SESSION["errorView"]=mysqli_error($conn);}
+		else{
+			$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				foreach ($rows as $r) {
+					$c = new Service();
+					$c->setService($r);
+					array_push($this->serviceArray,$c);
 				}
 			}
 		}
