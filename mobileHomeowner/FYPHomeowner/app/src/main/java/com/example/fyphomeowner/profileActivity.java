@@ -2,6 +2,7 @@ package com.example.fyphomeowner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -56,6 +57,7 @@ public class profileActivity extends AppCompatActivity {
     private TextView houseTypeTxt;
     private TextView householdSizeTxt;
     private Button editProfileBtn;
+    private SwitchCompat alertToggle;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -70,6 +72,7 @@ public class profileActivity extends AppCompatActivity {
         }
 
         editProfileBtn = findViewById(R.id.editProfileBtn);
+        alertToggle = findViewById(R.id.alertToggle);
         profileTitle = findViewById(R.id.profileTitle);
         nameTxt = findViewById(R.id.nameTxt);
         numberTxt = findViewById(R.id.numberTxt);

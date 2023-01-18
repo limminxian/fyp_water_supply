@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/star1" />
 
         <TextView
-            android:id="@+id/emailMsg"
+            android:id="@+id/emailTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="companyName@email.com"
@@ -92,7 +92,7 @@
             app:layout_constraintTop_toBottomOf="@+id/emailImg" />
 
         <TextView
-            android:id="@+id/phoneMsg"
+            android:id="@+id/phoneTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -115,7 +115,7 @@
             app:layout_constraintTop_toBottomOf="@+id/phoneImg" />
 
         <TextView
-            android:id="@+id/locationMsg"
+            android:id="@+id/addressTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -127,7 +127,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/descriptionMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -138,59 +138,59 @@
             app:layout_constraintTop_toBottomOf="@+id/locationImg" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/descriptionTxt"
             android:layout_width="303dp"
             android:layout_height="52dp"
             android:text="Water is a precious resource that is key to our survival. The smart water meter offers you more insights into your water usage, empowering you to be more water conscious and sustainable for the future."
             android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="@+id/descriptionMsg"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintStart_toStartOf="@+id/descriptionMsg"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionMsg" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/serviceRateMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Service rates"
-            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="@+id/serviceTxt"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toStartOf="@+id/serviceTxt"
+            app:layout_constraintTop_toBottomOf="@+id/serviceTxt" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/serviceRateTxt"
             android:layout_width="122dp"
             android:layout_height="52dp"
             android:text="Water Supply: $8 per litre\nMaintenance: $100\nInstallation: $50\nUninstallation: $50"
             android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/textView8"
+            app:layout_constraintEnd_toEndOf="@+id/serviceRateMsg"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView8"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            app:layout_constraintStart_toStartOf="@+id/serviceRateMsg"
+            app:layout_constraintTop_toBottomOf="@+id/serviceRateMsg" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/serviceTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Water Supply Service:\nProvision of water \nMaintenance:\nServices in cases of leakages or other equipment faults\nInstallation:\nFixing services of equipments purchased from us\nUninstallation:\nRemoving services of equipments purchased from us"
             android:textSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.201"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintEnd_toEndOf="@+id/serviceMsg"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/serviceMsg"
+            app:layout_constraintTop_toBottomOf="@+id/serviceMsg" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/serviceMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:text="Services"
-            app:layout_constraintEnd_toEndOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="@+id/descriptionTxt"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
 
         <ImageView
             android:id="@+id/star1"
@@ -233,7 +233,7 @@
             app:layout_constraintTop_toTopOf="@+id/star3" />
 
         <ImageView
-            android:id="@+id/emailImg2"
+            android:id="@+id/star5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_star"
@@ -255,7 +255,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.485"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintTop_toBottomOf="@+id/serviceRateTxt"
             app:layout_constraintVertical_bias="0.195" />
 
         <ImageView

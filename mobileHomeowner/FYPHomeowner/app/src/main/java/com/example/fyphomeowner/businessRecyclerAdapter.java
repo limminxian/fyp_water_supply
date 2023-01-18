@@ -56,8 +56,21 @@ public class businessRecyclerAdapter extends RecyclerView.Adapter<businessRecycl
         holder.businessTitle.setText(businessList.get(position).getName());
         holder.businessDescription.setText(businessList.get(position).getDescription());
         holder.businessImage.setImageResource(R.drawable.ic_businesses);
-        int rating = businessList.get(position).getNoOfStars();
+        Integer rating = 0;
+        if(businessList.get(position).getNoOfStars()!=null){
+            rating = businessList.get(position).getNoOfStars();
+        } else {
+            rating = 0;
+        }
+
         switch (rating){
+            case 0:
+                holder.star1.setImageResource(R.drawable.ic_empty_star);
+                holder.star2.setImageResource(R.drawable.ic_empty_star);
+                holder.star3.setImageResource(R.drawable.ic_empty_star);
+                holder.star4.setImageResource(R.drawable.ic_empty_star);
+                holder.star5.setImageResource(R.drawable.ic_empty_star);
+                break;
             case 1:
                 holder.star1.setImageResource(R.drawable.ic_star);
                 holder.star2.setImageResource(R.drawable.ic_empty_star);
@@ -94,10 +107,10 @@ public class businessRecyclerAdapter extends RecyclerView.Adapter<businessRecycl
                 holder.star5.setImageResource(R.drawable.ic_star);
                 break;
             default:
+                holder.star1.setImageResource(R.drawable.ic_empty_star);
                 holder.star2.setImageResource(R.drawable.ic_empty_star);
                 holder.star3.setImageResource(R.drawable.ic_empty_star);
                 holder.star4.setImageResource(R.drawable.ic_empty_star);
-                holder.star5.setImageResource(R.drawable.ic_empty_star);
                 holder.star5.setImageResource(R.drawable.ic_empty_star);
                 break;
         }

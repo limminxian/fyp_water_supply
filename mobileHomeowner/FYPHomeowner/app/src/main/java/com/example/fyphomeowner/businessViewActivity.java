@@ -8,15 +8,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class businessViewActivity extends AppCompatActivity implements businessRecyclerAdapter.BusinessClickListner {
 
@@ -25,18 +40,27 @@ public class businessViewActivity extends AppCompatActivity implements businessR
     private ImageView imageMenuView;
     private SearchView searchView;
     private ArrayList<Company> businessList;
+    private RecyclerView recyclerView;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_view);
 
+        //SHARED PREFERENCES
+        sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("EOF", "false");
+        editor.apply();
+
         //RECYCLER VIEW
-        RecyclerView recyclerView = findViewById(R.id.businessRecyclerView);
+        recyclerView = findViewById(R.id.businessRecyclerView);
         businessList = new ArrayList<>();
         setUpBusinessViews();
-        businessRecyclerAdapter adapter = new businessRecyclerAdapter(this, businessList, this);
-        recyclerView.setAdapter(adapter);
+
+//        businessRecyclerAdapter adapter = new businessRecyclerAdapter(this, businessList, this);
+//        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //SEARCH VIEW
@@ -49,7 +73,7 @@ public class businessViewActivity extends AppCompatActivity implements businessR
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                filterList(s, adapter);
+                //filterList(s, adapter);
                 return true;
             }
         });
@@ -160,17 +184,118 @@ public class businessViewActivity extends AppCompatActivity implements businessR
 
     //SET UP BUSINESS RECYCLER views
     private void setUpBusinessViews(){
-        for(int i = 1; i < 11; i++){
-            int rating = 3;
-            if(i%2==0){
-                rating = 4;
+        ArrayList<String> attrNameList = new ArrayList<>();
+        attrNameList.add("companyID");
+        attrNameList.add("name");
+        attrNameList.add("phoneNo");
+        attrNameList.add("street");
+        attrNameList.add("postalCode");
+        attrNameList.add("description");
+        attrNameList.add("noOfStars");
+        attrNameList.add("noOfRate");
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://192.168.1.168/fyp/businessViewRequest.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //changing the response to a JSONobject because the php file is response is a JSON file
+                            Log.i("tagconvertstr", "["+response+"]");
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+
+                            if (status.equals("success")){
+                                int rowNo = 1;
+                                boolean EOF = false;
+                                //while loop to loop through all the company objects created in php
+                                while(!EOF){
+                                    String companyRow = "Company row " + String.valueOf(rowNo);
+                                    //Check if that row no. exists if not set EOF as true
+                                    if(jsonObject.has(companyRow)){
+                                        //Get company json object from the array
+                                        JSONObject companyObj = jsonObject.getJSONObject(companyRow);
+
+                                        //Create a company object
+                                        Integer companyID;
+                                        Integer phoneNo;
+                                        Integer postalCode;
+                                        Integer noOfStars;
+                                        Integer noOfRate;
+                                        String name = companyObj.getString("name");
+                                        String street = companyObj.getString("street");
+                                        String description = companyObj.getString("description");
+
+                                        if(!companyObj.isNull("companyID")){
+                                            companyID = Integer.parseInt(companyObj.getString("companyID"));
+                                        }else{
+                                            companyID = null;
+                                        }
+                                        if(!companyObj.isNull("phoneNo")){
+                                            phoneNo = Integer.parseInt(companyObj.getString("phoneNo"));
+                                        }else{
+                                            phoneNo = null;
+                                        }
+                                        if(!companyObj.isNull("postalCode")){
+                                            postalCode = Integer.parseInt(companyObj.getString("postalCode"));
+                                        }else{
+                                            postalCode = null;
+                                        }
+                                        if(!companyObj.isNull("noOfStars")){
+                                            noOfStars = Integer.parseInt(companyObj.getString("noOfStars"));
+                                        }else{
+                                            noOfStars = null;
+                                        }
+                                        if(!companyObj.isNull("noOfRate")){
+                                            noOfRate = Integer.parseInt(companyObj.getString("noOfRate"));
+                                        }else{
+                                            noOfRate = null;
+                                        }
+
+                                        Company company = new Company(companyID, name, phoneNo, street, postalCode, description, noOfStars);
+                                        businessList.add(company);
+                                    }else{
+                                        EOF = true;
+                                    }
+                                    rowNo++;
+                                } //end of while loop
+
+                                businessRecyclerAdapter adapter = new businessRecyclerAdapter(businessViewActivity.this, businessList, businessViewActivity.this);
+                                recyclerView.setAdapter(adapter);
+                                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                    @Override
+                                    public boolean onQueryTextSubmit(String s) {
+                                        return false;
+                                    }
+                                    @Override
+                                    public boolean onQueryTextChange(String s) {
+                                        filterList(s, adapter);
+                                        return true;
+                                    }
+                                });
+                            }
+                            else {
+                                Log.d("error", message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
             }
-            User admin = new User();
-            Company company = new Company(i, "Company " + i, 61234567, "Singapore street", 412345,
-                    "Water is a precious resource that is key to our survival. The smart water meter offers you more insights into your water usage, empowering you to be more water conscious and sustainable for the future.",
-                    rating, admin);
-            businessList.add(company);
-        }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferences.getString("userID",""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     //SEARCH FLITER

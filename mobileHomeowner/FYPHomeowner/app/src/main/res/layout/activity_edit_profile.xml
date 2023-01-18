@@ -213,12 +213,12 @@
             app:layout_constraintVertical_bias="0.196" />
 
         <Button
-            android:id="@+id/registerBtn"
+            android:id="@+id/editProfileBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#02628E"
-            android:onClick="onRegisterBtnClick"
-            android:text="Edit profile"
+            android:text="Submit"
+            android:onClick="onSubmit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

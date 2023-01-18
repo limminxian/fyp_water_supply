@@ -20,14 +20,24 @@ public class businessProfileActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ImageView imageMenuView;
 
-    private int UEN;
     private String name;
-    private int PhoneNo;
+    private Integer PhoneNo;
     private String street;
-    private int postalCode;
+    private Integer postalCode;
     private String Description;
-    private int noOfStars;
+    private Integer noOfStars;
     private TextView companyTitle;
+    private TextView emailTxt;
+    private TextView phoneTxt;
+    private TextView addressTxt;
+    private TextView descriptionTxt;
+    private TextView serviceTxt;
+    private TextView serviceRateTxt;
+    private ImageView star1;
+    private ImageView star2;
+    private ImageView star3;
+    private ImageView star4;
+    private ImageView star5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +45,15 @@ public class businessProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_business_profile);
 
         companyTitle = findViewById(R.id.companyTitle);
+        star1 = findViewById(R.id.star1);
+        star2 = findViewById(R.id.star2);
+        star3 = findViewById(R.id.star3);
+        star4 = findViewById(R.id.star4);
+        star5 = findViewById(R.id.star5);
 
         //Get object out of the parcelable from the businessViewActivity
         Intent  intent = getIntent();
         Company company = intent.getParcelableExtra("companyKey");
-        UEN = company.getUEN();
         name = company.getName();
         PhoneNo = company.getPhoneNo();
         street = company.getStreet();
@@ -47,53 +61,54 @@ public class businessProfileActivity extends AppCompatActivity {
         Description = company.getDescription();
         noOfStars = company.getNoOfStars();
 
+        System.out.println(noOfStars);
+
         companyTitle.setText(name);
+        switch (noOfStars){
+            case 1:
+                star1.setImageResource(R.drawable.ic_star);
+                star2.setImageResource(R.drawable.ic_empty_star);
+                star3.setImageResource(R.drawable.ic_empty_star);
+                star4.setImageResource(R.drawable.ic_empty_star);
+                star5.setImageResource(R.drawable.ic_empty_star);
+                break;
+            case 2:
+                star1.setImageResource(R.drawable.ic_star);
+                star2.setImageResource(R.drawable.ic_star);
+                star3.setImageResource(R.drawable.ic_empty_star);
+                star4.setImageResource(R.drawable.ic_empty_star);
+                star5.setImageResource(R.drawable.ic_empty_star);
+                break;
+            case 3:
+                star1.setImageResource(R.drawable.ic_star);
+                star2.setImageResource(R.drawable.ic_star);
+                star3.setImageResource(R.drawable.ic_star);
+                star4.setImageResource(R.drawable.ic_empty_star);
+                star5.setImageResource(R.drawable.ic_empty_star);
+                break;
+            case 4:
+                star1.setImageResource(R.drawable.ic_star);
+                star2.setImageResource(R.drawable.ic_star);
+                star3.setImageResource(R.drawable.ic_star);
+                star4.setImageResource(R.drawable.ic_star);
+                star5.setImageResource(R.drawable.ic_empty_star);
+                break;
+            case 5:
+                star1.setImageResource(R.drawable.ic_star);
+                star2.setImageResource(R.drawable.ic_star);
+                star3.setImageResource(R.drawable.ic_star);
+                star4.setImageResource(R.drawable.ic_star);
+                star5.setImageResource(R.drawable.ic_star);
+                break;
+            default:
+                star1.setImageResource(R.drawable.ic_empty_star);
+                star2.setImageResource(R.drawable.ic_empty_star);
+                star3.setImageResource(R.drawable.ic_empty_star);
+                star4.setImageResource(R.drawable.ic_empty_star);
+                star5.setImageResource(R.drawable.ic_empty_star);
+                break;
+        }
 
-
-//        switch (noOfStars){
-//            case 1:
-//                holder.star1.setImageResource(R.drawable.ic_star);
-//                holder.star2.setImageResource(R.drawable.ic_empty_star);
-//                holder.star3.setImageResource(R.drawable.ic_empty_star);
-//                holder.star4.setImageResource(R.drawable.ic_empty_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                break;
-//            case 2:
-//                holder.star1.setImageResource(R.drawable.ic_star);
-//                holder.star2.setImageResource(R.drawable.ic_star);
-//                holder.star3.setImageResource(R.drawable.ic_empty_star);
-//                holder.star4.setImageResource(R.drawable.ic_empty_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                break;
-//            case 3:
-//                holder.star1.setImageResource(R.drawable.ic_star);
-//                holder.star2.setImageResource(R.drawable.ic_star);
-//                holder.star3.setImageResource(R.drawable.ic_star);
-//                holder.star4.setImageResource(R.drawable.ic_empty_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                break;
-//            case 4:
-//                holder.star1.setImageResource(R.drawable.ic_star);
-//                holder.star2.setImageResource(R.drawable.ic_star);
-//                holder.star3.setImageResource(R.drawable.ic_star);
-//                holder.star4.setImageResource(R.drawable.ic_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                break;
-//            case 5:
-//                holder.star1.setImageResource(R.drawable.ic_star);
-//                holder.star2.setImageResource(R.drawable.ic_star);
-//                holder.star3.setImageResource(R.drawable.ic_star);
-//                holder.star4.setImageResource(R.drawable.ic_star);
-//                holder.star5.setImageResource(R.drawable.ic_star);
-//                break;
-//            default:
-//                holder.star2.setImageResource(R.drawable.ic_empty_star);
-//                holder.star3.setImageResource(R.drawable.ic_empty_star);
-//                holder.star4.setImageResource(R.drawable.ic_empty_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                holder.star5.setImageResource(R.drawable.ic_empty_star);
-//                break;
-//        }
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);

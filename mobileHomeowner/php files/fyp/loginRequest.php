@@ -13,7 +13,12 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
             $row = mysqli_fetch_assoc($sqlResult);
 			//var_dump($row);
 			
-			if ($row['TYPE'] == '3'){
+			//find homeowner roles ID
+			$getRoleSQL = "SELECT ID FROM ROLE WHERE NAME = 'homeowner'";
+			$roleSQL = mysqli_query($connection, $getRoleSQL);
+			$userRole = mysqli_fetch_row($roleSQL)[0];
+			
+			if ($row['TYPE'] == $userRole){
 			
 				if ($email == $row['EMAIL'] && password_verify($password, $row['PASSWORD'])) {
 					

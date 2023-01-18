@@ -65,6 +65,7 @@ public class editProfileActivity extends AppCompatActivity {
     private Button changePasswordBtn;
     private SharedPreferences sharedPreferences;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,21 +91,19 @@ public class editProfileActivity extends AppCompatActivity {
         //SPINNER
         //Array list for spinner
         ArrayList<String> houseTypes = new ArrayList<>();
-        for (HouseType ht : HouseType.values()){
-            houseTypes.add("1-Room Flat");
-            houseTypes.add("2-Room Flat");
-            houseTypes.add("3-Room Flat");
-            houseTypes.add("4-Room Flat");
-            houseTypes.add("5-Room Flat");
-            houseTypes.add("Executive Flat");
-            houseTypes.add("Executive Condo");
-            houseTypes.add("Private Condo");
-            houseTypes.add("Apartment");
-            houseTypes.add("Semi Detached House");
-            houseTypes.add("Terrace House");
-            houseTypes.add("Shop House");
-            houseTypes.add("Bungalow House");
-        }
+        houseTypes.add("1-Room Flat");
+        houseTypes.add("2-Room Flat");
+        houseTypes.add("3-Room Flat");
+        houseTypes.add("4-Room Flat");
+        houseTypes.add("5-Room Flat");
+        houseTypes.add("Executive Flat");
+        houseTypes.add("Executive Condo");
+        houseTypes.add("Private Condo");
+        houseTypes.add("Apartment");
+        houseTypes.add("Semi Detached House");
+        houseTypes.add("Terrace House");
+        houseTypes.add("Shop House");
+        houseTypes.add("Bungalow House");
 
         //Add the arraylist into the spinner
         ArrayAdapter<String> houseTypesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, houseTypes);
@@ -150,6 +149,7 @@ public class editProfileActivity extends AppCompatActivity {
 
                                 int houseTypeArrayPos = houseTypesAdapter.getPosition(houseType);
                                 houseTypesSpinner.setSelection(houseTypeArrayPos);
+
                             }
                             else {
                                 Log.d("error", message);
@@ -306,6 +306,49 @@ public class editProfileActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+    }
+
+    public void onSubmit(View view) {
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "http://192.168.1.168/fyp/editProfileRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("success")) {
+                            Toast.makeText(getApplicationContext(), "Successfully edited profile", Toast.LENGTH_SHORT).show();
+                            openProfilePage();
+                        }
+                        else {
+                            Log.d("Error", response);
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                        }
+                        Log.d("Error", response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            //Sends data towards the php file to process
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferences.getString("userID",""));
+                paramV.put("name", String.valueOf(nameTxt.getText()));
+                paramV.put("email", String.valueOf(emailTxt.getText()));
+                paramV.put("street", String.valueOf(streetTxt.getText()));
+                paramV.put("blockNo", String.valueOf(blockNoTxt.getText()));
+                paramV.put("unitNo", String.valueOf(unitNoTxt.getText()));
+                paramV.put("postalCode", String.valueOf(postalCodeTxt.getText()));
+                paramV.put("phoneNo", String.valueOf(phoneNoTxt.getText()));
+                paramV.put("houseType", houseTypesSpinner.getSelectedItem().toString());
+                paramV.put("householdSize", String.valueOf(householdSizePicker.getValue()));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     //REDIRECT METHODS

@@ -52,8 +52,7 @@ if( !empty($_POST['name']) &&
 				
 				//Get the user ID to create the homeowner, and generate a verfication code for homeowner
 				$getUserIDSQL = "SELECT MAX(ID) FROM USERS";
-				$userIDSQL = mysqli_query($connection, $getUserIDSQL);
-				$homeownerUserID = mysqli_fetch_row($userIDSQL)[0];
+				$homeownerUserID = mysqli_fetch_row(mysqli_query($connection, $getUserIDSQL))[0];
 				$verificationCode = rand(100000,999999);
 				
 				//Create the homeowner in the db. 
@@ -66,12 +65,11 @@ if( !empty($_POST['name']) &&
 												'".$houseType."',
 												'".$householdSize."',
 												'".$verificationCode."')";
-												
-				
 					
-					if(mysqli_query($connection, $createHomeownerSQL)){
-						echo "success";
-					} else echo "failed creating homeowner, registration failed";
+				if(mysqli_query($connection, $createHomeownerSQL)){
+					echo "success";
+				} else echo "failed creating homeowner, registration failed";
+					
 			} else echo "failed creating user, registration failed";		
 			
 		} else echo "re-enter passwords do not match";

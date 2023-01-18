@@ -81,12 +81,23 @@ public class registerActivity extends AppCompatActivity {
 
         //SPINNER
         //Array list for spinner
-        ArrayList<HouseType> houseTypes = new ArrayList<>();
-        for (HouseType ht : HouseType.values()){
-            houseTypes.add(ht);
-        }
+        ArrayList<String> houseTypes = new ArrayList<>();
+        houseTypes.add("1-Room Flat");
+        houseTypes.add("2-Room Flat");
+        houseTypes.add("3-Room Flat");
+        houseTypes.add("4-Room Flat");
+        houseTypes.add("5-Room Flat");
+        houseTypes.add("Executive Flat");
+        houseTypes.add("Executive Condo");
+        houseTypes.add("Private Condo");
+        houseTypes.add("Apartment");
+        houseTypes.add("Semi Detached House");
+        houseTypes.add("Terrace House");
+        houseTypes.add("Shop House");
+        houseTypes.add("Bungalow House");
+
         //Add the arraylist into the spinner
-        ArrayAdapter<HouseType> houseTypesAdapter = new ArrayAdapter<HouseType>(this, android.R.layout.simple_spinner_dropdown_item, houseTypes);
+        ArrayAdapter<String> houseTypesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, houseTypes);
         houseTypesSpinner.setAdapter(houseTypesAdapter);
 
         //NUMBER PICKER
@@ -133,6 +144,7 @@ public class registerActivity extends AppCompatActivity {
                             Log.d("tag", "verification page opening");
                         }
                         else {
+                            Log.d("Error", response);
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -161,51 +173,7 @@ public class registerActivity extends AppCompatActivity {
             }
         };
         queue.add(stringRequest);
-
-//        ArrayList<EditText> inputs = new ArrayList<EditText>();
-//        inputs.add(usernameTxt);
-//        inputs.add(passwordTxt);
-//        inputs.add(retypePasswordTxt);
-//        inputs.add(emailTxt);
-//        inputs.add(streetTxt);
-//        inputs.add(blockNoTxt);
-//        inputs.add(unitNoTxt);
-//        inputs.add(postalCodeTxt);
-//        inputs.add(phoneNoTxt);
-//        inputs.add(nameTxt);
-//
-//        if(verifyReEnterPassword(passwordTxt.getText().toString(), retypePasswordTxt.getText().toString())){
-//            if(checkNull(inputs)){
-//                //Toast.makeText(this, String.valueOf(householdSizeVal), Toast.LENGTH_SHORT).show();
-//                // Verify email
-//                // Add popup for email 2FA
-//                showPopupWindowClick(view);
-//                // Verify 2FA code
-//                // Success message, then link to login page
-////                Homeowner homeowner = createAcc(nameTxt, emailTxt, passwordTxt, phoneNoTxt, streetTxt, blockNoTxt, unitNoTxt, postalCodeTxt, houseTypeVal, householdSizeVal);
-////                tempHomeownerDB.add(homeowner);
-//            }
-//        }
-
     }
-
-//    public boolean checkNull(ArrayList<EditText> inputs){
-//        boolean bool = false;
-//
-//        for(int i = 0; i < inputs.size(); i++){
-//            EditText currInput = inputs.get(i);
-//
-//            if(!TextUtils.isEmpty(currInput.getText().toString())){
-//                bool = true;
-//            }
-//            else{
-//                Toast.makeText(this,"Empty field, please fill in.", Toast.LENGTH_SHORT).show();
-//                bool = false;
-//                break;
-//            }
-//        }
-//        return bool;
-//    }
 
     public boolean verifyReEnterPassword(String pwd, String repwd){
         boolean bool;
@@ -219,22 +187,6 @@ public class registerActivity extends AppCompatActivity {
         }
         return bool;
     }
-
-//    public Homeowner createAcc(EditText name, EditText email, EditText password, EditText phoneNoTxt, EditText street, EditText blkNo, EditText unitNo,
-//                               EditText postalCodeTxt, String houseTypeString, int householdSize){
-//
-//        int phoneNo = Integer.parseInt(phoneNoTxt.getText().toString());
-//        int postalCode = Integer.parseInt(postalCodeTxt.getText().toString());
-//        Status status = Status.notValidated;
-//        Role type = Role.homeowner;
-//        Company subscribedCompany = null;
-//        HouseType houseType = HouseType.valueOf(houseTypeString);
-//
-//        Homeowner homeowner = new Homeowner(name.getText().toString(), email.getText().toString(), password.getText().toString(), status, type,
-//                phoneNo, street.getText().toString(), blkNo.getText().toString(), unitNo.getText().toString(), postalCode, houseType, householdSize, subscribedCompany);
-//
-//        return homeowner;
-//    }
 
     //Popup window method
     public void showPopupWindowClick(View view) {

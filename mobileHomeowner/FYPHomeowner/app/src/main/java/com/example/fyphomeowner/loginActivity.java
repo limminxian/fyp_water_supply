@@ -60,7 +60,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
                 //Creating a post request
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://192.168.56.1/fyp/loginRequest.php";
+                String url ="http://192.168.1.168/fyp/loginRequest.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
@@ -72,6 +72,9 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                 String status = jsonObject.getString("status");
                                 String message = jsonObject.getString("message");
                                 if(status.equals("success")){
+                                    verificationBtn.setVisibility(View.GONE);
+                                    forgotPasswordMsg.setVisibility(View.GONE);
+                                    forgotPasswordBtn.setVisibility(View.GONE);
                                     String userID = jsonObject.getString("userID");
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("logged", "true");
@@ -82,19 +85,24 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                 else if(status.equals("verify")){
                                     String email = jsonObject.getString("email");
                                     verificationBtn.setVisibility(View.VISIBLE);
+                                    forgotPasswordMsg.setVisibility(View.GONE);
+                                    forgotPasswordBtn.setVisibility(View.GONE);
                                     SharedPreferences.Editor editor = verificationSharedPreferences.edit();
                                     editor.putString("email", email);
                                     editor.apply();
                                     Toast.makeText(loginActivity.this, "Please verify acc first", Toast.LENGTH_SHORT).show();
                                 }
                                 else if(status.equals("wrong password")){
-
+                                    verificationBtn.setVisibility(View.GONE);
                                     forgotPasswordMsg.setVisibility(View.VISIBLE);
                                     forgotPasswordBtn.setVisibility(View.VISIBLE);
 
                                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
+                                    verificationBtn.setVisibility(View.GONE);
+                                    forgotPasswordMsg.setVisibility(View.GONE);
+                                    forgotPasswordBtn.setVisibility(View.GONE);
                                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                             }
