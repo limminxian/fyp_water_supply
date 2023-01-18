@@ -108,5 +108,15 @@
         android:textSize="12sp"
         android:gravity="center_horizontal"
         android:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="70dp"
+            android:text="error_while_logging_in"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:textColor="#FF0000"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </RelativeLayout>

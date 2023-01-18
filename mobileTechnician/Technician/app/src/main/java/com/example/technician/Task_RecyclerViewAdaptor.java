@@ -1,6 +1,7 @@
 package com.example.technician;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +32,22 @@ public class Task_RecyclerViewAdaptor extends RecyclerView.Adapter<Task_Recycler
 
     @Override
     public void onBindViewHolder(@NonNull Task_RecyclerViewAdaptor.MyViewHolder holder, int position) {
-        holder.homeownerTv.setText(TaskModels.get(position).getHomeownerName());
-        holder.serviceTv.setText(TaskModels.get(position).getServiceType());
+        holder.homeownerTv.setText(TaskModels.get(position).getName());
+        holder.serviceTv.setText(TaskModels.get(position).getType());
         holder.descTv.setText(TaskModels.get(position).getDescription());
-        holder.addressTv.setText(TaskModels.get(position).getAddress());
+        holder.addressTv.setText(String.format("%s %s %s %s", TaskModels.get(position).getBlockNo(), TaskModels.get(position).getStreet(), TaskModels.get(position).getUnitNo(), TaskModels.get(position).getPostalCode()));
+        //holder.addressTv.setText(TaskModels.get(position).getAddress());
         holder.statusTv.setText(TaskModels.get(position).getStatus());
-        holder.editButton.setImageResource(TaskModels.get(position).getImage());
+
+        holder.itemView.setOnClickListener((view) -> {
+            Intent intent = new Intent(context, updateTasksActivity.class);
+            intent.putExtra("homeownerName", TaskModels.get(position).getName());
+            intent.putExtra("serviceType", TaskModels.get(position).getType());
+            intent.putExtra("description", TaskModels.get(position).getDescription());
+            intent.putExtra("address", TaskModels.get(position).getBlockNo() + " " + TaskModels.get(position).getStreet() + " " + TaskModels.get(position).getUnitNo() + " " + TaskModels.get(position).getPostalCode());
+            intent.putExtra("status", TaskModels.get(position).getStatus());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -45,13 +56,10 @@ public class Task_RecyclerViewAdaptor extends RecyclerView.Adapter<Task_Recycler
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-
-        ImageView editButton;
         TextView homeownerTv, serviceTv, descTv, addressTv , statusTv;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            editButton = itemView.findViewById(R.id.editButton);
             homeownerTv = itemView.findViewById(R.id.homeownerTv);
             serviceTv = itemView.findViewById(R.id.serviceTv);
             descTv = itemView.findViewById(R.id.descTv);

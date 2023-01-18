@@ -1,43 +1,56 @@
 package com.example.technician;
 
 public class TaskModel {
-    String homeownerName;
-    String serviceType;
-    String description;
-    String address;
+    String street;
+    String blockNo;
+    String unitNo;
+    int postalCode;
+    String name;
     String status;
-    int image;
+    String description;
+    String type;
 
-    public TaskModel(String homeownerName, String serviceType, String description, String address, String status, int image) {
-        this.homeownerName = homeownerName;
-        this.serviceType = serviceType;
-        this.description = description;
-        this.address = address;
+
+    public TaskModel(String street, String blockNo, String unitNo, int postalCode, String name, String status, String description, String type) {
+        this.street = street;
+        this.blockNo = blockNo;
+        this.unitNo = unitNo;
+        this.postalCode = postalCode;
+        this.name = name;
         this.status = status;
-        this.image = image;
+        this.description = description;
+        this.type = type;
     }
 
-    public String getHomeownerName() {
-        return homeownerName;
+    public String getStreet() {
+        return street;
     }
 
-    public String getServiceType() {
-        return serviceType;
+    public String getBlockNo() {
+        return blockNo;
     }
 
-    public String getDescription() {
-        return description;
+    public String getUnitNo() {
+        return unitNo;
     }
 
-    public String getAddress() {
-        return address;
+    public int getPostalCode() {
+        return postalCode;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public int getImage() {
-        return image;
+    public String getDescription() {
+        return description;
+    }
+
+    public String getType() {
+        return type;
     }
 }

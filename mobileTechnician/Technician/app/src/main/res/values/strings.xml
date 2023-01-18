@@ -1,48 +1,29 @@
 <resources>
     <string name="app_name">Technician</string>
-    <string-array name="homeowner_name">
-        <item>Justin</item>
-        <item>Allen</item>
-        <item>Jason</item>
-        <item>Ally</item>
-        <item>Renee</item>
-    </string-array>
-    <string-array name="service_type">
-        <item>Maintenance</item>
-        <item>Installation</item>
-        <item>Uninstallation</item>
-        <item>Maintenance</item>
-        <item>Installation</item>
-    </string-array>
-    <string-array name="description">
-        <item>some desc</item>
-        <item>some desc</item>
-        <item>some desc</item>
-        <item>some desc</item>
-        <item>some desc</item>
-    </string-array>
-    <string-array name="address">
-        <item>Blk 322 Anson Road #0432 345322</item>
-        <item>Blk 322 Anson Road #0532 345322</item>
-        <item>Blk 322 Anson Road #0632 345322</item>
-        <item>Blk 322 Anson Road #0732 345322</item>
-        <item>Blk 322 Anson Road #0832 345322</item>
-    </string-array>
-    <string-array name="status">
-        <item>Open</item>
-        <item>Open</item>
-        <item>Open</item>
-        <item>Close</item>
-        <item>Close</item>
-    </string-array>
     <string-array name="area_array">
         <item>North</item>
+        <item>North East</item>
+        <item>Central</item>
         <item>East</item>
         <item>West</item>
-        <item>South</item>
-        <item>North East</item>
-        <item>North West</item>
-        <item>South East</item>
-        <item>South West</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Open</item>
+        <item>Close</item>
+    </string-array>
+    <string-array name="house_array">
+        <item>1-Room Flat</item>
+        <item>2-Room Flat</item>
+        <item>3-Room Flat</item>
+        <item>4-Room Flat</item>
+        <item>5-Room Flat</item>
+        <item>Executive Flat</item>
+        <item>Executive Condo</item>
+        <item>Private Condo</item>
+        <item>Apartment</item>
+        <item>Semi Detached House</item>
+        <item>Terrace House</item>
+        <item>Shop House</item>
+        <item>Bungalow House</item>
     </string-array>
 </resources>
