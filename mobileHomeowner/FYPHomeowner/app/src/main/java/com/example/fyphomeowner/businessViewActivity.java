@@ -41,7 +41,8 @@ public class businessViewActivity extends AppCompatActivity implements businessR
     private SearchView searchView;
     private ArrayList<Company> businessList;
     private RecyclerView recyclerView;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferencesHomeowner;
+    private SharedPreferences sharedPreferencesCompany;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +50,17 @@ public class businessViewActivity extends AppCompatActivity implements businessR
         setContentView(R.layout.activity_business_view);
 
         //SHARED PREFERENCES
-        sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("EOF", "false");
+        sharedPreferencesHomeowner = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        sharedPreferencesCompany = getSharedPreferences("companyPref", MODE_PRIVATE);
+        //reset chosen company
+        SharedPreferences.Editor editor = sharedPreferencesCompany.edit();
+        editor.putString("companyID", "");
         editor.apply();
 
         //RECYCLER VIEW
         recyclerView = findViewById(R.id.businessRecyclerView);
         businessList = new ArrayList<>();
         setUpBusinessViews();
-
-//        businessRecyclerAdapter adapter = new businessRecyclerAdapter(this, businessList, this);
-//        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //SEARCH VIEW
@@ -291,7 +291,7 @@ public class businessViewActivity extends AppCompatActivity implements businessR
         }) {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
-                paramV.put("userID", sharedPreferences.getString("userID",""));
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
                 return paramV;
             }
         };
@@ -316,6 +316,9 @@ public class businessViewActivity extends AppCompatActivity implements businessR
     //RECYCLER ONCLICK
     @Override
     public void selectedBusiness(Company company) {
+        SharedPreferences.Editor editor = sharedPreferencesCompany.edit();
+        editor.putString("companyID", String.valueOf(company.getID()));
+        editor.apply();
         openBusinessProfilePage(company);
     }
 }

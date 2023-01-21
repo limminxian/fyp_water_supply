@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import kotlin.jvm.Volatile;
-
 
 public class registerActivity extends AppCompatActivity {
     //Define variables
@@ -157,7 +155,6 @@ public class registerActivity extends AppCompatActivity {
             //Sends data towards the php file to process
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
-                //paramV.put("username", String.valueOf(usernameTxt.getText()));
                 paramV.put("name", String.valueOf(nameTxt.getText()));
                 paramV.put("password", String.valueOf(passwordTxt.getText()));
                 paramV.put("retypePassword", String.valueOf(retypePasswordTxt.getText()));
@@ -194,7 +191,7 @@ public class registerActivity extends AppCompatActivity {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_window, null);
+        View popupView = inflater.inflate(R.layout.verification_popup_window, null);
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;

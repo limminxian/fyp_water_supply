@@ -1,6 +1,7 @@
 package com.example.fyphomeowner;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -119,6 +121,7 @@ public class businessRecyclerAdapter extends RecyclerView.Adapter<businessRecycl
             @Override
             public void onClick(View view) {
                 businessClickListner.selectedBusiness(company);
+
             }
         });
     }
@@ -131,7 +134,8 @@ public class businessRecyclerAdapter extends RecyclerView.Adapter<businessRecycl
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         //grabs views from recycler layout file
-        //like onCreate
+        //similar to onCreate
+
 
         ImageView star1, star2, star3, star4, star5;
         ImageView businessImage;
