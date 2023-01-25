@@ -94,6 +94,7 @@ public class profileActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             //changing the response to a JSONobject because the php file is response is a JSON file
+                            Log.i("tagconvertstr", "["+response+"]");
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
                             String message = jsonObject.getString("message");

@@ -77,7 +77,7 @@ public class businessReviewActivity extends AppCompatActivity {
         //Views
         reviewTitle = findViewById(R.id.reviewTitle);
         ratingBar = findViewById(R.id.ratingBar);
-        reviewTxt = findViewById(R.id.reviewTxt);
+        reviewTxt = findViewById(R.id.currBill);
         reviewBtn = findViewById(R.id.reviewBtn);
         reviewTitle.setText("Rate and review " + companyName);
         reviewBtn.setOnClickListener(new View.OnClickListener() {

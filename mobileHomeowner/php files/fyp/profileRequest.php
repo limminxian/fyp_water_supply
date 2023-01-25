@@ -40,9 +40,7 @@ if (!empty($_POST['userID'])) {
 			$postalCode = $homeownerRow['POSTALCODE'];
 			$houseType = $homeownerRow['HOUSETYPE'];
 			$householdSize = $homeownerRow['NOOFPEOPLE'];
-		} else $result = array("status" => "failed", "message" => "Failed to fetch homeowner data");		
-		
-		$result = array("status" => "success", "message" => "Fetch data successful", 
+			$result = array("status" => "success", "message" => "Fetch data successful", 
 						"name" => $name,
 						"phoneNo" => $phoneNo,
 						"email" => $email,
@@ -52,6 +50,9 @@ if (!empty($_POST['userID'])) {
 						"postalCode" => $postalCode,
 						"houseType" => $houseType,
 						"householdSize" => $householdSize);
+		} else $result = array("status" => "failed", "message" => "Failed to fetch homeowner data");		
+		
+		
 		
     } else $result = array("status" => "failed", "message" => "Database connection failed");
 } else $result = array("status" => "failed", "message" => "All fields are required");

@@ -11,6 +11,29 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <Spinner
+            android:id="@+id/billYearSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:textColor="#0583BC"
+            app:layout_constraintBottom_toBottomOf="@+id/yearMsg"
+            app:layout_constraintStart_toEndOf="@+id/yearMsg"
+            app:layout_constraintTop_toTopOf="@+id/yearMsg"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Spinner
+            android:id="@+id/billMonthSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="#0583BC"
+            app:layout_constraintEnd_toEndOf="@+id/billYearSpinner"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/billYearSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/billYearSpinner" />
+
         <LinearLayout
             android:id="@+id/layoutToolBar"
             android:layout_width="match_parent"
@@ -44,6 +67,110 @@
         </LinearLayout>
 
         <!--        INPUT VIEWS HERE-->
+
+        <TextView
+            android:id="@+id/currBillTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/review_style"
+            android:gravity="top"
+            android:hint="bills"
+            android:inputType="textMultiLine"
+            android:lines="6"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/billTitle"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/billTitle"
+            app:layout_constraintTop_toBottomOf="@+id/billTitle" />
+
+        <TextView
+            android:id="@+id/prevBillTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/review_style"
+            android:gravity="top"
+            android:hint="no bills found"
+            android:inputType="textMultiLine"
+            android:lines="6"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/monthMsg"
+            app:layout_constraintHorizontal_bias="0.003"
+            app:layout_constraintStart_toStartOf="@+id/monthMsg"
+            app:layout_constraintTop_toBottomOf="@+id/monthMsg" />
+
+        <TextView
+            android:id="@+id/billTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Bill for: "
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutToolBar" />
+
+        <Button
+            android:id="@+id/makePaymentBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Make payment"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="@+id/currBillTxt"
+            app:layout_constraintHorizontal_bias="0.405"
+            app:layout_constraintStart_toStartOf="@+id/currBillTxt"
+            app:layout_constraintTop_toBottomOf="@+id/currBillTxt" />
+
+        <TextView
+            android:id="@+id/previousBillTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Previous bills"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/makePaymentBtn" />
+
+        <TextView
+            android:id="@+id/yearMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Year:"
+            app:layout_constraintEnd_toEndOf="@+id/previousBillTitle"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/previousBillTitle"
+            app:layout_constraintTop_toBottomOf="@+id/previousBillTitle" />
+
+        <TextView
+            android:id="@+id/monthMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Month:"
+            app:layout_constraintEnd_toEndOf="@+id/yearMsg"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/yearMsg"
+            app:layout_constraintTop_toBottomOf="@+id/yearMsg" />
+
+        <Button
+            android:id="@+id/prevBillsBtn"
+            android:layout_width="126dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="12dp"
+            android:text="Get previous bills"
+            android:textAllCaps="false"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/prevBillTxt"
+            app:layout_constraintHorizontal_bias="0.412"
+            app:layout_constraintStart_toStartOf="@+id/prevBillTxt"
+            app:layout_constraintTop_toBottomOf="@+id/prevBillTxt" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
