@@ -34,7 +34,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/alegreya_sans"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/descTv"
@@ -44,7 +44,7 @@
             android:layout_marginTop="40dp"
             android:fontFamily="@font/alegreya_sans"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/addressTv"
@@ -54,7 +54,7 @@
             android:layout_marginTop="60dp"
             android:fontFamily="@font/alegreya_sans"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/statusTv"
@@ -65,8 +65,18 @@
             android:layout_marginBottom="10sp"
             android:fontFamily="@font/alegreya_sans"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/areaTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="10sp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
 <!--        <ImageButton-->
 <!--            android:id="@+id/editButton"-->
 <!--            android:layout_marginTop="80dp"-->

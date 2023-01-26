@@ -38,14 +38,15 @@ public class Task_RecyclerViewAdaptor extends RecyclerView.Adapter<Task_Recycler
         holder.addressTv.setText(String.format("%s %s %s %s", TaskModels.get(position).getBlockNo(), TaskModels.get(position).getStreet(), TaskModels.get(position).getUnitNo(), TaskModels.get(position).getPostalCode()));
         //holder.addressTv.setText(TaskModels.get(position).getAddress());
         holder.statusTv.setText(TaskModels.get(position).getStatus());
+        holder.areaTv.setText(TaskModels.get(position).getArea());
 
         holder.itemView.setOnClickListener((view) -> {
             Intent intent = new Intent(context, updateTasksActivity.class);
-            intent.putExtra("homeownerName", TaskModels.get(position).getName());
-            intent.putExtra("serviceType", TaskModels.get(position).getType());
-            intent.putExtra("description", TaskModels.get(position).getDescription());
-            intent.putExtra("address", TaskModels.get(position).getBlockNo() + " " + TaskModels.get(position).getStreet() + " " + TaskModels.get(position).getUnitNo() + " " + TaskModels.get(position).getPostalCode());
-            intent.putExtra("status", TaskModels.get(position).getStatus());
+//            intent.putExtra("homeownerName", TaskModels.get(position).getName());
+//            intent.putExtra("serviceType", TaskModels.get(position).getType());
+//            intent.putExtra("description", TaskModels.get(position).getDescription());
+//            intent.putExtra("address", TaskModels.get(position).getBlockNo() + " " + TaskModels.get(position).getStreet() + " " + TaskModels.get(position).getUnitNo() + " " + TaskModels.get(position).getPostalCode());
+//            intent.putExtra("status", TaskModels.get(position).getStatus());
             context.startActivity(intent);
         });
     }
@@ -56,7 +57,7 @@ public class Task_RecyclerViewAdaptor extends RecyclerView.Adapter<Task_Recycler
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView homeownerTv, serviceTv, descTv, addressTv , statusTv;
+        TextView homeownerTv, serviceTv, descTv, addressTv , statusTv, areaTv;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +66,7 @@ public class Task_RecyclerViewAdaptor extends RecyclerView.Adapter<Task_Recycler
             descTv = itemView.findViewById(R.id.descTv);
             addressTv = itemView.findViewById(R.id.addressTv);
             statusTv = itemView.findViewById(R.id.statusTv);
+            areaTv = itemView.findViewById(R.id.areaTv);
         }
     }
 }

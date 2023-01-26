@@ -9,9 +9,10 @@ public class TaskModel {
     String status;
     String description;
     String type;
+    String area;
 
 
-    public TaskModel(String street, String blockNo, String unitNo, int postalCode, String name, String status, String description, String type) {
+    public TaskModel(String street, String blockNo, String unitNo, int postalCode, String name, String status, String description, String type, String area) {
         this.street = street;
         this.blockNo = blockNo;
         this.unitNo = unitNo;
@@ -20,6 +21,7 @@ public class TaskModel {
         this.status = status;
         this.description = description;
         this.type = type;
+        this.area = area;
     }
 
     public String getStreet() {
@@ -52,5 +54,12 @@ public class TaskModel {
 
     public String getType() {
         return type;
+    }
+
+    public String getArea() {return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }
