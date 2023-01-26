@@ -48,6 +48,7 @@ public class editTicketActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferencesHomeowner;
     private SharedPreferences sharedPreferencesTicket;
 
+    private ArrayAdapter<String> ticketAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +140,7 @@ public class editTicketActivity extends AppCompatActivity {
                                 for(int i = 0; i < ticketTypesObj.length(); i++ ){
                                     ticketType.add(ticketTypesObj.getString(i));
                                 }
-                                ArrayAdapter<String> ticketAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ticketType);
+                                ticketAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ticketType);
                                 ticketTypeSpinner.setAdapter(ticketAdapter);
                             }
                             else {
@@ -181,10 +182,16 @@ public class editTicketActivity extends AppCompatActivity {
                             String message = jsonObject.getString("message");
                             if (status.equals("success")){
                                 String description = jsonObject.getString("description");
+                                String name = jsonObject.getString("name");
                                 Log.d("ID: ",jsonObject.getString("id") );
                                 if(description != "null"){
                                     descriptionTxt.setText(description);
                                 }
+                                if(name != "null"){
+                                    int serviceTypeArrayPos = ticketAdapter.getPosition(name);
+                                    ticketTypeSpinner.setSelection(serviceTypeArrayPos);
+                                }
+
                             }
                             else {
                                 Log.d("error", message);
@@ -202,7 +209,7 @@ public class editTicketActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
 //                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID",""));
-                paramV.put("ticketID", "6");
+                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID", ""));
                 return paramV;
             }
         };
@@ -236,7 +243,7 @@ public class editTicketActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
 //                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID",""));
-                paramV.put("ticketID", "6");
+                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID", ""));
                 paramV.put("type", ticketTypeSpinner.getSelectedItem().toString());
                 Log.d("Selected: ", ticketTypeSpinner.getSelectedItem().toString());
                 paramV.put("description", descriptionTxt.getText().toString());

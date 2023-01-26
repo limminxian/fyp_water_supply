@@ -47,7 +47,10 @@ public class ticketRecyclerAdapter extends RecyclerView.Adapter<ticketRecyclerAd
         //assign values to views created in recycler layout file
         //based on position of recycler view
         Ticket ticket = ticketList.get(position);
-        holder.ticketTxt.setText(ticketList.get(position).getDate());
+        holder.dateTxt.setText("Date created: " + ticketList.get(position).getDate());
+        holder.serviceTypeTxt.setText("Service Type: " + ticketList.get(position).getServiceType());
+        holder.descriptionTxt.setText("Description: " + ticketList.get(position).getDescription());
+        holder.statusTxt.setText("Status: " + ticketList.get(position).getStatus());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,11 +70,17 @@ public class ticketRecyclerAdapter extends RecyclerView.Adapter<ticketRecyclerAd
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         //grabs views from recycler layout file
         //similar to onCreate
-        TextView ticketTxt;
+        TextView dateTxt;
+        TextView serviceTypeTxt;
+        TextView descriptionTxt;
+        TextView statusTxt;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ticketTxt = itemView.findViewById(R.id.ticketTxt);
+            dateTxt = itemView.findViewById(R.id.dateTxt);
+            serviceTypeTxt = itemView.findViewById(R.id.serviceTypeTxt);
+            descriptionTxt = itemView.findViewById(R.id.descriptionTxt);
+            statusTxt = itemView.findViewById(R.id.statusTxt);
         }
     }
 }

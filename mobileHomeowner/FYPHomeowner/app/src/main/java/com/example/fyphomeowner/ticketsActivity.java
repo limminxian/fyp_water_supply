@@ -63,6 +63,7 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
 
         //RECYCLER VIEW
         recyclerView = findViewById(R.id.ticketRecyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         ticketList = new ArrayList<>();
         setUpTickets();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -154,7 +155,7 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
                                     String description = ticketObj.getString("description");
                                     String ticketStatus = ticketObj.getString("status");
                                     String ticketStr = date +"\n"+ serviceType +"\n"+ description +"\n"+ ticketStatus;
-                                    Ticket ticket = new Ticket(Integer.parseInt(ticketID), date, description, ticketStatus);
+                                    Ticket ticket = new Ticket(Integer.parseInt(ticketID), date, serviceType, description, ticketStatus);
                                     ticketList.add(ticket);
 //                                    TextView textView = new TextView(getApplicationContext());
 //                                    textView.setText(ticketStr);

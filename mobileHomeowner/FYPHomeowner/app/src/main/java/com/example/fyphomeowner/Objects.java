@@ -257,12 +257,16 @@ public class Objects {
 class Ticket{
     private Integer ID;
     private String date;
+    private String serviceType;
     private String description;
     private String status;
 
-    public Ticket(Integer ID, String date, String description, String status) {
+    public Ticket(Integer ID, String date, String serviceType, String description, String status) {
+        date = date.substring(0, Math.min(date.length(), 10));
+
         this.ID = ID;
         this.date = date;
+        this.serviceType = serviceType;
         this.description = description;
         this.status = status;
     }
@@ -281,6 +285,14 @@ class Ticket{
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 
     public String getDescription() {

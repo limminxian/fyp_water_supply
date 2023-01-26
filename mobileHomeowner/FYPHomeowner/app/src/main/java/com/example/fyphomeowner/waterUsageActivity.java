@@ -6,23 +6,50 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class waterUsageActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView imageMenuView;
+    private SharedPreferences sharedPreferencesHomeowner;
+    private BarChart barChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_usage);
+        sharedPreferencesHomeowner = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        barChart = findViewById(R.id.barChart);
+
+        ArrayList<BarEntry> waterUsage = new ArrayList<>();
+        waterUsage.add(new BarEntry(2015, 420));
+        waterUsage.add(new BarEntry(2016, 470));
+        waterUsage.add(new BarEntry(2017, 500));
+        waterUsage.add(new BarEntry(2018, 420));
+        waterUsage.add(new BarEntry(2019, 300));
+        waterUsage.add(new BarEntry(2020, 210));
+
+        BarDataSet barDataSet = new BarDataSet(waterUsage, "Water Usage");
+        barDataSet.setValueTextSize(16f);
+        BarData barData = new BarData(barDataSet);
+        barChart.setFitBars(true);
+        barChart.setData(barData);
+        barChart.getDescription().setText("Water usages for this decade");
+        barChart.animateY(2000);
 
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
