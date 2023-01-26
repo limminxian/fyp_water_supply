@@ -36,7 +36,7 @@ if (!empty($_POST['userID']))
 		} else $result = array("status" => "failed", "message" => "Company record count failed");	
 		
 		
-		$result = array("status" => "success", "message" => "Fetch data successful", );
+		$result = array("status" => "success", "message" => "Fetch data successful");
 		//For loop through all rows 
 		for ($rowNo = 1; $rowNo <= $companyCount; $rowNo++) {
 			//Get row at the row number

@@ -254,6 +254,64 @@ public class Objects {
 //    }
 //}
 
+class Ticket{
+    private Integer ID;
+    private String date;
+    private String serviceType;
+    private String description;
+    private String status;
+
+    public Ticket(Integer ID, String date, String serviceType, String description, String status) {
+        date = date.substring(0, Math.min(date.length(), 10));
+
+        this.ID = ID;
+        this.date = date;
+        this.serviceType = serviceType;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Integer getID() {
+        return ID;
+    }
+
+    public void setID(Integer ID) {
+        this.ID = ID;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+
 class Company implements Parcelable {
     private Integer ID;
     private String name;

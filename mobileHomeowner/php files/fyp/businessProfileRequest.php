@@ -103,7 +103,7 @@ if (!empty($_POST['userID']) && !empty($_POST['companyID'])) {
 				$reviews[$reviewName] = $reviewArr;
 				$count++;
 			}
-		} else $result = array("status" => "failed", "message" => "Failed to fetch review data");	
+		} else {$result = array("status" => "failed", "message" => "Failed to fetch review data"); $count++;}	
 	
 		//get avg stars from reviews
 		$avgStars = $stars/$count;
