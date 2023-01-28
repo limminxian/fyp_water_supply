@@ -7,7 +7,7 @@
         if ($conn) {
             //$sql = "select * from USERS where EMAIL = '" . $EMAIL . "'";
             $sql = "select u.NAME, u.EMAIL, u.PASSWORD, u.TYPE, u.STATUS, r.name as ROLENAME from users u
-            inner join roles r on u.TYPE = r.ID
+            inner join role r on u.TYPE = r.ID
             where u.EMAIL = '" . $EMAIL . "'";
             $res = mysqli_query($conn, $sql);
             if (mysqli_num_rows($res) != 0) {
