@@ -789,6 +789,24 @@ class Equipment{
 		echo mysqli_error($conn);
 		mysqli_stmt_close($stmt);
 	}
+	
+	function getAllEquipmentHomeowner($type){
+		$conn = getdb();
+		$stmt = mysqli_prepare($conn,"SELECT E.* FROM `EQUIPMENT` E, `EQUIPSTOCK` T WHERE E.EQUIPMENT = T.SERIAL AND T.TYPE=?;");
+		mysqli_stmt_bind_param($stmt,"d", $type);
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);		
+			while ($rows = mysqli_fetch_all($result, MYSQLI_ASSOC)) {
+				$this->equipmentArray=[];
+				foreach ($rows as $r) {
+					$c = new Equipment();
+					$c->setEquipment($r);
+					array_push($this->equipmentArray,$c);
+				}
+			}
+		echo mysqli_error($conn);
+		mysqli_stmt_close($stmt);
+	}
 }
 
 class EquipmentStock{
