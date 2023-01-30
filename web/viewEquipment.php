@@ -72,10 +72,10 @@ foreach($equipment->equipmentArray as $c){
 		<button  value="<?=base64_encode(serialize($c))?>" name="view"/>View equipment stock</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>edit</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="edit"/>View homeowner equipment</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>delete</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>Edit</button>
 	</td>
 	</tr>
   <?php
