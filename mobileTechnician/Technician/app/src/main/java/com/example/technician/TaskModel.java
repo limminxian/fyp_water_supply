@@ -1,28 +1,30 @@
 package com.example.technician;
 
 public class TaskModel {
+    int ticketID;
+    String name;
+    String type;
+    String description;
     String street;
     String blockNo;
     String unitNo;
     int postalCode;
-    String name;
     String status;
-    String description;
-    String type;
     String area;
 
-
-    public TaskModel(String street, String blockNo, String unitNo, int postalCode, String name, String status, String description, String type, String area) {
+    public TaskModel(int ticketID, String name, String type, String description, String street, String blockNo, String unitNo, int postalCode, String status, String area) {
+        this.ticketID = ticketID;
+        this.name = name;
+        this.type = type;
+        this.description = description;
         this.street = street;
         this.blockNo = blockNo;
         this.unitNo = unitNo;
         this.postalCode = postalCode;
-        this.name = name;
         this.status = status;
-        this.description = description;
-        this.type = type;
         this.area = area;
     }
+
 
     public String getStreet() {
         return street;
@@ -56,10 +58,17 @@ public class TaskModel {
         return type;
     }
 
-    public String getArea() {return area;
-    }
+    public String getArea() {return area;}
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public int getTicketID() {
+        return ticketID;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

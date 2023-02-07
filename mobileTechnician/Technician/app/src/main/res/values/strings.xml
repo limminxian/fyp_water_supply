@@ -11,19 +11,4 @@
         <item>Open</item>
         <item>Close</item>
     </string-array>
-    <string-array name="house_array">
-        <item>1-Room Flat</item>
-        <item>2-Room Flat</item>
-        <item>3-Room Flat</item>
-        <item>4-Room Flat</item>
-        <item>5-Room Flat</item>
-        <item>Executive Flat</item>
-        <item>Executive Condo</item>
-        <item>Private Condo</item>
-        <item>Apartment</item>
-        <item>Semi Detached House</item>
-        <item>Terrace House</item>
-        <item>Shop House</item>
-        <item>Bungalow House</item>
-    </string-array>
 </resources>

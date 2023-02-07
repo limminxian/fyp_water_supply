@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".viewWaterUsageActivity"
-    android:background="#f1f1f1">
+    tools:context=".addWaterUsageActivity">
 
     <TextView
         android:id="@+id/usernameView"
@@ -24,43 +23,30 @@
         android:layout_alignRight="@+id/usernameView"/>
 
     <TextView
-        android:id="@+id/textViewmonth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Water usage for December 2022"
-        android:paddingStart="15dp"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/areaTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Area: "
+        android:text="Add Water Usage"
         android:textStyle="bold"
         android:textSize="20dp"
         android:textColor="@color/black"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:layout_marginStart="50dp"
         />
 
-    <Spinner
-        android:id="@+id/areaSpinner"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="100dp"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/addressRecyclerView"
+        android:id="@+id/waterRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
-        android:layout_above="@+id/bottom_navigator"/>
+        android:layout_marginTop="120dp"/>
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:background="@color/blue_200"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/waterRecyclerView"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigator"

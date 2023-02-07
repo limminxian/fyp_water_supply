@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addressCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="8dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/unitTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="5sp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/waterUsage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13sp"
+            android:layout_marginTop="30sp"
+            android:layout_marginBottom="5sp"
+            android:fontFamily="@font/alegreya_sans"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:hint="Input Water Usage in Litres (e.g. 200.12)"
+            android:inputType="numberDecimal" />
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:background="@color/blue_200"
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="13sp"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:background="@color/blue_200"
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="130dp"
+            android:layout_marginBottom="20dp" />
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

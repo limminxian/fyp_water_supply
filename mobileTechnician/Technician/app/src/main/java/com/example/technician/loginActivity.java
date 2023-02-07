@@ -36,6 +36,10 @@ public class loginActivity extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.loginBtn);
         sharedPreferences = getSharedPreferences("MyAppName", MODE_PRIVATE);
         Intent intent = new Intent(getApplicationContext(), viewAssignedTasksActivity.class);
+        if (sharedPreferences.getString("logged","false").equals("true")){
+            startActivity(intent);
+            finish();
+        }
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +49,8 @@ public class loginActivity extends AppCompatActivity {
                 password = passwordTxt.getText().toString();
                 textViewError = findViewById(R.id.error);
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url ="https://fyptechnician.herokuapp.com/login.php";
+                //String url ="https://fyptechnician.herokuapp.com/login.php";
+                String url ="http://192.168.1.10/Technician/login.php";
                 //String url = "http://10.33.70.138/Technician/login.php";
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {

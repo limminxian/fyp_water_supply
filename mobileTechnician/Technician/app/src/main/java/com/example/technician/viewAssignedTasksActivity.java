@@ -14,10 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -46,19 +44,34 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_assigned_tasks);
-        recyclerView = findViewById(R.id.taskRecyclerView);
         Intent intent = new Intent(getApplicationContext(), loginActivity.class);
         sharedPreferences = getSharedPreferences("MyAppName", MODE_PRIVATE);
         tasksharedPreferences = getSharedPreferences("Tasks", MODE_PRIVATE);
 
+        if (sharedPreferences.getString("logged","false").equals("false")){
+            startActivity(intent);
+            finish();
+        }
+
         //AREA SPINNER
         areaSpinner = findViewById(R.id.areaSpinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.area_array, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        areaSpinner.setAdapter(spinnerAdapter);
+//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.area_array, android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        areaSpinner.setAdapter(spinnerAdapter);
+        ArrayList<String> areaArray = new ArrayList<>();
+        areaArray.add("North");
+        areaArray.add("North East");
+        areaArray.add("Central");
+        areaArray.add("East");
+        areaArray.add("West");
+
+        ArrayAdapter<String> areaAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, areaArray);
+        areaSpinner.setAdapter(areaAdapter);
+
 
         name = findViewById(R.id.usernameView);
         logoutBtn = findViewById(R.id.logoutButton);
+        recyclerView = findViewById(R.id.taskRecyclerView);
 //        Intent intent = getIntent();
 //        String username = intent.getStringExtra("Username String");
 //        name.setText(String.format("Hello, %s", username));
@@ -98,7 +111,8 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
             {
                 TaskModels.clear();
                 String selectedArea = areaSpinner.getSelectedItem().toString();
-                System.out.println("Area selected: " + selectedArea);
+                //System.out.println("Area selected: " + selectedArea);
+                areaSpinner.setSelection(areaAdapter.getPosition(selectedArea));
                 setUpTaskModels(selectedArea);
             }
 
@@ -108,9 +122,9 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
         });
     }
 
-
     private void setUpTaskModels(String sArea) {
-        String url ="https://fyptechnician.herokuapp.com/task.php";
+        //String url ="https://fyptechnician.herokuapp.com/task.php";
+        String url ="http://192.168.1.10/Technician/task.php";
         url = url + "?area=" + sArea;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -118,33 +132,13 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-//                            //converting the string to json array object
-//                            JSONArray jsonArray = new JSONArray(response);
-//                            //traversing through all the object
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//
-//                                //getting product object from json array
-//                                JSONObject task = jsonArray.getJSONObject(i);
-//
-//                                //adding the product to product list
-//                                TaskModels.add(new TaskModel(
-//                                        task.getString("STREET"),
-//                                        task.getString("BLOCKNO"),
-//                                        task.getString("UNITNO"),
-//                                        task.getInt("POSTALCODE"),
-//                                        task.getString("NAME"),
-//                                        task.getString("DESCRIPTION"),
-//                                        task.getString("SERVICETYPE"),
-//                                        task.getString("STATUS"),
-//                                        task.getString("AREA")
-//                                ));
-//                            }
                             Log.i("tagconvertstr", "["+response+"]");
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray task = jsonObject.getJSONArray("tasks");
                                 for (int i = 0; i < task.length(); i++) {
                                     String area = task.getJSONObject(i).getString("AREA");
                                         String status1 = task.getJSONObject(i).getString("status");
+                                        int ticketId = task.getJSONObject(i).getInt("ID");
                                         String street = task.getJSONObject(i).getString("STREET");
                                         String blockNo = task.getJSONObject(i).getString("BLOCKNO");
                                         String unitNo = task.getJSONObject(i).getString("UNITNO");
@@ -153,21 +147,23 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                         String description = task.getJSONObject(i).getString("DESCRIPTION");
                                         String serviceType = task.getJSONObject(i).getString("SERVICETYPE");
                                         String status = task.getJSONObject(i).getString("STATUS");
-                                        TaskModels.add(new TaskModel(street, blockNo, unitNo, postalCode, name, description, serviceType, status, area));
+                                        TaskModels.add(new TaskModel(ticketId, name, serviceType, description, street, blockNo, unitNo, postalCode, status, area));
                                         SharedPreferences.Editor editor = tasksharedPreferences.edit();
+                                        editor.putInt("ticketId", ticketId);
                                         editor.putString("street", street);
                                         editor.putString("blockNo", blockNo);
                                         editor.putString("unitNo", unitNo);
-                                        editor.putString("postalCode", String.valueOf(postalCode));
+                                        editor.putInt("postalCode", postalCode);
                                         editor.putString("name", name);
                                         editor.putString("description", description);
                                         editor.putString("serviceType", serviceType);
                                         editor.putString("status", status);
+                                        editor.putString("area", area);
                                         editor.apply();
                                 }
 
                             //creating adapter object and setting it to recyclerview
-                            Task_RecyclerViewAdaptor adapter = new Task_RecyclerViewAdaptor(viewAssignedTasksActivity.this, TaskModels);
+                            taskRecyclerViewAdaptor adapter = new taskRecyclerViewAdaptor(viewAssignedTasksActivity.this, TaskModels);
                             recyclerView.setAdapter(adapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
