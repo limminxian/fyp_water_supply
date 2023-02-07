@@ -30,58 +30,42 @@ if(!isset($_SESSION['loginId'])){
 } 
 else{
 	if(isset($_POST["logout"])){
-	unset($_SESSION["loginId"]);
-	header("Location: login.php");
+		unset($_SESSION["loginId"]);
+		header("Location: login.php");
+	}
+
+$equipment = new Equipment();
+$equipment->getAllEquipmentHomeowner($_SESSION["equiptype"]->id);
+if (isset($_POST["add"])){
+	header("Location: addEquipmentStock.php");
 }
 
-if (isset($_POST["view"])){
-	$t = unserialize(base64_decode($_POST["view"]));
-	$_SESSION["equiptype"]=$t;
-	header("Location: viewEquipmentStock.php");
+if (isset($_POST["csv"])){
+	header("Location: addEquipmentCSV.php");
 }
 
-if (isset($_POST["viewhome"])){
-	$t = unserialize(base64_decode($_POST["viewhome"]));
-	$_SESSION["equiptype"]=$t;
-	header("Location: viewEquipmentHomeowner.php");
-}
-
-$equipment = new Company();
-$equipment->getAllequipment();
 ?>
 <br>
 <table>
   <tr>
     <th>ID</th>
-    <th>Name</th>
-    <th>Stock</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>serial number</th>
+    <th>installation date</th>
+    <th>homeowner</th>
   </tr>	
   <form action="" method="post">
-  	<a class="rightButton" href="addChemical.php">Add new equipment</a>
 <?php
 foreach($equipment->equipmentArray as $c){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'amount');
+		$properties = array('id', 'equipment', 'installationdate','homeowner');
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$c->$prop?>
 			</td>
 		<?php }
 	?>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="view"/>View equipment stock</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="viewhome"/>View homeowner equipment</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>Edit</button>
-	</td>
 	</tr>
   <?php
 }
