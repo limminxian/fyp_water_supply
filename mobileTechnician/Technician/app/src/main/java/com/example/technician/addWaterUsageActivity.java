@@ -93,8 +93,8 @@ public class addWaterUsageActivity extends AppCompatActivity {
     }
 
     private void setUpWaterModels() {
-        String url ="http://192.168.1.10/Technician/viewHousesbyPostalCode.php";
-        //String url ="https://fyptechnician.herokuapp.com/viewHousesbyPostalCode.php";
+        //String url ="http://192.168.1.10/Technician/viewHousesbyPostalCode.php";
+        String url ="https://fyptechnician.herokuapp.com/viewHousesbyPostalCode.php";
         Intent intent3 = getIntent();
         postalCode = intent3.getIntExtra("postalCode", 302222);
         url = url + "?postalCode=" + postalCode;
@@ -142,20 +142,5 @@ public class addWaterUsageActivity extends AppCompatActivity {
             }
         };
         Volley.newRequestQueue(this).add(stringRequest);
-    }
-}
-
-class DecimalDigitsInputFilter implements InputFilter {
-    private Pattern mPattern;
-    DecimalDigitsInputFilter(int digitsBeforeZero, int digitsAfterZero) {
-        String pattern = "[0-9]+((\\.[0-9]{0,2})?)||(\\.)?";
-        mPattern = Pattern.compile(pattern);
-    }
-    @Override
-    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-        Matcher matcher = mPattern.matcher(dest);
-        if (!matcher.matches())
-            return "";
-        return null;
     }
 }

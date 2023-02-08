@@ -80,8 +80,8 @@ public class addWaterRecyclerViewAdaptor extends RecyclerView.Adapter<addWaterRe
             String waterUsageText = holder.waterUsage.getText().toString();
             if(!waterUsageText.isEmpty()) {
                 float waterUsage = Float.parseFloat(waterUsageText.trim());
-                //String url ="https://fyptechnician.herokuapp.com/addWaterUsage.php";
-                String url ="http://192.168.1.10/Technician/addWaterUsage.php";
+                String url ="https://fyptechnician.herokuapp.com/addWaterUsage.php";
+                //String url ="http://192.168.1.10/Technician/addWaterUsage.php";
                 RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
@@ -124,8 +124,8 @@ public class addWaterRecyclerViewAdaptor extends RecyclerView.Adapter<addWaterRe
             String waterUsageText = holder.waterUsage.getText().toString().trim();
             if(!waterUsageText.isEmpty()) {
                 float waterUsage = Float.parseFloat(df.format(Double.parseDouble(waterUsageText)));
-                //String url ="https://fyptechnician.herokuapp.com/editWaterUsage.php";
-                String url ="http://192.168.1.10/Technician/editWaterUsage.php";
+                String url ="https://fyptechnician.herokuapp.com/editWaterUsage.php";
+                //String url ="http://192.168.1.10/Technician/editWaterUsage.php";
                 RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {

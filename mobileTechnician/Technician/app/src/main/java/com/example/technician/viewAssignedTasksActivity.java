@@ -128,9 +128,9 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
     }
 
     private void setUpTaskModels(String sArea) {
-        //String url ="https://fyptechnician.herokuapp.com/task.php";
+        String url ="https://fyptechnician.herokuapp.com/task.php";
         System.out.println("tech ID check : " + sharedPreferences.getInt("technicianID",0));
-        String url ="http://192.168.1.10/Technician/task.php";
+        //String url ="http://192.168.1.10/Technician/task.php";
         url = url + "?area=" + sArea + "&technicianID=" + sharedPreferences.getInt("technicianID",0);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

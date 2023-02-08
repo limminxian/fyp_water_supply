@@ -50,8 +50,8 @@ public class loginActivity extends AppCompatActivity {
                 password = passwordTxt.getText().toString();
                 textViewError = findViewById(R.id.error);
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                //String url ="https://fyptechnician.herokuapp.com/login.php";
-                String url ="http://192.168.1.10/Technician/login.php";
+                String url ="https://fyptechnician.herokuapp.com/login.php";
+                //String url ="http://192.168.1.10/Technician/login.php";
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override

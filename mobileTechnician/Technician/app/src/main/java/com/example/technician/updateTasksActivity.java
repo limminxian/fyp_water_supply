@@ -94,8 +94,8 @@ public class updateTasksActivity extends AppCompatActivity {
             }
         });
         //db
-        String url = "http://192.168.1.10/Technician/viewTask.php";
-        //String url ="https://fyptechnician.herokuapp.com/viewTask.php";
+        //String url = "http://192.168.1.10/Technician/viewTask.php";
+        String url ="https://fyptechnician.herokuapp.com/viewTask.php";
         Intent intent3 = getIntent();
         String ticketID = String.valueOf(intent3.getIntExtra("ticketID", 0));
         url = url + "?ticketID=" + ticketID;

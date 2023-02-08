@@ -101,7 +101,7 @@ public class viewWaterUsageActivity extends AppCompatActivity {
         String[] splitMonth = splitDate[0].split(" ");
         month.setText(String.format("Water Usage for %s %s", splitMonth[0], splitDate[1]));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        setUpWaterModels(areaSpinner.getSelectedItem().toString());
+        //setUpWaterModels(areaSpinner.getSelectedItem().toString());
         bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.nearMe);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -141,8 +141,8 @@ public class viewWaterUsageActivity extends AppCompatActivity {
         });
     }
     private void setUpWaterModels(String sArea) {
-        //String url ="https://fyptechnician.herokuapp.com/viewAddress.php";
-        String url ="http://192.168.1.10/Technician/viewAddress.php";
+        String url ="https://fyptechnician.herokuapp.com/viewAddress.php";
+        //String url ="http://192.168.1.10/Technician/viewAddress.php";
         url = url + "?area=" + sArea;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
