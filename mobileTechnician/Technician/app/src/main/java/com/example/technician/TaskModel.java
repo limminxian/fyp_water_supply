@@ -1,5 +1,8 @@
 package com.example.technician;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class TaskModel {
     int ticketID;
     String name;
@@ -11,8 +14,9 @@ public class TaskModel {
     int postalCode;
     String status;
     String area;
+    LocalDate serviceDate;
 
-    public TaskModel(int ticketID, String name, String type, String description, String street, String blockNo, String unitNo, int postalCode, String status, String area) {
+    public TaskModel(int ticketID, String name, String type, String description, String street, String blockNo, String unitNo, int postalCode, String status, String area, LocalDate serviceDate) {
         this.ticketID = ticketID;
         this.name = name;
         this.type = type;
@@ -23,6 +27,7 @@ public class TaskModel {
         this.postalCode = postalCode;
         this.status = status;
         this.area = area;
+        this.serviceDate = serviceDate;
     }
 
 
@@ -59,6 +64,10 @@ public class TaskModel {
     }
 
     public String getArea() {return area;}
+
+    public LocalDate getServiceDate() {
+        return serviceDate;
+    }
 
     public void setArea(String area) {
         this.area = area;

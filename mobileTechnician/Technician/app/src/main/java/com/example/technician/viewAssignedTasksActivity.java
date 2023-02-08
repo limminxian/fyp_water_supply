@@ -26,7 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,7 +81,7 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
 //        String username = intent.getStringExtra("Username String");
 //        name.setText(String.format("Hello, %s", username));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        setUpTaskModels(areaSpinner.getSelectedItem().toString());
+//        setUpTaskModels(areaSpinner.getSelectedItem().toString());
         bottomNavigationView = findViewById(R.id.bottom_navigator);
         bottomNavigationView.setSelectedItemId(R.id.tasks);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -124,8 +129,9 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
 
     private void setUpTaskModels(String sArea) {
         //String url ="https://fyptechnician.herokuapp.com/task.php";
+        System.out.println("tech ID check : " + sharedPreferences.getInt("technicianID",0));
         String url ="http://192.168.1.10/Technician/task.php";
-        url = url + "?area=" + sArea;
+        url = url + "?area=" + sArea + "&technicianID=" + sharedPreferences.getInt("technicianID",0);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -136,7 +142,14 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray task = jsonObject.getJSONArray("tasks");
                                 for (int i = 0; i < task.length(); i++) {
-                                    String area = task.getJSONObject(i).getString("AREA");
+                                    String serviceDateStr = task.getJSONObject(i).getString("SERVICEDATE");
+                                    DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                    LocalDate serviceDate = LocalDate.parse(serviceDateStr, sdf);
+                                    LocalDate currentDate = LocalDate.now();
+                                    System.out.println("service Date " + serviceDate);
+                                    System.out.println("current Date " + currentDate);
+                                    if(serviceDate.isEqual(currentDate)) {
+                                        String area = task.getJSONObject(i).getString("AREA");
                                         String status1 = task.getJSONObject(i).getString("status");
                                         int ticketId = task.getJSONObject(i).getInt("ID");
                                         String street = task.getJSONObject(i).getString("STREET");
@@ -147,7 +160,7 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                         String description = task.getJSONObject(i).getString("DESCRIPTION");
                                         String serviceType = task.getJSONObject(i).getString("SERVICETYPE");
                                         String status = task.getJSONObject(i).getString("STATUS");
-                                        TaskModels.add(new TaskModel(ticketId, name, serviceType, description, street, blockNo, unitNo, postalCode, status, area));
+                                        TaskModels.add(new TaskModel(ticketId, name, serviceType, description, street, blockNo, unitNo, postalCode, status, area, serviceDate));
                                         SharedPreferences.Editor editor = tasksharedPreferences.edit();
                                         editor.putInt("ticketId", ticketId);
                                         editor.putString("street", street);
@@ -160,6 +173,7 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                         editor.putString("status", status);
                                         editor.putString("area", area);
                                         editor.apply();
+                                    }
                                 }
 
                             //creating adapter object and setting it to recyclerview
@@ -175,14 +189,7 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-              })
-                {
-                    protected Map<String, String> getParams(){
-                        Map<String, String> paramV = new HashMap<>();
-                        paramV.put("email", sharedPreferences.getString("email",""));
-                        return paramV;
-                    }
-                };
+              });
 
         Volley.newRequestQueue(this).add(stringRequest);
 

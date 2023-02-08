@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class loginActivity extends AppCompatActivity {
     String username, password, name;
+    int id;
     TextView textViewError;
     SharedPreferences sharedPreferences;
     @Override
@@ -51,7 +52,6 @@ public class loginActivity extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                 //String url ="https://fyptechnician.herokuapp.com/login.php";
                 String url ="http://192.168.1.10/Technician/login.php";
-                //String url = "http://10.33.70.138/Technician/login.php";
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
@@ -63,11 +63,13 @@ public class loginActivity extends AppCompatActivity {
                                     String status = jsonObject.getString("status");
                                     String message = jsonObject.getString("message");
                                     if(status.equals("success")) {
+                                        id = jsonObject.getInt("ID");
                                         name = jsonObject.getString("NAME");
                                         username = jsonObject.getString("EMAIL");
                                         password = jsonObject.getString("PASSWORD");
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         editor.putString("logged", "true");
+                                        editor.putInt("technicianID", id);
                                         editor.putString("name", name);
                                         editor.putString("email", username);
                                         editor.putString("password", password);
