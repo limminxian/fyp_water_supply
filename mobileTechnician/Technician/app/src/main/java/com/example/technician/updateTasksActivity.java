@@ -75,8 +75,8 @@ public class updateTasksActivity extends AppCompatActivity {
         //STATUS SPINNER
         statusSpinner = findViewById(R.id.statusSpinner);
         ArrayList<String> statusArray = new ArrayList<>();
-        statusArray.add("Open");
-        statusArray.add("Close");
+        statusArray.add("open");
+        statusArray.add("close");
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, statusArray);
         statusSpinner.setAdapter(statusAdapter);
         // DATA
@@ -122,7 +122,7 @@ public class updateTasksActivity extends AppCompatActivity {
                                 descriptionTV.setText(String.format("Description: %s", description));
                                 addressTV.setText(String.format("Address: %s %s %s %d", street, blockNo,unitNo, postalCode));
                                 statusSpinner.setSelection(statusAdapter.getPosition(status));
-                                if(status.equals("Close")){
+                                if(status.equals("close")){
                                     updateButton.setVisibility(View.GONE);
                                 }
                             }

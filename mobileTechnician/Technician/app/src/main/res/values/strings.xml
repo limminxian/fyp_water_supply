@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Technician</string>
     <string-array name="area_array">
-        <item>North</item>
-        <item>North East</item>
-        <item>Central</item>
-        <item>East</item>
-        <item>West</item>
+        <item>north</item>
+        <item>northeast</item>
+        <item>central</item>
+        <item>east</item>
+        <item>west</item>
     </string-array>
     <string-array name="status_array">
-        <item>Open</item>
-        <item>Close</item>
+        <item>open</item>
+        <item>close</item>
     </string-array>
 </resources>

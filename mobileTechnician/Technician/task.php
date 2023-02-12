@@ -22,7 +22,7 @@
         $sql = "select t.ID, t.STATUS, t.DESCRIPTION, t.SERVICEDATE, y.NAME as SERVICETYPE, u.NAME, h.STREET, h.BLOCKNO, h.UNITNO, h.POSTALCODE, h.AREA
         from ticket t 
         inner join task a on t.ID = a.TICKET 
-        inner join tickettype y on t.TYPE = y.ID 
+        inner join tickettype y on t.TYPE = y.ID
         inner join users u on t.HOMEOWNER = u.ID 
         inner join homeowner h on t.HOMEOWNER = h.ID 
         where a.TECHNICIAN = '$technicianId' and h.area = '$selectedarea'";

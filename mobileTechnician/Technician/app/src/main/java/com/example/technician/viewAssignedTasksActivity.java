@@ -64,11 +64,11 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
 //        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        areaSpinner.setAdapter(spinnerAdapter);
         ArrayList<String> areaArray = new ArrayList<>();
-        areaArray.add("North");
-        areaArray.add("North East");
-        areaArray.add("Central");
-        areaArray.add("East");
-        areaArray.add("West");
+        areaArray.add("north");
+        areaArray.add("northeast");
+        areaArray.add("central");
+        areaArray.add("east");
+        areaArray.add("west");
 
         ArrayAdapter<String> areaAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, areaArray);
         areaSpinner.setAdapter(areaAdapter);
