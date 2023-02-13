@@ -136,23 +136,7 @@ public class updateTasksActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                })
-        {
-            protected Map<String, String> getParams(){
-                Map<String, String> paramV = new HashMap<>();
-                paramV.put("ticketId", String.valueOf(tasksharedPreferences.getInt("ticketId",0)));
-                paramV.put("street", tasksharedPreferences.getString("street",""));
-                paramV.put("blockNo", tasksharedPreferences.getString("blockNo",""));
-                paramV.put("unitNo", tasksharedPreferences.getString("unitNo",""));
-                paramV.put("postalCode", String.valueOf(tasksharedPreferences.getInt("postalCode",0)));
-                paramV.put("name", tasksharedPreferences.getString("name",""));
-                paramV.put("description", tasksharedPreferences.getString("description",""));
-                paramV.put("serviceType", tasksharedPreferences.getString("serviceType",""));
-                paramV.put("status", tasksharedPreferences.getString("status",""));
-                paramV.put("area", tasksharedPreferences.getString("area",""));
-                return paramV;
-            }
-        };
+                });
 
         //adding our stringrequest to queue
         Volley.newRequestQueue(this).add(stringRequest);
@@ -175,8 +159,8 @@ public class updateTasksActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url ="http://192.168.1.10/Technician/updateTask.php";
-                //String url ="https://fyptechnician.herokuapp.com/updateTask.php";
+                //String url ="http://192.168.1.10/Technician/updateTask.php";
+                String url ="https://fyptechnician.herokuapp.com/updateTask.php";
                 String status = statusSpinner.getSelectedItem().toString();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {

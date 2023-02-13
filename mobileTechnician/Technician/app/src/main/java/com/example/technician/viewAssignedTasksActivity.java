@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,9 +61,6 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
 
         //AREA SPINNER
         areaSpinner = findViewById(R.id.areaSpinner);
-//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.area_array, android.R.layout.simple_spinner_item);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        areaSpinner.setAdapter(spinnerAdapter);
         ArrayList<String> areaArray = new ArrayList<>();
         areaArray.add("north");
         areaArray.add("northeast");
@@ -145,7 +143,8 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                     String serviceDateStr = task.getJSONObject(i).getString("SERVICEDATE");
                                     DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                                     LocalDate serviceDate = LocalDate.parse(serviceDateStr, sdf);
-                                    LocalDate currentDate = LocalDate.now();
+                                    ZoneId zone = ZoneId.of( "Singapore" ) ;
+                                    LocalDate currentDate = LocalDate.now(zone);
                                     System.out.println("service Date " + serviceDate);
                                     System.out.println("current Date " + currentDate);
                                     if(serviceDate.isEqual(currentDate)) {
