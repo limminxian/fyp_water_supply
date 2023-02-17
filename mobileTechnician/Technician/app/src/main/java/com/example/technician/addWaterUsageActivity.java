@@ -95,9 +95,7 @@ public class addWaterUsageActivity extends AppCompatActivity {
     private void setUpWaterModels() {
         //String url ="http://192.168.1.10/Technician/viewHousesbyPostalCode.php";
         String url ="https://fyptechnician.herokuapp.com/viewHousesbyPostalCode.php";
-        Intent intent3 = getIntent();
-        postalCode = intent3.getIntExtra("postalCode", 302222);
-        url = url + "?postalCode=" + postalCode;
+        url = url + "?postalCode=" + getIntent().getIntExtra("postalCode", 0);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -130,17 +128,7 @@ public class addWaterUsageActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                })
-        {
-            protected Map<String, String> getParams(){
-                Map<String, String> paramV = new HashMap<>();
-                paramV.put("email", sharedPreferences.getString("email",""));
-                paramV.put("homeownerId", String.valueOf(AddresssharedPreferences.getInt("homeownerId",0)));
-                paramV.put("street", AddresssharedPreferences.getString("street", ""));
-                paramV.put("houseType", AddresssharedPreferences.getString("houseType", ""));
-                return paramV;
-            }
-        };
+                });
         Volley.newRequestQueue(this).add(stringRequest);
     }
 }

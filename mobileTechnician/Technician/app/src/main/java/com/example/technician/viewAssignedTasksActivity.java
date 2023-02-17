@@ -145,12 +145,14 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                     LocalDate serviceDate = LocalDate.parse(serviceDateStr, sdf);
                                     ZoneId zone = ZoneId.of( "Singapore" ) ;
                                     LocalDate currentDate = LocalDate.now(zone);
-                                    System.out.println("service Date " + serviceDate);
-                                    System.out.println("current Date " + currentDate);
+//                                    System.out.println("service Date " + serviceDate);
+//                                    System.out.println("current Date " + currentDate);
                                     if(serviceDate.isEqual(currentDate)) {
                                         String area = task.getJSONObject(i).getString("AREA");
                                         String status1 = task.getJSONObject(i).getString("status");
+                                        int taskId = task.getJSONObject(i).getInt("TASKID");
                                         int ticketId = task.getJSONObject(i).getInt("ID");
+                                        int homeownerId = task.getJSONObject(i).getInt("HOMEOWNERID");
                                         String street = task.getJSONObject(i).getString("STREET");
                                         String blockNo = task.getJSONObject(i).getString("BLOCKNO");
                                         String unitNo = task.getJSONObject(i).getString("UNITNO");
@@ -161,6 +163,8 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                         String status = task.getJSONObject(i).getString("STATUS");
                                         TaskModels.add(new TaskModel(ticketId, name, serviceType, description, street, blockNo, unitNo, postalCode, status, area, serviceDate));
                                         SharedPreferences.Editor editor = tasksharedPreferences.edit();
+                                        editor.putInt("taskId", taskId);
+                                        editor.putInt("homeownerId", homeownerId);
                                         editor.putInt("ticketId", ticketId);
                                         editor.putString("street", street);
                                         editor.putString("blockNo", blockNo);
@@ -174,7 +178,6 @@ public class viewAssignedTasksActivity extends AppCompatActivity {
                                         editor.apply();
                                     }
                                 }
-
                             //creating adapter object and setting it to recyclerview
                             taskRecyclerViewAdaptor adapter = new taskRecyclerViewAdaptor(viewAssignedTasksActivity.this, TaskModels);
                             recyclerView.setAdapter(adapter);

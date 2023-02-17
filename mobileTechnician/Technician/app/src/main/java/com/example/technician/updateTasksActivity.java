@@ -41,6 +41,7 @@ public class updateTasksActivity extends AppCompatActivity {
     TextView serviceTypeTV;
     TextView descriptionTV;
     TextView addressTV;
+    public static TextView serialID;
     Button scanButton;
     ImageButton logoutBtn;
     ArrayList<TaskModel> TaskModels = new ArrayList<>();
@@ -55,6 +56,7 @@ public class updateTasksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_tasks);
         logoutBtn = findViewById(R.id.logoutButton);
         updateButton = findViewById(R.id.update);
+        serialID = findViewById(R.id.serialID);
         //SHARED PREFERENCES
         sharedPreferences = getSharedPreferences("MyAppName", MODE_PRIVATE);
         tasksharedPreferences = getSharedPreferences("Tasks", MODE_PRIVATE);
@@ -86,19 +88,23 @@ public class updateTasksActivity extends AppCompatActivity {
         addressTV = findViewById(R.id.addressTv);
         // Scan Equipment
         scanButton = findViewById(R.id.scanButton);
+        scanButton.setVisibility(View.GONE);
+        serialID.setVisibility(View.GONE);
+        String intentServiceType = getIntent().getStringExtra("serviceType");
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent4 = new Intent("android.media.action.IMAGE_CAPTURE");
-                startActivity(intent4);
+                Intent intent = new Intent(getApplicationContext(), scanBarCodeActivity.class);
+                String intentServiceType = getIntent().getStringExtra("serviceType");
+                intent.putExtra("serviceType", intentServiceType);
+                startActivity(intent);
             }
         });
         //db
         //String url = "http://192.168.1.10/Technician/viewTask.php";
         String url ="https://fyptechnician.herokuapp.com/viewTask.php";
-        Intent intent3 = getIntent();
-        String ticketID = String.valueOf(intent3.getIntExtra("ticketID", 0));
-        url = url + "?ticketID=" + ticketID;
+        //url = url + "?ticketID=" + tasksharedPreferences.getInt("ticketId",0);
+        url = url + "?ticketID=" + getIntent().getIntExtra("ticketId", 0);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -108,7 +114,6 @@ public class updateTasksActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray task = jsonObject.getJSONArray("tasks");
                             for (int i = 0; i < task.length(); i++) {
-                                int ticketId = task.getJSONObject(i).getInt("ID");
                                 String street = task.getJSONObject(i).getString("STREET");
                                 String blockNo = task.getJSONObject(i).getString("BLOCKNO");
                                 String unitNo = task.getJSONObject(i).getString("UNITNO");
@@ -116,14 +121,28 @@ public class updateTasksActivity extends AppCompatActivity {
                                 String name = task.getJSONObject(i).getString("NAME");
                                 String description = task.getJSONObject(i).getString("DESCRIPTION");
                                 String serviceType = task.getJSONObject(i).getString("SERVICETYPE");
+                                int serviceTypeID = task.getJSONObject(i).getInt("SERVICETYPEID");
                                 String status = task.getJSONObject(i).getString("STATUS");
+                                SharedPreferences.Editor editor = tasksharedPreferences.edit();
+                                editor.putInt("serviceTypeID", serviceTypeID);
+                                editor.apply();
                                 homeownerTV.setText(String.format("Name: %s", name));
                                 serviceTypeTV.setText(String.format("Service Type: %s", serviceType));
                                 descriptionTV.setText(String.format("Description: %s", description));
-                                addressTV.setText(String.format("Address: %s %s %s %d", street, blockNo,unitNo, postalCode));
+                                if(unitNo == null || unitNo.equals("null") || unitNo.isEmpty()) {
+                                    addressTV.setText(String.format("Address: %s %s", street, postalCode));
+                                } else {
+                                    addressTV.setText(String.format("Address: %s %s %s %s", blockNo, street,
+                                            unitNo, postalCode));
+                                }
                                 statusSpinner.setSelection(statusAdapter.getPosition(status));
                                 if(status.equals("close")){
                                     updateButton.setVisibility(View.GONE);
+                                    scanButton.setVisibility(View.GONE);
+                                }
+                                if(serviceType.equals("installation") || serviceType.equals("uninstallation")) {
+                                   scanButton.setVisibility(View.VISIBLE);
+                                   serialID.setVisibility(View.VISIBLE);
                                 }
                             }
                         } catch (JSONException e) {
@@ -160,13 +179,14 @@ public class updateTasksActivity extends AppCompatActivity {
             public void onClick(View view) {
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                 //String url ="http://192.168.1.10/Technician/updateTask.php";
-                String url ="https://fyptechnician.herokuapp.com/updateTask.php";
+                //String url ="https://fyptechnician.herokuapp.com/updateTask.php";
+                String url ="https://fyptechnician.herokuapp.com/generateBillForTask.php";
                 String status = statusSpinner.getSelectedItem().toString();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                if(response.equals("Status edited successfully")){
+                                if(response.equals("Successfully updated ticketSuccessfully updated workloadSuccessfully inserted bill")){
                                     Log.i("tagconvertstr", "["+response+"]");
                                     Toast.makeText(getApplicationContext(), " Status is updated", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -182,7 +202,11 @@ public class updateTasksActivity extends AppCompatActivity {
                     protected Map<String, String> getParams() {
                         Map<String, String> paramV = new HashMap<>();
                         paramV.put("status", status);
-                        paramV.put("ticketId", String.valueOf(tasksharedPreferences.getInt("ticketId",0)));
+                        paramV.put("ticketId", String.valueOf(getIntent().getIntExtra("ticketId", 0)));
+                        paramV.put("serviceType", String.valueOf(tasksharedPreferences.getInt("serviceTypeID",0)));
+                        paramV.put("technicianId", String.valueOf(sharedPreferences.getInt("technicianID",0)));
+                        System.out.println("ticketId" + getIntent().getIntExtra("ticketId", 0));
+                        System.out.println("serviceType" + tasksharedPreferences.getInt("serviceTypeID",0));
                         return paramV;
                     }
                 };

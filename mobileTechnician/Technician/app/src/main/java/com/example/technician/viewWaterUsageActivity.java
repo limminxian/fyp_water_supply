@@ -31,11 +31,14 @@ import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class viewWaterUsageActivity extends AppCompatActivity {
@@ -47,6 +50,7 @@ public class viewWaterUsageActivity extends AppCompatActivity {
     Spinner areaSpinner;
     SharedPreferences sharedPreferences;
     SharedPreferences AddresssharedPreferences;
+    SharedPreferences waterUsagePreferences;
     RecyclerView recyclerView;
     TextView areaText;
 
@@ -56,6 +60,7 @@ public class viewWaterUsageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_water_usage);
         sharedPreferences = getSharedPreferences("MyAppName", MODE_PRIVATE);
         AddresssharedPreferences = getSharedPreferences("Addresses", MODE_PRIVATE);
+        waterUsagePreferences = getSharedPreferences("water", MODE_PRIVATE);
         Intent intent = new Intent(getApplicationContext(), loginActivity.class);
 
         if (sharedPreferences.getString("logged","false").equals("false")){
@@ -72,18 +77,23 @@ public class viewWaterUsageActivity extends AppCompatActivity {
 
         Calendar cal = Calendar.getInstance();
         //@TODO: remove after testing
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MM dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            cal.setTime(sdf.parse("2023 02 28"));
+            cal.setTime(sdf.parse("2023-02-28"));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //end of todo
-//        if(cal.get(Calendar.DATE) != cal.getActualMaximum(Calendar.DATE)) {
-//            areaText.setText("Please visit at month end");
-//            recyclerView.setVisibility(View.GONE);
-//            areaSpinner.setVisibility(View.GONE);
-//        }
+        java.sql.Date sqlDate = java.sql.Date.valueOf("2023-02-28");
+        SharedPreferences.Editor editor = waterUsagePreferences.edit();
+        editor.putString("sqlDate", String.valueOf(sqlDate));
+        editor.apply();
+
+        System.out.println(sqlDate);
+        if(cal.get(Calendar.DATE) != cal.getActualMaximum(Calendar.DATE)) {
+            areaText.setText("Please visit at month end");
+            recyclerView.setVisibility(View.GONE);
+            areaSpinner.setVisibility(View.GONE);
+        }
 
         //AREA SPINNER
 
@@ -95,11 +105,11 @@ public class viewWaterUsageActivity extends AppCompatActivity {
 //        Intent intent = getIntent();
 //        String username = intent.getStringExtra("Username String");
 //        name.setText(String.format("Hello, %s", username));
-        Calendar calendar = Calendar.getInstance();
-        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
-        String[] splitDate = currentDate.split(",");
-        String[] splitMonth = splitDate[0].split(" ");
-        month.setText(String.format("Water Usage for %s %s", splitMonth[0], splitDate[1]));
+        LocalDateTime ldt = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd", Locale.ENGLISH);
+        String currentDate = dtf.format(ldt);
+        String[] splitDate = currentDate.split("-");
+        month.setText(String.format("Water Usage for %s %s", splitDate[1], splitDate[0]));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //setUpWaterModels(areaSpinner.getSelectedItem().toString());
         bottomNavigationView = findViewById(R.id.bottom_navigator);
@@ -184,14 +194,7 @@ public class viewWaterUsageActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-                })
-        {
-            protected Map<String, String> getParams(){
-                Map<String, String> paramV = new HashMap<>();
-                paramV.put("email", sharedPreferences.getString("email",""));
-                return paramV;
-            }
-        };
+                });
 
         Volley.newRequestQueue(this).add(stringRequest);
     }

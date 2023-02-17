@@ -32,7 +32,14 @@ public class viewWaterRecyclerViewAdaptor extends RecyclerView.Adapter<viewWater
 
     @Override
     public void onBindViewHolder(@NonNull viewWaterRecyclerViewAdaptor.MyViewHolder holder, int position) {
-        holder.addressTV.setText(String.format("%s %s %s", WaterModels.get(position).getBlockNo(), WaterModels.get(position).getStreet(), WaterModels.get(position).getPostalCode()));
+        String unitNo = WaterModels.get(position).getUnitNo();
+        if(unitNo == null || unitNo.equals("null") || unitNo.isEmpty()) {
+            holder.addressTV.setText(String.format("Address: %s %s", WaterModels.get(position).getStreet(), WaterModels.get(position).getPostalCode()));
+        } else {
+            holder.addressTV.setText(String.format("Address: %s %s %s", WaterModels.get(position).getBlockNo(), WaterModels.get(position).getStreet(),
+                    WaterModels.get(position).getPostalCode()));
+        }
+//        holder.addressTV.setText(String.format("%s %s %s %s", WaterModels.get(position).getBlockNo(), WaterModels.get(position).getUnitNo(), WaterModels.get(position).getStreet(), WaterModels.get(position).getPostalCode()));
         holder.itemView.setOnClickListener((view) -> {
             Intent intent = new Intent(context, addWaterUsageActivity.class);
             intent.putExtra("postalCode", WaterModels.get(position).getPostalCode());

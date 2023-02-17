@@ -34,13 +34,20 @@ public class taskRecyclerViewAdaptor extends RecyclerView.Adapter<taskRecyclerVi
         holder.homeownerTv.setText(String.format("Homeowner Name: %s", TaskModels.get(position).getName()));
         holder.descTv.setText(String.format("Description: %s", TaskModels.get(position).getDescription()));
         holder.serviceTv.setText(String.format("Service Type: %s", TaskModels.get(position).getType()));
-        holder.addressTv.setText(String.format("Address: %s %s %s %s", TaskModels.get(position).getBlockNo(), TaskModels.get(position).getStreet(),
-                TaskModels.get(position).getUnitNo(), TaskModels.get(position).getPostalCode()));
+        String unitNo = TaskModels.get(position).getUnitNo();
+        System.out.println("Unit number: " + unitNo);
+        if(unitNo == null || unitNo.equals("null") || unitNo.isEmpty()) {
+            holder.addressTv.setText(String.format("Address: %s %s", TaskModels.get(position).getStreet(), TaskModels.get(position).getPostalCode()));
+        } else {
+            holder.addressTv.setText(String.format("Address: %s %s %s %s", TaskModels.get(position).getBlockNo(), TaskModels.get(position).getStreet(),
+                    TaskModels.get(position).getUnitNo(), TaskModels.get(position).getPostalCode()));
+        }
         holder.statusTv.setText(String.format("Status: %s", TaskModels.get(position).getStatus()));
         holder.areaTv.setText(String.format("Area: %s", TaskModels.get(position).getArea()));
         holder.itemView.setOnClickListener((view) -> {
             Intent intent = new Intent(context, updateTasksActivity.class);
-            intent.putExtra("ticketID", TaskModels.get(position).getTicketID());
+            intent.putExtra("ticketId", TaskModels.get(position).getTicketID());
+            intent.putExtra("serviceType", TaskModels.get(position).getType());
             context.startActivity(intent);
         });
     }
