@@ -347,7 +347,6 @@ class Company extends User{
 		$r = parent::addUser($company);
 		if($r[0]){
 			$admin=parent::getId();
-			$this->saveAcraFile();
 			$stmt = mysqli_prepare($conn,"INSERT INTO `COMPANY` (`NAME`,`STREET`, `POSTALCODE`, `DESCRIPTION`, `ACRAPATH`,`PHOTOPATH`, `ADMIN`) VALUES(?,?,?,?,?,'imgnotfound.jpg',?);");
 			mysqli_stmt_bind_param($stmt,"ssdssd",$this->compName, $this->street,$this->postalcode,$this->description,$this->acrapath,$admin);
 			mysqli_stmt_execute($stmt);
@@ -527,16 +526,7 @@ class Company extends User{
 	
 	function savePhotoFile($photopath,$admin){
 		$this->photopath=$photopath;
-		// Where the file is going to be stored
-		$target_dir = "companylogos/";
-		$filename = $admin;
-		$path = pathinfo($this->photopath['name']);
-		$ext = $path['extension'];
-		$temp_name = $this->photopath['tmp_name'];
-		$this->photopath = $filename.".".$ext;
-		$path_filename_ext = $target_dir.$filename.".".$ext;
-		
-		move_uploaded_file($temp_name,$path_filename_ext);
+		var_dump($this->photopath);
 		$conn = getdb();
 		$stmt = mysqli_prepare($conn, "UPDATE COMPANY SET PHOTOPATH = ? WHERE `ADMIN` =  ?;" );
 		mysqli_stmt_bind_param($stmt,"sd",$this->photopath,$admin);
@@ -544,7 +534,7 @@ class Company extends User{
 	}
 	
 	function downloadAcraFile(){
-		$file = "acra/".$this->acrapath;
+		$file = $this->acrapath;
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename='.basename($file));

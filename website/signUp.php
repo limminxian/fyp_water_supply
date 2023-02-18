@@ -15,14 +15,14 @@ if (isset($_POST['submit'])) {
 		$description = $_POST['description'];
 		$compName = $_POST['compName'];
 		$UEN = $_POST['uen'];
-		$file = $_FILES["fileToUpload"];
+		$file = $_POST["avatar_url"];
 		$a = new Company();
 		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"acrapath"=>$file,"role"=>$role));		
 		if($result!=""){		
 			echo "<div class='error'>" . $result[1] . "</div>" ;
 			unset($_POST['role']);
 		}else{		
-			//header("Location: signUp.php");
+			header("Location: signUp.php");
 			header("Location: login.php");
 		}
 	}else{
@@ -51,8 +51,9 @@ if (isset($_POST['submit'])) {
 <head>
 <div id="nav-placeholder">
 </div>
-
+<p id="demo"></p>
 <link rel="stylesheet" href="style.css">
+<script src="https://app.simplefileupload.com/buckets/896d1e5895f04667e26b254f89f9b3bc.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -99,7 +100,7 @@ Decription of Business: <input type="text" class="form compForm" name="descripti
 
 UEN: <input type="text" class="form compForm" name="uen" placeholder="UEN" required ><br>
 
-ACRA certificate: <input type="file" class="form compForm" name="fileToUpload" id="fileToUpload" onchange="checkFile()" required>
+ACRA certificate: <input type="file" name="avatar_url" id="avatar_url" class="simple-file-upload" data-accepted=".jpg,.pdf">
 
 </div>
 

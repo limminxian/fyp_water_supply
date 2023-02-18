@@ -101,7 +101,7 @@ foreach($company->pendingCompanyArray as $c){
 	?>
 	<td>
 		<center>
-		<button  value="<?=base64_encode(serialize($c))?>" class="edit"name="download"/>Download</button>
+		<a  href="<?=$c->acrapath?>" target="_blank" class="edit"name="download"/>Download</a>
 	</td>
 	<td>
 		<center>
