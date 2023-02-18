@@ -1113,11 +1113,7 @@ class Equipment{
 	
 	function getAllEquipmentHomeowner($type){
 		$conn = getdb();
-<<<<<<< Updated upstream
-		$stmt = mysqli_prepare($conn,"SELECT E.* FROM `EQUIPMENT` E, `EQUIPSTOCK` T WHERE E.EQUIPMENT = T.SERIAL AND T.TYPE=?;");
-=======
 		$stmt = mysqli_prepare($conn,"SELECT E.*, C.SERVICEDATE AS INSTALLATIONDATE, U.SERVICEDATE AS UNINSTALLATIONDATE FROM `EQUIPSTOCK` T, TASK K, TICKET C, `EQUIPMENT` E LEFT JOIN (SELECT E2.EQUIPMENT, C2.SERVICEDATE FROM `EQUIPSTOCK` T2, TASK K2, TICKET C2, `EQUIPMENT` E2 WHERE E2.EQUIPMENT = T2.SERIAL AND E2.UNINSTALLTASK=K2.ID AND C2.ID=K2.TICKET )U ON E.EQUIPMENT = U.EQUIPMENT WHERE E.EQUIPMENT = T.SERIAL AND T.TYPE=? AND E.INSTALLTASK=K.ID AND C.ID=K.TICKET;");
->>>>>>> Stashed changes
 		mysqli_stmt_bind_param($stmt,"d", $type);
 		mysqli_stmt_execute($stmt);
 		$result = mysqli_stmt_get_result($stmt);		

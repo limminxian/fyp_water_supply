@@ -45,10 +45,6 @@ if (isset($_POST["viewhome"])){
 	$_SESSION["equiptype"]=$t;
 	header("Location: viewEquipmentHomeowner.php");
 }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 $equipment = new Company();
 $equipment->getAllEquipment();
 if(isset($_SESSION["success"])){		
@@ -64,10 +60,6 @@ if(isset($_SESSION["success"])){
     <th>Amount</th>
     <th></th>
     <th></th>
-<<<<<<< Updated upstream
-    <th></th>
-=======
->>>>>>> Stashed changes
   </tr>	
   <form action="" method="post">
   	<a class="rightButton" href="addEquipment.php">Add new equipment</a>
@@ -87,13 +79,6 @@ foreach($equipment->equipmentArray as $c){
 		<button  value="<?=base64_encode(serialize($c))?>" name="view"class="edit"/>View equipment stock</button>
 	</td>
 	<td>
-<<<<<<< Updated upstream
-		<button  value="<?=base64_encode(serialize($c))?>" name="viewhome"/>View homeowner equipment</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>Edit</button>
-	</td>
-=======
 		<button  value="<?=base64_encode(serialize($c))?>" name="viewhome" class="edit"/>View homeowner equipment</button>
 	</td>
 	<!--td>
@@ -102,7 +87,6 @@ foreach($equipment->equipmentArray as $c){
 	<td>
 		
 	</td-->
->>>>>>> Stashed changes
 	</tr>
   <?php
 }

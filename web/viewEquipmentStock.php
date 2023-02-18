@@ -69,15 +69,12 @@ foreach($equipment->equipmentArray as $c){
 			</td>
 		<?php }
 	?>
-<<<<<<< Updated upstream
-=======
 	<!--td>
 		<button  value="<?=base64_encode(serialize($c))?>" name="edit"class="edit"/>edit</button>
 	</td>
 	<td>
 		
 	</td-->
->>>>>>> Stashed changes
 	</tr>
   <?php
 }
