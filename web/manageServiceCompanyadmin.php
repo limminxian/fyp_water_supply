@@ -34,10 +34,9 @@ else{
 		header("Location: login.php");
 	}
 
-	if (isset($_POST["edit"])){
-		$t = unserialize(base64_decode($_POST["edit"]));
-		$_SESSION["service"]=$t;
-		header("Location: editServiceDetails.php");
+	if (isset($_POST["suspend"])){
+		$t = unserialize(base64_decode($_POST["suspend"]));
+		$t->updateService("suspend");
 	}
 	
 	if (isset($_POST["rates"])){
@@ -47,53 +46,59 @@ else{
 	}
 	
 $service = new Company();
-$service->getAllService();
+$s= $service->getAllService($_SESSION["loginId"]);
+if(isset($_SESSION["success"])){		
+	echo "<div class='success'>" . $_SESSION["success"]. "</div>" ;
+	unset($_SESSION["success"]);
+}
 ?>
 <br>
 
 <a class="rightButton" href="createServiceComp.php">Add new service</a>
 
 <table>
-  <tr>
+  <tr bgcolor="#488AC7">
     <th>Name</th>
     <th>Description</th>
     <th>Latest rate</th>
+    <th>Status</th>
 	<th></th>
 	<th></th>
-    <th></th>
   </tr>	
   <form action="" method="post">
 <?php
-foreach($service->serviceArray as $r){
+foreach($s as $r){
 	?>
   <tr>
 	<?php
-		$properties = array('name', 'description', 'rate');
+		$properties = array('name', 'description', 'rate','status');
 		
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$r->$prop?>
 			</td>
-		<?php }?>
+		<?php 
+		}?>
 			<td>
-				<button  value="<?=base64_encode(serialize($r))?>" name="rates"/>rates</button>
+				<button  value="<?=base64_encode(serialize($r))?>" class="edit"name="rates"/>rates</button>
 			</td>
 			<?php
-		if(strcmp($r->createdby,"1")!=0){
+		if($r->createdby!=0){
 			
 			?>
 			<td>
-				<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
+				<button  value="<?=base64_encode(serialize($r))?>" class="edit"name="suspend"/>suspend</button>
 			</td>
-			<td>
-				<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
-			</td>
+	         
 			<?php
 		}
 		else{?>
-			<td></td><td></td></tr>
+			<td>
+			</td>
 			<?php
-		}
+		}?>
+			</tr>
+			<?php
 }
 ?>
 

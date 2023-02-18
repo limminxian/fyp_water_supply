@@ -1,13 +1,35 @@
 <?php
 function getdb(){
-$servername = "localhost";
+
+/*   $hostName = "us-cdbr-east-06.cleardb.net";
+  $username = "bc292174f8cae7";
+  $password = "68916e25";
+  $db = "heroku_a43ceec7a5c075b";
+  $port = "";
+  
+ */  $hostName = "us-cdbr-east-06.cleardb.net";
+  $username = "bcd6f3dd4c4cab";
+  $password = "ec185dd8";
+  $db = "heroku_f92e6718b416bf8";
+  $port = "";
+
+/* $hostName = "us-cdbr-east-06.cleardb.net";
+$username = "bbd12ae4b2fcc3";
+$password = "df9ea7aa";
+$db = "heroku_80d6ea926f679b3"; */
+
+/* $hostName = "localhost";
 $username = "root";
 $password = "";
-$db = "fyp";
+$db = "fyp"; */
+
+
 try {
    
-    $conn = mysqli_connect($servername, $username, $password, $db);
+    $conn = mysqli_connect($hostName,$username, $password, $db);
      //echo "Connected successfully"; 
+//$conn = pg_connect("dbname=d1rhm1e7kg5b5e host=ec2-3-225-213-67.compute-1.amazonaws.com port=5432 user=lbftgzbfbhpkxk password=7730fd74a05533e54625120ba59d494a060111ce887ccd836c95a9d7494ed0b2 sslmode=require");
+
     }
 catch(exception $e)
     {
@@ -20,7 +42,6 @@ function createTables(){
 
 // sql to create table
 $createTables = "
-
 CREATE TABLE IF NOT EXISTS ROLE (
 ID INT UNSIGNED AUTO_INCREMENT,
 NAME VARCHAR(30),
@@ -31,7 +52,7 @@ PRIMARY KEY (ID)
 
 CREATE TABLE IF NOT EXISTS USERS (
 ID INT UNSIGNED AUTO_INCREMENT,
-NAME VARCHAR(30),
+NAME VARCHAR(30) unique,
 NUMBER VARCHAR(30),
 EMAIL VARCHAR(50) unique,
 PASSWORD VARCHAR(255),
@@ -47,6 +68,7 @@ NAME VARCHAR(30),
 STREET VARCHAR(30),
 POSTALCODE INT,
 DESCRIPTION VARCHAR(50),
+ACRAPATH VARCHAR(50),
 ADMIN INT UNSIGNED,
 PRIMARY KEY (ID),
 NOOFSTAR INT,
@@ -85,7 +107,9 @@ ID INT UNSIGNED AUTO_INCREMENT,
 NAME VARCHAR(50),
 DESCRIPTION VARCHAR(100),
 TOTECH BOOLEAN,
-PRIMARY KEY (ID)
+COMPANY INT UNSIGNED,
+PRIMARY KEY (ID),
+FOREIGN KEY (COMPANY) REFERENCES COMPANY(ID)
 );
 
 
@@ -136,6 +160,14 @@ PRIMARY KEY (ID),
 FOREIGN KEY (COMPANY) REFERENCES COMPANY(ID)
 );
 
+CREATE TABLE IF NOT EXISTS CHEMICALUSED (
+CHEMICAL INT UNSIGNED,
+AMOUNT INT,
+USEDATE DATETIME DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (USEDATE,CHEMICAL),
+FOREIGN KEY (CHEMICAL) REFERENCES CHEMICAL(ID)
+);
+
 CREATE TABLE IF NOT EXISTS EQUIPTYPE (
 ID INT UNSIGNED AUTO_INCREMENT,
 NAME VARCHAR(30),
@@ -161,8 +193,8 @@ FOREIGN KEY (COMPANY) REFERENCES COMPANY(ID)
 CREATE TABLE IF NOT EXISTS EQUIPMENT (
 ID INT UNSIGNED AUTO_INCREMENT,
 EQUIPMENT VARCHAR(20),
-QUANTITY INT,
 INSTALLATIONDATE DATE,
+UNINSTALLATIONDATE DATE,
 HOMEOWNER INT UNSIGNED,
 TASK INT UNSIGNED,
 PRIMARY KEY (ID),
@@ -252,13 +284,40 @@ $createAdmin ="
 
 INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
     SELECT 'superadmin','website owner',FALSE
+	FROM DUAL
     WHERE NOT EXISTS
         (SELECT ID FROM `ROLE` WHERE NAME = 'superadmin');
 		
-INSERT INTO `USERS` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
-    SELECT 'Admin1','admin@gmail.com','".$hashed."',1, 'ACTIVE'
+INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
+    SELECT 'companyadmin','business owner who provides the services',TRUE
+	FROM DUAL
     WHERE NOT EXISTS
-        (SELECT id FROM `USERS` WHERE EMAIL = 'admin@gmail.com');
+        (SELECT ID FROM `ROLE` WHERE NAME = 'companyadmin');
+		
+INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
+    SELECT 'homeowner','homeowner who uses the services',TRUE
+	FROM DUAL
+    WHERE NOT EXISTS
+        (SELECT ID FROM `ROLE` WHERE NAME = 'homeowner');
+		
+INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
+    SELECT 'technician','technician',FALSE
+	FROM DUAL
+    WHERE NOT EXISTS
+        (SELECT ID FROM `ROLE` WHERE NAME = 'technician');
+
+INSERT INTO `ROLE` (`NAME`,`DESCRIPTION`,`REGISTER`)
+    SELECT 'customerservice','customerservice',FALSE
+	FROM DUAL
+    WHERE NOT EXISTS
+        (SELECT ID FROM `ROLE` WHERE NAME = 'customerservice');
+		
+INSERT INTO `USERS` (`NAME`,`EMAIL`,`PASSWORD`,`TYPE`, `STATUS`)
+    SELECT 'Admin1','admin@gmail.com','".$hashed."',R.ID, 'ACTIVE'
+	FROM ROLE R
+    WHERE NOT EXISTS
+        (SELECT id FROM `USERS` WHERE EMAIL = 'admin@gmail.com')
+		AND R.NAME='superadmin';
 
 ";
 $con=getdb();

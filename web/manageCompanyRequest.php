@@ -55,7 +55,7 @@ if(isset($_POST["back"])){
 
 ?>
 <table>
-  <tr>
+ <tr bgcolor="#488AC7">
     <th>Company Admin</th>
     <th>Name</th>
     <th>Number</th>
@@ -79,6 +79,11 @@ if (isset($_POST["reject"])){
 	$c->appRejCompany("REJECT");
 	header("Refresh:0");
 }
+if (isset($_POST["download"])){
+	$c = unserialize(base64_decode($_POST["download"]));
+	$c->downloadAcraFile();
+	header("Refresh:0");
+}
 ?>
   <form action="" method="post">
 <?php
@@ -95,10 +100,17 @@ foreach($company->pendingCompanyArray as $c){
 		
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="accept"/>Accept</button>
+		<center>
+		<button  value="<?=base64_encode(serialize($c))?>" class="edit"name="download"/>Download</button>
 	</td>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="reject"/>Reject</button>
+		<center>
+		<button  value="<?=base64_encode(serialize($c))?>" class="edit"name="accept"/>Accept</button>
+	</td>
+	<td>
+		<center>
+		<button  value="<?=base64_encode(serialize($c))?>" class="edit"name="reject"/>Reject</button>
+	  </center>
 	</td>
   </tr><?php
 }?>

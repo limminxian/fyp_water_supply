@@ -6,7 +6,7 @@ include_once 'userClass.php';
 ?>
 
 <html>
-<title>IT for rent</title> 
+<title>create role</title> 
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,7 @@ $(function(){
 
 </head>
 
-<h1>Register</h1>
+<h1>Create Role</h1>
 <?php
 if(isset($_POST["logout"])){
 	unset($_SESSION["loginId"]);
@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
   
 
 ?>
-
+<body>
 <div class="center bg-img">
 
 <form action="" method="post" class="formcontainer">
@@ -76,7 +76,7 @@ Register allow:
 <input class="formbutton" type="submit" name="submit" value="Submit" />
 
 </form>
-</script>
+
 
 </div>
 </body>

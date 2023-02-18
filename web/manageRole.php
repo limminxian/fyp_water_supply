@@ -48,13 +48,11 @@ $role->getAllRole();
 <a class="rightButton" href="createRole.php">Add new role</a>
 
 <table>
-  <tr>
+  <tr bgcolor="#488AC7">
     <th>ID</th>
     <th>Name</th>
     <th>Description</th>
     <th>Allow Register</th>
-    <th></th>
-    <th></th>
   </tr>	
   <form action="" method="post">
 <?php
@@ -69,12 +67,12 @@ foreach($role->roleArray as $r){
 			</td>
 		<?php }
 	?>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
-	</td>
+	<!--td>
+		<center>
+		<button  value="<?=base64_encode(serialize($r))?>" class="edit"name="edit"/>edit</button>
+	</td-->
+
+
 	</tr>
   <?php
 }
@@ -87,6 +85,6 @@ foreach($role->roleArray as $r){
 <?php 
 }
 ?>
-   
+
 </body>
 </html> 

@@ -47,7 +47,7 @@ $ticket->getAllTicket();
 <br>
 
 <table>
-  <tr>
+ <tr bgcolor="#488AC7">
     <th>ID</th>
     <th>Name</th>
     <th>Date</th>
@@ -61,7 +61,7 @@ foreach($ticket->ticketArray as $t){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'date', 'type', 'status');
+		$properties = array('id', 'name', 'createdate', 'type', 'status');
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$t->$prop?>
@@ -69,7 +69,9 @@ foreach($ticket->ticketArray as $t){
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($t))?>" name="view"/>View</button>
+		<center>
+		<button  value="<?=base64_encode(serialize($t))?>" class="edit"name="view"/>View</button>
+	  </center>
 	</td>
   </tr>
   

@@ -11,5 +11,5 @@ $(function(){
   $("#nav-placeholder").load("navBarIndex.php");
 });
 </script>
-<h1>Please install our app to use services
+<h1>Please install our app to use services↴
 <img src="img/QRcode.png" >

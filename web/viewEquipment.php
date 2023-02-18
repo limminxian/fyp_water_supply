@@ -45,28 +45,38 @@ if (isset($_POST["viewhome"])){
 	$_SESSION["equiptype"]=$t;
 	header("Location: viewEquipmentHomeowner.php");
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 $equipment = new Company();
-$equipment->getAllequipment();
+$equipment->getAllEquipment();
+if(isset($_SESSION["success"])){		
+	echo "<div class='success'>" . $_SESSION["success"]. "</div>" ;
+	unset($_SESSION["success"]);
+}
 ?>
 <br>
 <table>
-  <tr>
-    <th>ID</th>
+ <tr bgcolor="#488AC7">
     <th>Name</th>
-    <th>Stock</th>
+    <th>Description</th>
+    <th>Amount</th>
     <th></th>
     <th></th>
+<<<<<<< Updated upstream
     <th></th>
+=======
+>>>>>>> Stashed changes
   </tr>	
   <form action="" method="post">
-  	<a class="rightButton" href="addChemical.php">Add new equipment</a>
+  	<a class="rightButton" href="addEquipment.php">Add new equipment</a>
 <?php
 foreach($equipment->equipmentArray as $c){
 	?>
   <tr>
 	<?php
-		$properties = array('id', 'name', 'amount');
+		$properties = array('name', 'description','stockamount');
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$c->$prop?>
@@ -74,14 +84,25 @@ foreach($equipment->equipmentArray as $c){
 		<?php }
 	?>
 	<td>
-		<button  value="<?=base64_encode(serialize($c))?>" name="view"/>View equipment stock</button>
+		<button  value="<?=base64_encode(serialize($c))?>" name="view"class="edit"/>View equipment stock</button>
 	</td>
 	<td>
+<<<<<<< Updated upstream
 		<button  value="<?=base64_encode(serialize($c))?>" name="viewhome"/>View homeowner equipment</button>
 	</td>
 	<td>
 		<button  value="<?=base64_encode(serialize($c))?>" name="delete"/>Edit</button>
 	</td>
+=======
+		<button  value="<?=base64_encode(serialize($c))?>" name="viewhome" class="edit"/>View homeowner equipment</button>
+	</td>
+	<!--td>
+		<button  value="<?=base64_encode(serialize($c))?>" name="edit"class="edit"/>edit</button>
+	</td>
+	<td>
+		
+	</td-->
+>>>>>>> Stashed changes
 	</tr>
   <?php
 }
