@@ -591,7 +591,7 @@ class Company implements Parcelable {
     }
 
     public String getLogo(){
-        return "https://fypwatersupplyweb.herokuapp.com/companylogos/" + logo;
+        return logo;
     }
 
     public void setLogo(String logo) {

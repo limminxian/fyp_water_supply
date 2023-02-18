@@ -255,7 +255,7 @@ public class businessProfileActivity extends AppCompatActivity {
                                     logo = "imgnotfound.jpg";
                                 }
 
-                                Glide.with(getApplicationContext()).load("https://fypwatersupplyweb.herokuapp.com/companylogos/" + logo).into(businessLogo);
+                                Glide.with(getApplicationContext()).load(logo).into(businessLogo);
                                 //Create list of reviews
                                 ArrayList<String> listArr = new ArrayList<>();
                                 //Get reviews

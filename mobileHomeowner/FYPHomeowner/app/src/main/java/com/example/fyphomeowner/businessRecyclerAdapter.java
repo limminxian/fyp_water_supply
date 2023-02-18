@@ -3,6 +3,7 @@ package com.example.fyphomeowner;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class businessRecyclerAdapter extends RecyclerView.Adapter<businessRecycl
         holder.businessTitle.setText(businessList.get(position).getName());
         holder.businessDescription.setText(businessList.get(position).getDescription());
         Glide.with(holder.businessImage).load(businessList.get(position).getLogo()).into(holder.businessImage);
+        Log.d("logo: ", businessList.get(position).getLogo());
 //        holder.businessImage.setImageResource(R.drawable.ic_businesses);
         Integer rating = 0;
         if(businessList.get(position).getNoOfStars()!=null){
