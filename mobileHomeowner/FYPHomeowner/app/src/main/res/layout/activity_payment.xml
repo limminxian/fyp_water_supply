@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,45 +47,40 @@
         <!--        INPUT VIEWS HERE-->
 
         <TextView
-            android:id="@+id/billTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/review_style"
-            android:gravity="top"
-            android:hint="bills"
-            android:inputType="textMultiLine"
-            android:lines="6"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/billTitle"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/billTitle"
-            app:layout_constraintTop_toBottomOf="@+id/billTitle" />
-
-        <TextView
             android:id="@+id/billTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Bill for: "
+            android:layout_marginTop="25dp"
+            android:text="Select a payment method "
             android:textSize="25dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintHorizontal_bias="0.283"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutToolBar" />
 
-        <Button
-            android:id="@+id/makePaymentBtn"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/paymentMethodsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/billTitle"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:onClick="onClick"
+            app:layout_constraintTop_toBottomOf="@+id/billTitle" />
+
+        <TextView
+            android:id="@+id/hintTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Make payment"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="@+id/billTxt"
-            app:layout_constraintHorizontal_bias="0.405"
-            app:layout_constraintStart_toStartOf="@+id/billTxt"
-            app:layout_constraintTop_toBottomOf="@+id/billTxt" />
+            android:layout_marginTop="56dp"
+            android:text="Please add a payment method first"
+            android:textSize="17dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/billTitle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

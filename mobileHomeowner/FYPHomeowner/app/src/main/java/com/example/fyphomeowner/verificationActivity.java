@@ -41,7 +41,7 @@ public class verificationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url = "http://192.168.1.168/fyp/verificationRequest.php";
+                String url = "https://fyphomeowner.herokuapp.com/verificationRequest.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {

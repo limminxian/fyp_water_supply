@@ -2,27 +2,72 @@ package com.example.fyphomeowner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
-public class paymentMethodsActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+public class paymentMethodsActivity extends AppCompatActivity implements paymentMethodsRecyclerAdapter.CardClickListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView imageMenuView;
+    private ConstraintLayout constraintLayout;
+    private Button addPaymentBtn;
+    private SharedPreferences sharedPreferencesHomeowner;
+    private SharedPreferences sharedPreferencesPayment;
+    private RecyclerView recyclerView;
+    private ArrayList<Card> cardList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_methods);
+        sharedPreferencesHomeowner = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        sharedPreferencesPayment = getSharedPreferences("paymentPref", MODE_PRIVATE);
+
+        addPaymentBtn = findViewById(R.id.addPaymentBtn);
+
+        //RECYCLER VIEW
+        recyclerView = findViewById(R.id.paymentMethodsRecyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
+        cardList = new ArrayList<>();
+        setUpCards();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        addPaymentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddPaymentPage();
+            }
+        });
 
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -64,6 +109,10 @@ public class paymentMethodsActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -71,6 +120,73 @@ public class paymentMethodsActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void setUpCards(){
+        //CONNECT DB
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/viewPaymentMethodsRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //changing the response to a JSONobject because the php file is response is a JSON file
+                            Log.i("tagconvertstr", "["+response+"]");
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if (status.equals("success")){
+                                JSONObject cardsObj = jsonObject.getJSONObject("cards");
+                                //ArrayList<TextView> textViews = new ArrayList<>();
+
+                                Iterator<String> keys = cardsObj.keys();
+                                while(keys.hasNext()){
+                                    String key = keys.next();
+                                    String ID = key;
+                                    JSONObject cardObj = cardsObj.getJSONObject(key);
+                                    String name = cardObj.getString("name");
+                                    String brand = cardObj.getString("brand");
+                                    String country = cardObj.getString("country");
+                                    String address = cardObj.getString("address");
+                                    String city = cardObj.getString("city");
+                                    String postalCode = cardObj.getString("postalCode");
+                                    String cardNoStr = cardObj.getString("cardNo");
+                                    String expMonth = cardObj.getString("expMonth");
+                                    String expYear = cardObj.getString("expYear");
+                                    String cvc = cardObj.getString("cvc");
+
+                                    BigInteger cardNo = new BigInteger(cardNoStr);
+                                    Card card = new Card(Integer.parseInt(ID), name, brand, country, address, city, Integer.parseInt(postalCode),cardNo,
+                                                        Integer.parseInt(expMonth), Integer.parseInt(expYear), Integer.parseInt(cvc));
+                                    cardList.add(card);
+                                }
+                                paymentMethodsRecyclerAdapter adapter = new paymentMethodsRecyclerAdapter(paymentMethodsActivity.this, cardList, paymentMethodsActivity.this);
+                                if(adapter != null){
+                                    recyclerView.setAdapter(adapter);
+                                }
+                            }
+                            else {
+                                Log.d("error", message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     //REDIRECT METHODS
@@ -106,10 +222,7 @@ public class paymentMethodsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);
@@ -121,4 +234,21 @@ public class paymentMethodsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openAddPaymentPage(){
+        Intent intent = new Intent(this, addPaymentMethodActivity.class);
+        startActivity(intent);
+    }
+    public void openEditPaymentPage(){
+        Intent intent = new Intent(this, editPaymentMethodActivity.class);
+        startActivity(intent);
+    }
+
+    //RECYCLER ONCLICK
+    @Override
+    public void selectedCard(Card card) {
+        SharedPreferences.Editor editor = sharedPreferencesPayment.edit();
+        editor.putString("cardID", String.valueOf(card.getID()));
+        editor.apply();
+        openEditPaymentPage();
+    }
 }

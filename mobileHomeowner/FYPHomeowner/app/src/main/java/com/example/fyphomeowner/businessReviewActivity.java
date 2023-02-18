@@ -87,10 +87,10 @@ public class businessReviewActivity extends AppCompatActivity {
                 Log.d("Company ID:", sharedPreferencesCompany.getString("companyID",""));
                 Log.d("review :", reviewTxt.getText().toString());
                 Log.d("Rating :", String.valueOf((int)ratingBar.getRating()));
-                Toast.makeText(businessReviewActivity.this, String.valueOf((int)ratingBar.getRating()), Toast.LENGTH_SHORT).show();
+
                 //CONNECT DB
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url = "http://192.168.1.168/fyp/businessReviewRequest.php";
+                String url = "https://fyphomeowner.herokuapp.com/businessReviewRequest.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
@@ -101,6 +101,8 @@ public class businessReviewActivity extends AppCompatActivity {
                                 if (response.equals("success")) {
                                     Toast.makeText(businessReviewActivity.this, "Company successfully reviewed", Toast.LENGTH_SHORT).show();
                                     Log.d("tag", "successfully reviewed company");
+                                    Intent intent = new Intent(getApplicationContext(), businessProfileActivity.class);
+                                    startActivity(intent);
                                     finish();
                                 }
                                 else {
@@ -121,6 +123,7 @@ public class businessReviewActivity extends AppCompatActivity {
                         paramV.put("companyID", sharedPreferencesCompany.getString("companyID",""));
                         paramV.put("review", reviewTxt.getText().toString());
                         paramV.put("noOfStars", String.valueOf((int)ratingBar.getRating()));
+
                         return paramV;
                     }
                 };
@@ -168,6 +171,10 @@ public class businessReviewActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -210,10 +217,7 @@ public class businessReviewActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);

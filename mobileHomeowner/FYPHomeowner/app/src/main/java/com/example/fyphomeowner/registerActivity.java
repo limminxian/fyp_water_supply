@@ -26,6 +26,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,7 +128,7 @@ public class registerActivity extends AppCompatActivity {
         householdSizeVal = householdSizePicker.getValue();
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/registerRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/registerRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -137,6 +140,7 @@ public class registerActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("email", String.valueOf(emailTxt.getText()));
                             editor.apply();
+                            sendVerification(emailTxt.getText().toString());
                             Toast.makeText(getApplicationContext(), "Registrations successful", Toast.LENGTH_SHORT).show();
                             showPopupWindowClick(view);
                             Log.d("tag", "verification page opening");
@@ -166,6 +170,84 @@ public class registerActivity extends AppCompatActivity {
                 paramV.put("phoneNo", String.valueOf(phoneNoTxt.getText()));
                 paramV.put("houseType", houseTypeVal);
                 paramV.put("householdSize", String.valueOf(householdSizeVal));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+
+    }
+
+    public void sendVerification(String email){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/verificationCodeRequest.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if(status.equals("success")){
+                                Log.i("tagconvertstr", "["+response+"]");
+                                String email = jsonObject.getString("email");
+                                String verificationCode = jsonObject.getString("verificationCode");
+                                sendEmail(email, verificationCode);
+                            }
+                            else{
+                                Log.d("error", response);
+                                Toast.makeText(registerActivity.this, response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", "null");
+                paramV.put("email", email);
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    public void sendEmail(String email, String verificationCode){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/sendEmail.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("success")){
+                            Log.d("its a: ", response);
+                        }
+                        else {
+                            Log.d("error", response);
+                            Toast.makeText(registerActivity.this, response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("email", email);
+                paramV.put("message", "Verification code is "+verificationCode);
+                System.out.println(email);
+                System.out.println(verificationCode);
                 return paramV;
             }
         };
@@ -216,8 +298,42 @@ public class registerActivity extends AppCompatActivity {
             @Override
             public void onDismiss(){
                 openVerificationPage();
+                finish();
             }
         });
+    }
+
+    public void sendVerificationCode(){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/verificationCodeRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //checking response for success directly because php file echos "success"
+                        if (response.equals("success")) {
+                            Log.d("success: ", "code successfully sent");
+                        }
+                        else {
+                            Log.d("Error", response);
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            //Sends data towards the php file to process
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("householdSize", String.valueOf(householdSizeVal));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     public void openLoginPage(){

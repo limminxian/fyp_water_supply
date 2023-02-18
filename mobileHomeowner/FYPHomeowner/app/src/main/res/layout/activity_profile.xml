@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +48,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="serif"
-            android:text="Hello, "
             android:textColor="#04C9E1"
             android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +72,6 @@
             android:id="@+id/nameTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="name"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/nameMsg"
@@ -88,17 +86,16 @@
             android:layout_height="wrap_content"
             android:text="Phone number:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/nameTxt"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/nameTxt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.228"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nameTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintVertical_bias="0.029" />
 
         <TextView
             android:id="@+id/numberTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/numberMsg"
@@ -113,17 +110,16 @@
             android:layout_height="wrap_content"
             android:text="Email:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/numberTxt"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/numberTxt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.191"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/numberTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintVertical_bias="0.026" />
 
         <TextView
             android:id="@+id/emailTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="email"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/emailMsg"
@@ -138,9 +134,9 @@
             android:layout_height="wrap_content"
             android:text="Street:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/emailTxt"
-            app:layout_constraintHorizontal_bias="0.116"
-            app:layout_constraintStart_toStartOf="@+id/emailTxt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.198"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emailTxt"
             app:layout_constraintVertical_bias="0.03" />
 
@@ -148,7 +144,6 @@
             android:id="@+id/streetTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="street"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/streetMsg"
@@ -164,16 +159,15 @@
             android:text="Block number:"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.327"
-            app:layout_constraintStart_toEndOf="@+id/streetMsg"
-            app:layout_constraintTop_toBottomOf="@+id/emailTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintHorizontal_bias="0.224"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/streetTxt"
+            app:layout_constraintVertical_bias="0.043" />
 
         <TextView
             android:id="@+id/blockNoTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/blockNoMsg"
@@ -188,17 +182,16 @@
             android:layout_height="wrap_content"
             android:text="Unit number:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/streetTxt"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/streetTxt"
-            app:layout_constraintTop_toBottomOf="@+id/blockNoTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.224"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blockNoMsg"
+            app:layout_constraintVertical_bias="0.081" />
 
         <TextView
             android:id="@+id/unitNoTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="321"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/unitNoMsg"
@@ -214,16 +207,15 @@
             android:text="Postal Code:"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.186"
-            app:layout_constraintStart_toEndOf="@+id/unitNoMsg"
-            app:layout_constraintTop_toBottomOf="@+id/blockNoTxt"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintHorizontal_bias="0.22"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/unitNoTxt"
+            app:layout_constraintVertical_bias="0.048" />
 
         <TextView
             android:id="@+id/postalCodeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="123123"
             android:fontFamily="serif"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/postalCodeMsg"
@@ -238,24 +230,24 @@
             android:layout_height="wrap_content"
             android:text="Housing type:"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/unitNoTxt"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/unitNoTxt"
-            app:layout_constraintTop_toBottomOf="@+id/unitNoTxt"
-            app:layout_constraintVertical_bias="0.05" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.225"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postalCodeTxt"
+            app:layout_constraintVertical_bias="0.082" />
 
         <TextView
             android:id="@+id/houseTypeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3-room"
             android:fontFamily="serif"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.02"
-            app:layout_constraintStart_toEndOf="@+id/houseTypeMsg"
-            app:layout_constraintTop_toBottomOf="@+id/unitNoTxt"
-            app:layout_constraintVertical_bias="0.05" />
+            app:layout_constraintHorizontal_bias="0.547"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postalCodeTxt"
+            app:layout_constraintVertical_bias="0.082" />
 
         <TextView
             android:id="@+id/householdSizeMsg"
@@ -273,52 +265,29 @@
             android:id="@+id/householdSizeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
             android:fontFamily="serif"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.02"
-            app:layout_constraintStart_toEndOf="@+id/householdSizeMsg"
+            app:layout_constraintHorizontal_bias="0.547"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/houseTypeTxt"
-            app:layout_constraintVertical_bias="0.048" />
+            app:layout_constraintVertical_bias="0.05" />
 
         <Button
             android:id="@+id/editProfileBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#02628E"
+            android:backgroundTint="@color/defaultBtn"
+            android:onClick="openEditProfilePage"
             android:text="Edit Profile"
             android:textAllCaps="false"
-            android:onClick="openEditProfilePage"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.518"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/alert"
-            app:layout_constraintVertical_bias="0.368" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/alertToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/alert"
-            app:layout_constraintStart_toEndOf="@+id/alert"
-            app:layout_constraintTop_toTopOf="@+id/alert" />
-
-        <TextView
-            android:id="@+id/alert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Alerts"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/householdSizeTxt"
-            app:layout_constraintHorizontal_bias="0.013"
-            app:layout_constraintStart_toStartOf="@+id/householdSizeMsg"
             app:layout_constraintTop_toBottomOf="@+id/householdSizeMsg"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.368" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     
@@ -327,7 +296,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

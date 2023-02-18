@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.navigation.NavigationView;
@@ -39,10 +41,14 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class businessProfileActivity extends AppCompatActivity {
 
@@ -55,6 +61,7 @@ public class businessProfileActivity extends AppCompatActivity {
     private String street;
     private Integer postalCode;
     private String Description;
+    private String date;
     private Integer noOfStars;
     private TextView companyTitle;
     private TextView emailTxt;
@@ -71,8 +78,9 @@ public class businessProfileActivity extends AppCompatActivity {
     private Button subBtn;
     private Button unsubBtn;
     private Button reviewBtn;
-    private ListView listView;
+    private TextView reviewTxt;
     private RatingBar ratingBar;
+    private ImageView businessLogo;
 
     private SharedPreferences sharedPreferencesHomeowner;
     private SharedPreferences sharedPreferencesCompany;
@@ -102,108 +110,10 @@ public class businessProfileActivity extends AppCompatActivity {
         subBtn = findViewById(R.id.subscriptionBtn);
         unsubBtn = findViewById(R.id.unsubscriptionBtn);
         reviewBtn = findViewById(R.id.reviewBtn);
-        listView = findViewById(R.id.listView);
+        reviewTxt = findViewById(R.id.reviewTxt);
+        businessLogo = findViewById(R.id.businessLogo);
 
-        //CONNECT DB
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/businessProfileRequest.php";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //changing the response to a JSONobject because the php file is response is a JSON file
-                            Log.i("tagconvertstr", "["+response+"]");
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            String message = jsonObject.getString("message");
-                            if (status.equals("success")){
-                                companyTitle.setText(jsonObject.getString("name"));
-                                emailTxt.setText(jsonObject.getString("email"));
-                                phoneTxt.setText(jsonObject.getString("phoneNo"));
-                                addressTxt.setText(jsonObject.getString("address"));
-                                descriptionTxt.setText(jsonObject.getString("description"));
-                                serviceTxt.setText(jsonObject.getString("services"));
-                                serviceRateTxt.setText(jsonObject.getString("serviceRates"));
-                                if(!jsonObject.isNull("noOfStars")){
-                                    noOfStars = jsonObject.getInt("noOfStars");
-                                }else{
-                                    noOfStars = 0;
-                                }
-                                ratingBar.setRating(noOfStars);
-                                ratingBar.setIsIndicator(true);
-
-                                //Create list of reviews
-                                ArrayList<String> listArr = new ArrayList<>();
-                                //Get reviews
-                                JSONObject reviewsObj = jsonObject.getJSONObject("reviews");
-                                Iterator<String> keys = reviewsObj.keys();
-                                while(keys.hasNext()){
-                                    String key = keys.next();
-                                    JSONObject reviewObj = reviewsObj.getJSONObject(key);
-                                    String homeownerName = reviewObj.getString("homeownerName");
-                                    String review = reviewObj.getString("review");
-                                    int reviewStars = reviewObj.getInt("reviewStars");
-                                    String reviewStr = "'"+review+"' "+"reviewed by: "+homeownerName;
-                                    listArr.add(reviewStr);
-                                }
-                                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, listArr);
-                                listView.setAdapter(arrayAdapter);
-
-                                boolean subscribed = jsonObject.getBoolean("subscribed");
-                                if(subscribed){
-                                    subBtn.setVisibility(View.GONE);
-                                    unsubBtn.setVisibility(View.VISIBLE);
-                                    reviewBtn.setVisibility(View.VISIBLE);
-                                    unsubBtn.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            datePicker(view, subscribed);
-                                        }
-                                    });
-                                    reviewBtn.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            openReviewPage();
-                                        }
-                                    });
-                                }else{
-                                    subBtn.setVisibility(View.VISIBLE);
-                                    unsubBtn.setVisibility(View.GONE);
-                                    reviewBtn.setVisibility(View.GONE);
-                                    subBtn.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            datePicker(view, subscribed);
-                                        }
-                                    });
-                                }
-                                SharedPreferences.Editor editor = sharedPreferencesCompany.edit();
-                                editor.putString("companyName", jsonObject.getString("name"));
-                                editor.apply();
-                            }
-                            else {
-                                Log.d("error", message);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> paramV = new HashMap<>();
-                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
-                paramV.put("companyID", sharedPreferencesCompany.getString("companyID",""));
-                return paramV;
-            }
-        };
-        queue.add(stringRequest);
+        getInfo();
 
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -245,6 +155,10 @@ public class businessProfileActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -287,10 +201,7 @@ public class businessProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);
@@ -305,6 +216,142 @@ public class businessProfileActivity extends AppCompatActivity {
     public void openReviewPage(){
         Intent intent = new Intent(this, businessReviewActivity.class);
         startActivity(intent);
+    }
+
+    public void getInfo(){
+        //CONNECT DB
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/businessProfileRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //changing the response to a JSONobject because the php file is response is a JSON file
+                            Log.i("tagconvertstr", "["+response+"]");
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if (status.equals("success")){
+                                companyTitle.setText(jsonObject.getString("name"));
+                                emailTxt.setText(jsonObject.getString("email"));
+                                phoneTxt.setText(jsonObject.getString("phoneNo"));
+                                addressTxt.setText(jsonObject.getString("address"));
+                                descriptionTxt.setText(jsonObject.getString("description"));
+                                serviceTxt.setText(jsonObject.getString("services"));
+                                serviceRateTxt.setText(jsonObject.getString("serviceRates"));
+                                if(!jsonObject.isNull("noOfStars")){
+                                    noOfStars = jsonObject.getInt("noOfStars");
+                                }else{
+                                    noOfStars = 0;
+                                }
+                                ratingBar.setRating(noOfStars);
+                                ratingBar.setIsIndicator(true);
+                                String logo = jsonObject.getString("logo");
+                                if(logo!=null && logo!="null" && !logo.isEmpty()){
+                                    logo = jsonObject.getString("logo");
+                                } else {
+                                    logo = "imgnotfound.jpg";
+                                }
+
+                                Glide.with(getApplicationContext()).load("https://fypwatersupplyweb.herokuapp.com/companylogos/" + logo).into(businessLogo);
+                                //Create list of reviews
+                                ArrayList<String> listArr = new ArrayList<>();
+                                //Get reviews
+                                if(jsonObject.has("reviews")) {
+                                    JSONObject reviewsObj = jsonObject.getJSONObject("reviews");
+                                    String reviews = "";
+                                    Iterator<String> keys = reviewsObj.keys();
+                                    while (keys.hasNext()) {
+                                        String key = keys.next();
+                                        JSONObject reviewObj = reviewsObj.getJSONObject(key);
+                                        String homeownerName = reviewObj.getString("homeownerName");
+                                        String review = reviewObj.getString("review");
+                                        String reviewStr = "'" + review + "' " + "reviewed by: " + homeownerName + "\n";
+                                        reviews += reviewStr;
+                                        System.out.println(reviews);
+                                    }
+                                    reviewTxt.setText(reviews);
+                                }
+
+                                boolean subscribed = jsonObject.getBoolean("subscribed");
+                                if(subscribed){
+                                    subBtn.setVisibility(View.GONE);
+                                    unsubBtn.setVisibility(View.VISIBLE);
+                                    reviewBtn.setVisibility(View.VISIBLE);
+                                    unsubBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            datePicker(view, subscribed);
+                                        }
+                                    });
+                                    reviewBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            openReviewPage();
+                                        }
+                                    });
+                                }else{
+                                    subBtn.setVisibility(View.VISIBLE);
+                                    unsubBtn.setVisibility(View.GONE);
+                                    reviewBtn.setVisibility(View.GONE);
+                                    subBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if(jsonObject.has("subscribeID")){
+                                                Toast.makeText(businessProfileActivity.this, "Please unsubscribe first", Toast.LENGTH_SHORT).show();
+                                                try {
+                                                    String subscribeID = jsonObject.getString("subscribeID");
+                                                    SharedPreferences.Editor editor = sharedPreferencesCompany.edit();
+                                                    editor.putString("companyID", subscribeID);
+                                                    editor.apply();
+                                                    finish();
+                                                    startActivity(getIntent());
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else {
+                                                datePicker(view, subscribed);
+                                            }
+                                        }
+                                    });
+                                }
+
+                                boolean reviewed = jsonObject.getBoolean("reviewed");
+                                if(reviewed){
+                                    reviewBtn.setClickable(false);
+                                    reviewBtn.setBackgroundColor(Color.GRAY);
+                                }else{
+                                    reviewBtn.setClickable(true);
+                                    reviewBtn.setBackgroundColor(R.color.waterBlue);
+                                }
+
+                                SharedPreferences.Editor editor = sharedPreferencesCompany.edit();
+                                editor.putString("companyName", jsonObject.getString("name"));
+                                editor.apply();
+                            }
+                            else {
+                                Log.d("error", message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+                paramV.put("companyID", sharedPreferencesCompany.getString("companyID",""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     //Popup window method
@@ -322,7 +369,11 @@ public class businessProfileActivity extends AppCompatActivity {
             @Override public void onPositiveButtonClick(Long selection) {
                 // Do something...
                 //Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                Toast.makeText(businessProfileActivity.this, String.valueOf(selection), Toast.LENGTH_SHORT).show();
+                Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                utc.setTimeInMillis(selection);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                date = format.format(utc.getTime());
+                subUnsub(subStatus);
             }
         });
 
@@ -371,4 +422,80 @@ public class businessProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void subUnsub(boolean subStatus){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+        if(subStatus){ // if homeowner is subbed to THIS company
+            //want to unsub
+            String url = "https://fyphomeowner.herokuapp.com/unsubscribeRequest.php";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //checking response for success directly because php file echos "success"
+                            if (response.equals("success")) {
+                                Toast.makeText(businessProfileActivity.this, "Unsubscribed", Toast.LENGTH_SHORT).show();
+                                System.out.println("success");
+                                finish();
+                                startActivity(getIntent());
+                            }
+                            else {
+                                Toast.makeText(businessProfileActivity.this, response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                //Sends data towards the php file to process
+                protected Map<String, String> getParams() {
+                    Map<String, String> paramV = new HashMap<>();
+                    paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+                    paramV.put("companyID", sharedPreferencesCompany.getString("companyID",""));
+                    paramV.put("date", date);
+                    return paramV;
+                }
+            };
+            queue.add(stringRequest);
+
+        }else{ // if homeowner is not subbed to this company
+            //want to sub
+            String url = "https://fyphomeowner.herokuapp.com/subscribeRequest.php";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //checking response for success directly because php file echos "success"
+                            if (response.equals("success")) {
+                                Toast.makeText(businessProfileActivity.this, "subscribed", Toast.LENGTH_SHORT).show();
+                                System.out.println("success");
+                                finish();
+                                startActivity(getIntent());
+                            }
+                            else {
+                                Toast.makeText(businessProfileActivity.this, response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                //Sends data towards the php file to process
+                protected Map<String, String> getParams() {
+                    Map<String, String> paramV = new HashMap<>();
+                    paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+                    paramV.put("companyID", sharedPreferencesCompany.getString("companyID",""));
+                    paramV.put("date", date);
+                    return paramV;
+                }
+            };
+            queue.add(stringRequest);
+        }
+    }
+
 }

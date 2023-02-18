@@ -11,8 +11,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +31,11 @@ import com.google.android.material.navigation.NavigationView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class profileActivity extends AppCompatActivity {
 
@@ -57,8 +62,8 @@ public class profileActivity extends AppCompatActivity {
     private TextView houseTypeTxt;
     private TextView householdSizeTxt;
     private Button editProfileBtn;
-    private SwitchCompat alertToggle;
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
+    private Boolean isTouched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,6 @@ public class profileActivity extends AppCompatActivity {
         }
 
         editProfileBtn = findViewById(R.id.editProfileBtn);
-        alertToggle = findViewById(R.id.alertToggle);
         profileTitle = findViewById(R.id.profileTitle);
         nameTxt = findViewById(R.id.nameTxt);
         numberTxt = findViewById(R.id.numberTxt);
@@ -86,7 +90,7 @@ public class profileActivity extends AppCompatActivity {
 
         //CONNECT DB
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/profileRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/profileRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -109,7 +113,7 @@ public class profileActivity extends AppCompatActivity {
                                 houseType = jsonObject.getString("houseType");
                                 householdSize = jsonObject.getString("householdSize");
 
-                                profileTitle.setText(profileTitle.getText().toString().concat(name));
+                                profileTitle.setText("Hello, ".concat(name));
                                 nameTxt.setText(name);
                                 numberTxt.setText(phoneNo);
                                 emailTxt.setText(email);
@@ -181,6 +185,10 @@ public class profileActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -193,6 +201,7 @@ public class profileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 startActivity(new Intent(getApplicationContext(), editProfileActivity.class));
+                finish();
             }
         });
     }
@@ -230,10 +239,7 @@ public class profileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);

@@ -5,12 +5,14 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/layoutToolBar"
             android:layout_width="match_parent"
@@ -34,25 +36,94 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="Payment methods"
                 android:fontFamily="serif"
+                android:text="Payment methods"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <!--        INPUT VIEWS HERE-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--        <TextView-->
+        <!--            android:id="@+id/previousBillTxt"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="25dp"-->
+        <!--            android:background="@drawable/review_style"-->
+        <!--            android:gravity="top"-->
+        <!--            android:hint="Date:\nService Type:\nDescription: \nStatus:"-->
+        <!--            android:inputType="textMultiLine"-->
+        <!--            android:lines="4"-->
+        <!--            android:padding="10dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/selectTicketMsg"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/selectTicketMsg"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/selectTicketMsg" />-->
+
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.09"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/layoutToolBar" -->
+
+
+        <TextView
+            android:id="@+id/paymentMethodsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutToolBar"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
+            android:text="Payment Methods"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/addPaymentBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutToolBar"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="25dp"
+            android:layout_toEndOf="@+id/paymentMethodsTitle"
+            android:text="Add"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@+id/paymentMethodsTitle"
+            app:layout_constraintStart_toEndOf="@+id/paymentMethodsTitle"
+            app:layout_constraintTop_toTopOf="@+id/paymentMethodsTitle" />
+
+        <TextView
+            android:id="@+id/selectTicketMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@id/layoutToolBar"
+            android:text="Available payment methods"
+            app:layout_constraintEnd_toEndOf="@+id/paymentMethodsTitle"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/paymentMethodsTitle"
+            app:layout_constraintTop_toBottomOf="@+id/paymentMethodsTitle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/paymentMethodsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectTicketMsg"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:onClick="onClick"
+            app:layout_constraintTop_toBottomOf="@+id/selectTicketMsg" />
+
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

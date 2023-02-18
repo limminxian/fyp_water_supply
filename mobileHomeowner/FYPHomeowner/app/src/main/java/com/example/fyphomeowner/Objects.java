@@ -3,6 +3,8 @@ package com.example.fyphomeowner;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.math.BigInteger;
+
 public class Objects {
 
 }
@@ -254,7 +256,53 @@ public class Objects {
 //    }
 //}
 
-class Ticket{
+class WaterUsage{
+    private float waterUsage;
+    private Integer day;
+    private Integer month;
+    private Integer year;
+
+    public WaterUsage(float waterUsage, Integer day, Integer month, Integer year) {
+        this.waterUsage = waterUsage;
+        this.day = day;
+        this.month = month;
+        this.year = year;
+    }
+
+    public float getWaterUsage() {
+        return waterUsage;
+    }
+
+    public void setWaterUsage(float waterUsage) {
+        this.waterUsage = waterUsage;
+    }
+
+    public Integer getDay() {
+        return day;
+    }
+
+    public void setDay(Integer day) {
+        this.day = day;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+}
+
+class Ticket {
     private Integer ID;
     private String date;
     private String serviceType;
@@ -312,6 +360,122 @@ class Ticket{
     }
 }
 
+class Card {
+    private Integer ID;
+    private String name;
+    private String brand;
+    private String country;
+    private String address;
+    private String city;
+    private Integer postalCode;
+    private BigInteger cardNo;
+    private Integer expMonth;
+    private Integer expYear;
+    private Integer cvc;
+
+    public Card(Integer ID, String name, String brand, String country, String address, String city, Integer postalCode, BigInteger cardNo, Integer expMonth, Integer expYear, Integer cvc) {
+        this.ID = ID;
+        this.name = name;
+        this.brand = brand;
+        this.country = country;
+        this.address = address;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.cardNo = cardNo;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+        this.cvc = cvc;
+    }
+
+    public Integer getID() {
+        return ID;
+    }
+
+    public void setID(Integer ID) {
+        this.ID = ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Integer getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(Integer postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public BigInteger getCardNo() {
+        return cardNo;
+    }
+
+    public void setCardNo(BigInteger cardNo) {
+        this.cardNo = cardNo;
+    }
+
+    public Integer getExpMonth() {
+        return expMonth;
+    }
+
+    public void setExpMonth(Integer expMonth) {
+        this.expMonth = expMonth;
+    }
+
+    public Integer getExpYear() {
+        return expYear;
+    }
+
+    public void setExpYear(Integer expYear) {
+        this.expYear = expYear;
+    }
+
+    public Integer getCvc() {
+        return cvc;
+    }
+
+    public void setCvc(Integer cvc) {
+        this.cvc = cvc;
+    }
+}
+
 class Company implements Parcelable {
     private Integer ID;
     private String name;
@@ -320,19 +484,21 @@ class Company implements Parcelable {
     private Integer postalCode;
     private String Description;
     private Integer noOfStars;
+    private String logo;
 
     public Company(){
 
     }
 
-    public Company(Integer ID, String name, Integer phoneNo, String street, Integer postalCode, String description, Integer noOfStars) {
+    public Company(Integer ID, String name, Integer phoneNo, String street, Integer postalCode, String description, Integer noOfStars, String logo) {
         this.ID = ID;
         this.name = name;
-        this.PhoneNo = phoneNo;
+        PhoneNo = phoneNo;
         this.street = street;
         this.postalCode = postalCode;
-        this.Description = description;
+        Description = description;
         this.noOfStars = noOfStars;
+        this.logo = logo;
     }
 
     public Company (Company company){
@@ -424,6 +590,13 @@ class Company implements Parcelable {
         this.noOfStars = noOfStars;
     }
 
+    public String getLogo(){
+        return "https://fypwatersupplyweb.herokuapp.com/companylogos/" + logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
 
     @Override
     public String toString() {

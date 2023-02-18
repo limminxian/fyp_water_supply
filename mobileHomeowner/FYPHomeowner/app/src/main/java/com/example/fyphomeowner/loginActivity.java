@@ -1,18 +1,25 @@
 package com.example.fyphomeowner;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +67,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
                 //Creating a post request
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url ="http://192.168.1.168/fyp/loginRequest.php";
+                String url ="https://fyphomeowner.herokuapp.com/loginRequest.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
@@ -96,7 +103,14 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                     verificationBtn.setVisibility(View.GONE);
                                     forgotPasswordMsg.setVisibility(View.VISIBLE);
                                     forgotPasswordBtn.setVisibility(View.VISIBLE);
-
+                                    String userID = jsonObject.getString("userID");
+                                    forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            sendVerification(userID, "null");
+                                            showPopupWindowClick(v, userID);
+                                        }
+                                    });
                                     Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
@@ -131,7 +145,10 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                 //end of creating post req
 
                 break;
+
             case R.id.verificationBtn:
+                String emailStr = verificationSharedPreferences.getString("email", "");
+                sendVerification("null", emailStr);
                 openVerificationPage();
                 break;
             case R.id.registerPageBtn:
@@ -169,6 +186,193 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    //Popup window method
+    public void showPopupWindowClick(View view, String userID) {
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.verification_popup_window, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window token
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){
+            @Override
+            public void onDismiss(){
+                forgotPasswordMethod(userID);
+            }
+        });
+    }
+
+    public void sendVerification(String userID, String email){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/verificationCodeRequest.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if(status.equals("success")){
+                                Log.i("tagconvertstr", "["+response+"]");
+                                String email = jsonObject.getString("email");
+                                String verificationCode = jsonObject.getString("verificationCode");
+                                sendEmail(email, verificationCode);
+                            }
+                            else{
+                                Log.d("error", response);
+                                Toast.makeText(loginActivity.this, response, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", userID);
+                paramV.put("email", email);
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    public void sendEmail(String email, String verificationCode){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/sendEmail.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("success")){
+                            Log.d("its a: ", response);
+                        }
+                        else {
+                            Log.d("error", response);
+                            Toast.makeText(loginActivity.this, response, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        })
+        {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("email", email);
+                paramV.put("message", "Verification code is "+verificationCode);
+                System.out.println(email);
+                System.out.println(verificationCode);
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    public void forgotPasswordMethod(String userID){
+        AlertDialog.Builder builder = new AlertDialog.Builder(loginActivity.this);
+        final View resetPasswordLayout = getLayoutInflater().inflate(R.layout.reset_password_alert_dialog, null);
+        builder.setView(resetPasswordLayout);
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button posBtn = ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                posBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO Do something
+                        EditText verifyCodeTxt = resetPasswordLayout.findViewById(R.id.verifyCodeTxt);
+                        EditText newPasswordTxt = resetPasswordLayout.findViewById(R.id.newPasswordTxt);
+                        EditText rePasswordTxt = resetPasswordLayout.findViewById(R.id.rePasswordTxt);
+                        String verifyCode = verifyCodeTxt.getText().toString();
+                        String newPassword = newPasswordTxt.getText().toString();
+                        String rePassword = rePasswordTxt.getText().toString();
+
+                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                        String url = "https://fyphomeowner.herokuapp.com/resetPasswordRequest.php";
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        if (response.equals("success")){
+                                            Toast.makeText(loginActivity.this, "password changed successfully", Toast.LENGTH_SHORT).show();
+                                            alertDialog.dismiss();
+                                        }
+                                        else {
+                                            Log.d("error", response);
+                                            Toast.makeText(loginActivity.this, response, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
+                            }
+                        })
+                        {
+                            protected Map<String, String> getParams() {
+                                Map<String, String> paramV = new HashMap<>();
+                                paramV.put("userID", userID);
+                                paramV.put("verifyCode", verifyCode);
+                                paramV.put("newPassword", newPassword);
+                                paramV.put("rePassword", rePassword);
+                                return paramV;
+                            }
+                        };
+                        queue.add(stringRequest);
+                    }
+                });
+                Button negBtn = ((AlertDialog) alertDialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+                negBtn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+    }
+
     public boolean checkNull(String username, String password){
         boolean bool = false;
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)){
@@ -188,6 +392,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     public void openHomePage(){
         Intent intent = new Intent(this, dashboardActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void openVerificationPage(){

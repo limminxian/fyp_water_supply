@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,14 +55,61 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutToolBar" />
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Display water usage by: "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+        <Spinner
+            android:id="@+id/sortBySpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="#0583BC"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.206"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+        <Spinner
+            android:id="@+id/selectedYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:textColor="#0583BC"
+            app:layout_constraintEnd_toEndOf="@+id/sortBySpinner"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/sortBySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/sortBySpinner" />
+<!--        <Spinner-->
+<!--            android:id="@+id/selectedDecade"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:visibility="visible"-->
+<!--            android:textColor="#0583BC"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/sortBySpinner"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/sortBySpinner"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/sortBySpinner" />-->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

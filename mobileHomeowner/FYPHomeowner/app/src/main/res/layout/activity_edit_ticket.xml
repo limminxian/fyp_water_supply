@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,38 +59,38 @@
             app:layout_constraintTop_toBottomOf="@+id/layoutToolBar" />
 
 
-        <Spinner
-            android:id="@+id/ticketTypeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:textColor="#0583BC"
-            app:layout_constraintBottom_toBottomOf="@+id/ticketMsg"
-            app:layout_constraintStart_toEndOf="@+id/ticketMsg"
-            app:layout_constraintTop_toTopOf="@+id/ticketMsg"
-            app:layout_constraintVertical_bias="1.0" />
+<!--        <Spinner-->
+<!--            android:id="@+id/ticketTypeSpinner"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:textColor="#0583BC"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/ticketMsg"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/ticketMsg"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/ticketMsg"-->
+<!--            app:layout_constraintVertical_bias="1.0" />-->
 
-        <TextView
-            android:id="@+id/ticketMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Ticket Type"
-            app:layout_constraintEnd_toEndOf="@+id/editTicketTitle"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/editTicketTitle"
-            app:layout_constraintTop_toBottomOf="@+id/editTicketTitle" />
+<!--        <TextView-->
+<!--            android:id="@+id/ticketMsg"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:text="Ticket Type"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/editTicketTitle"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/editTicketTitle"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/editTicketTitle" />-->
 
         <TextView
             android:id="@+id/descriptionMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="52dp"
             android:text="Description"
-            app:layout_constraintEnd_toEndOf="@+id/ticketMsg"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/ticketMsg"
-            app:layout_constraintTop_toBottomOf="@+id/ticketMsg" />
+            app:layout_constraintEnd_toEndOf="@+id/editTicketTitle"
+            app:layout_constraintHorizontal_bias="0.021"
+            app:layout_constraintStart_toStartOf="@+id/editTicketTitle"
+            app:layout_constraintTop_toBottomOf="@+id/editTicketTitle" />
 
         <EditText
             android:id="@+id/descriptionTxt"
@@ -128,7 +128,6 @@
             android:gravity="top"
             android:hint="Chat with customer service agent here:"
             android:inputType="textMultiLine"
-            android:lines="3"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -156,7 +155,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/replyBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="reply"
@@ -175,7 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

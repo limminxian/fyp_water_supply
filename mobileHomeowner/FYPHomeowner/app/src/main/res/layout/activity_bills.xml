@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/bg"
     tools:context=".profileActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,7 +76,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/review_style"
             android:gravity="top"
-            android:hint="bills"
+            android:hint="no bills found"
             android:inputType="textMultiLine"
             android:lines="6"
             android:padding="10dp"
@@ -106,8 +106,8 @@
             android:id="@+id/billTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Bill for: "
+            android:layout_margin="24dp"
+            android:text="Unpaid bills for: "
             android:textSize="25dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.057"
@@ -118,11 +118,12 @@
             android:id="@+id/makePaymentBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/defaultBtn"
             android:text="Make payment"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="@+id/currBillTxt"
-            app:layout_constraintHorizontal_bias="0.405"
+            app:layout_constraintHorizontal_bias="0.325"
             app:layout_constraintStart_toStartOf="@+id/currBillTxt"
             app:layout_constraintTop_toBottomOf="@+id/currBillTxt" />
 
@@ -130,8 +131,8 @@
             android:id="@+id/previousBillTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Previous bills"
+            android:layout_margin="24dp"
+            android:text="Previously paid bills"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.06"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,14 +162,15 @@
 
         <Button
             android:id="@+id/prevBillsBtn"
-            android:layout_width="126dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="184dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="36dp"
+            android:backgroundTint="@color/defaultBtn"
             android:text="Get previous bills"
             android:textAllCaps="false"
             android:textSize="10dp"
             app:layout_constraintEnd_toEndOf="@+id/prevBillTxt"
-            app:layout_constraintHorizontal_bias="0.412"
+            app:layout_constraintHorizontal_bias="0.284"
             app:layout_constraintStart_toStartOf="@+id/prevBillTxt"
             app:layout_constraintTop_toBottomOf="@+id/prevBillTxt" />
 
@@ -179,7 +181,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
-        android:backgroundTint="@color/light_blue"
+        android:backgroundTint="@color/white"
         android:layout_gravity="start">
     </com.google.android.material.navigation.NavigationView>
 

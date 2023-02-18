@@ -3,7 +3,6 @@ package com.example.fyphomeowner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,15 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,10 +27,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,14 +63,44 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
         setUpTickets();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/getSubStatus.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //checking response for success directly because php file echos "success"
+                        if (response.equals("true")) {
+                            raiseTicketBtn.setClickable(true);
+                            raiseTicketBtn.setBackgroundResource(android.R.drawable.btn_default);
+                        }
+                        else {
+                            raiseTicketBtn.setClickable(false);
+                            raiseTicketBtn.setBackgroundColor(Color.GRAY);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            //Sends data towards the php file to process
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+
         raiseTicketBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openRaiseTicketPage();
+                finish();
             }
         });
-
-
 
         //NAVIGATION MENU
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -117,6 +142,10 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -129,7 +158,7 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
     public void setUpTickets(){
         //CONNECT DB
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/viewTicketsRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/viewTicketsRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -157,42 +186,11 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
                                     String ticketStr = date +"\n"+ serviceType +"\n"+ description +"\n"+ ticketStatus;
                                     Ticket ticket = new Ticket(Integer.parseInt(ticketID), date, serviceType, description, ticketStatus);
                                     ticketList.add(ticket);
-//                                    TextView textView = new TextView(getApplicationContext());
-//                                    textView.setText(ticketStr);
-//                                    textViews.add(textView);
                                 }
                                 ticketRecyclerAdapter adapter = new ticketRecyclerAdapter(ticketsActivity.this, ticketList, ticketsActivity.this);
                                 if(adapter != null){
                                     recyclerView.setAdapter(adapter);
                                 }
-
-
-//                                TextView selectTicketMsg = findViewById(R.id.selectTicketMsg);
-//                                constraintLayout = findViewById(R.id.constraintLayout);
-//                                for(int i = 0; i < textViews.size(); i++){
-//                                    ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                                    layoutParams.setMargins(75, 75, 75, 75);
-//                                    if(i == 0){
-//                                        layoutParams.startToStart = selectTicketMsg.getId();
-//                                        layoutParams.endToEnd = selectTicketMsg.getId();
-//                                        layoutParams.topToBottom = selectTicketMsg.getId();
-//                                        System.out.println(selectTicketMsg.getId());
-//                                    }else{
-//                                        System.out.println(textViews.get(i-1).getId());
-//                                        layoutParams.startToStart = textViews.get(i-1).getId();
-//                                        layoutParams.endToEnd = textViews.get(i-1).getId();
-//                                        layoutParams.topToBottom = textViews.get(i-1).getId();
-//                                    }
-//                                    textViews.get(i).setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.review_style));
-//                                    textViews.get(i).setLayoutParams(layoutParams);
-//                                    constraintLayout.addView(textViews.get(i));
-//                                    textViews.get(i).setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View view) {
-//                                            openEditTicketPage();
-//                                        }
-//                                    });
-//                                }
                             }
                             else {
                                 Log.d("error", message);
@@ -249,10 +247,7 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);
@@ -280,5 +275,6 @@ public class ticketsActivity extends AppCompatActivity implements ticketRecycler
         editor.putString("ticketID", String.valueOf(ticket.getID()));
         editor.apply();
         openEditTicketPage();
+        finish();
     }
 }

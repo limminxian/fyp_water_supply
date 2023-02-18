@@ -118,6 +118,10 @@ public class businessViewActivity extends AppCompatActivity implements businessR
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -160,10 +164,7 @@ public class businessViewActivity extends AppCompatActivity implements businessR
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);
@@ -195,7 +196,7 @@ public class businessViewActivity extends AppCompatActivity implements businessR
         attrNameList.add("noOfRate");
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://192.168.1.168/fyp/businessViewRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/businessViewRequest.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -227,6 +228,7 @@ public class businessViewActivity extends AppCompatActivity implements businessR
                                         String name = companyObj.getString("name");
                                         String street = companyObj.getString("street");
                                         String description = companyObj.getString("description");
+                                        String logo = companyObj.getString("logo");
 
                                         if(!companyObj.isNull("companyID")){
                                             companyID = Integer.parseInt(companyObj.getString("companyID"));
@@ -250,12 +252,19 @@ public class businessViewActivity extends AppCompatActivity implements businessR
                                         }
                                         if(!companyObj.isNull("noOfRate")){
                                             noOfRate = Integer.parseInt(companyObj.getString("noOfRate"));
-                                        }else{
+                                        }else {
                                             noOfRate = null;
                                         }
+                                        if(logo!=null && logo!="null" && !logo.isEmpty()){
+                                            logo = companyObj.getString("logo");
+                                        } else {
+                                            logo = "imgnotfound.jpg";
+                                        }
+                                        if(name!=null && name!="null" && !name.isEmpty()){
+                                            Company company = new Company(companyID, name, phoneNo, street, postalCode, description, noOfStars, logo);
+                                            businessList.add(company);
+                                        }
 
-                                        Company company = new Company(companyID, name, phoneNo, street, postalCode, description, noOfStars);
-                                        businessList.add(company);
                                     }else{
                                         EOF = true;
                                     }
@@ -307,6 +316,8 @@ public class businessViewActivity extends AppCompatActivity implements businessR
             String cname = company.getName().toLowerCase();
             text = text.toLowerCase();
             if(text.equals(cname)){
+                filteredList.add(businessList.get(i));
+            } else if (text.equals("")) {
                 filteredList.add(businessList.get(i));
             }
         }

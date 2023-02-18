@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,15 +36,16 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class billsActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView imageMenuView;
-    private SharedPreferences sharedPreferences;
     private TextView currBillTxt;
     private TextView prevBillTxt;
     private TextView billTitle;
@@ -54,12 +57,14 @@ public class billsActivity extends AppCompatActivity {
     private Month currMonthStr;
     private int currMonth;
     private int currYear;
-
+    private SharedPreferences sharedPreferencesHomeowner;
+    private SharedPreferences sharedPreferencesPayment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bills);
-        sharedPreferences = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        sharedPreferencesHomeowner = getSharedPreferences("homeownerPref", MODE_PRIVATE);
+        sharedPreferencesPayment = getSharedPreferences("paymentPref", MODE_PRIVATE);
         billTitle = findViewById(R.id.billTitle);
         currBillTxt = findViewById(R.id.currBillTxt);
         prevBillTxt = findViewById(R.id.prevBillTxt);
@@ -75,7 +80,7 @@ public class billsActivity extends AppCompatActivity {
             currMonth = currDate.getMonthValue();
             currYear = currDate.getYear();
         }
-        billTitle.setText("Bills for " + currMonthStr);
+        billTitle.setText("Unpaid bills for " + currMonthStr);
 
         //SPINNER
         //bills month spinner
@@ -102,11 +107,11 @@ public class billsActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, years);
         billYearSpinner.setAdapter(yearAdapter);
-        int yearArrayPos = yearAdapter.getPosition("2023");
+        int yearArrayPos = yearAdapter.getPosition(String.valueOf(thisYear));
         billYearSpinner.setSelection(yearArrayPos);
 
         //set current bills text
-        getBills(currBillTxt, currMonth, currYear);
+        getBills(currBillTxt, currMonth, currYear, true);
 
         makePaymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +122,7 @@ public class billsActivity extends AppCompatActivity {
         prevBillsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getBills(prevBillTxt, billMonthSpinner.getSelectedItemPosition()+1, Integer.parseInt(billYearSpinner.getSelectedItem().toString()));
+                getBills(prevBillTxt, billMonthSpinner.getSelectedItemPosition()+1, Integer.parseInt(billYearSpinner.getSelectedItem().toString()), false);
             }
         });
 
@@ -161,6 +166,10 @@ public class billsActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -170,10 +179,10 @@ public class billsActivity extends AppCompatActivity {
         });
     }
 
-    public void getBills(TextView textView, int month, int year){
+    public void getBills(TextView textView, int month, int year, boolean curr){
         //CONNECT DB
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/viewBillsRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/viewBillsRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -186,22 +195,72 @@ public class billsActivity extends AppCompatActivity {
                             String status = jsonObject.getString("status");
                             String message = jsonObject.getString("message");
                             if (status.equals("success")){
+
                                 String bills = "";
+                                String companyName = "";
                                 int total = 0;
-                                JSONObject billsObj = jsonObject.getJSONObject("serviceBills");
-                                Iterator<String> keys = billsObj.keys();
-                                while(keys.hasNext()){
-                                    String key = keys.next();
-                                    String serviceName = key;
-                                    JSONObject serviceBillObj = billsObj.getJSONObject(key);
-                                    String amount = serviceBillObj.getString("amount");
-                                    String payment = serviceBillObj.getString("payment");
-                                    String paymentDate = serviceBillObj.getString("paymentDate");
-                                    bills += serviceName +": "+ amount + "\n";
-                                    total += Integer.parseInt(amount);
+
+                                if(jsonObject.has("serviceBills")) {
+                                    JSONObject billsObj = jsonObject.getJSONObject("serviceBills");
+                                    Iterator<String> keys = billsObj.keys();
+                                    Set<String> billIDArr = new HashSet<String>();
+                                    while(keys.hasNext()){
+                                        String key = keys.next();
+                                        String serviceName = key;
+                                        JSONObject serviceBillObj = billsObj.getJSONObject(key);
+                                        String ID;
+                                        String amount;
+                                        String payment;
+                                        String paymentDate;
+
+                                        if(serviceBillObj.getString("ID")!="null"){
+                                            ID = serviceBillObj.getString("ID");
+                                            billIDArr.add(ID);
+                                        }else{
+                                            ID = "";
+                                        }
+                                        if(serviceBillObj.getString("amount")!="null"){
+                                            amount = serviceBillObj.getString("amount");
+                                        }else{
+                                            amount = "";
+                                        }
+                                        if(serviceBillObj.getString("payment")!="null"){
+                                            payment = serviceBillObj.getString("payment");
+                                        }else{
+                                            payment = "";
+                                        }
+                                        if(serviceBillObj.getString("billingDate")!="null"){
+                                            paymentDate = serviceBillObj.getString("billingDate");
+                                        }else{
+                                            paymentDate = "";
+                                        }
+                                        if(serviceBillObj.getString("companyName")!="null"){
+                                            companyName = serviceBillObj.getString("companyName");
+                                        }else{
+                                            companyName = "";
+                                        }
+
+                                        bills += serviceName +": "+ amount + "\n";
+                                        total += Float.parseFloat(amount);
+                                    }
+                                    bills += "Total bills from " + companyName + ": " + String.valueOf(total);
+                                    textView.setText(bills);
+
+                                    if(curr){
+                                        makePaymentBtn.setClickable(true);
+                                        makePaymentBtn.setBackgroundResource(android.R.drawable.btn_default);
+                                        SharedPreferences.Editor editor = sharedPreferencesPayment.edit();
+                                        editor.putStringSet("billIDs", billIDArr);
+                                        editor.apply();
+                                    }
                                 }
-                                bills += "Total: " + String.valueOf(total);
-                                textView.setText(bills);
+                                else{
+                                    textView.setText("No bills found");
+                                    if(curr){
+                                        makePaymentBtn.setClickable(false);
+                                        makePaymentBtn.setBackgroundColor(Color.GRAY);
+                                    }
+                                }
                             }
                             else {
                                 Log.d("error", message);
@@ -219,9 +278,10 @@ public class billsActivity extends AppCompatActivity {
         }) {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
-                paramV.put("userID", sharedPreferences.getString("userID",""));
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
                 paramV.put("month", String.valueOf(month));
                 paramV.put("year", String.valueOf(year));
+                paramV.put("curr", String.valueOf(curr));
                 return paramV;
             }
         };
@@ -261,10 +321,7 @@ public class billsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);

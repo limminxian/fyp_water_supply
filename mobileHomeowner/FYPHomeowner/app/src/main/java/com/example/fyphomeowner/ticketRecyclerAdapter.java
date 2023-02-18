@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,10 +46,26 @@ public class ticketRecyclerAdapter extends RecyclerView.Adapter<ticketRecyclerAd
         //assign values to views created in recycler layout file
         //based on position of recycler view
         Ticket ticket = ticketList.get(position);
-        holder.dateTxt.setText("Date created: " + ticketList.get(position).getDate());
-        holder.serviceTypeTxt.setText("Service Type: " + ticketList.get(position).getServiceType());
-        holder.descriptionTxt.setText("Description: " + ticketList.get(position).getDescription());
-        holder.statusTxt.setText("Status: " + ticketList.get(position).getStatus());
+        if(ticketList.get(position).getDate()!="null"){
+            holder.dateTxt.setText("Date created: " + ticketList.get(position).getDate());
+        }else{
+            holder.dateTxt.setText("");
+        }
+        if(ticketList.get(position).getDate()!="null"){
+            holder.serviceTypeTxt.setText("Service Type: " + ticketList.get(position).getServiceType());
+        }else{
+            holder.serviceTypeTxt.setText("");
+        }
+        if(ticketList.get(position).getDate()!="null"){
+            holder.descriptionTxt.setText("Description: " + ticketList.get(position).getDescription());
+        }else{
+            holder.descriptionTxt.setText("");
+        }
+        if(ticketList.get(position).getDate()!="null"){
+            holder.statusTxt.setText("Status: " + ticketList.get(position).getStatus());
+        }else{
+            holder.statusTxt.setText("");
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

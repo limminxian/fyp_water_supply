@@ -116,7 +116,7 @@ public class editProfileActivity extends AppCompatActivity {
 
         //CONNECT DB
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/profileRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/profileRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -212,6 +212,10 @@ public class editProfileActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -259,7 +263,7 @@ public class editProfileActivity extends AppCompatActivity {
                                 String newPassword = newPasswordTxt.getText().toString();
                                 String cmfNewPassword = cmfNewPasswordTxt.getText().toString();
 
-                                String url = "http://192.168.1.168/fyp/editPasswordRequest.php";
+                                String url = "https://fyphomeowner.herokuapp.com/editPasswordRequest.php";
                                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                                         new Response.Listener<String>() {
                                             @Override
@@ -310,7 +314,7 @@ public class editProfileActivity extends AppCompatActivity {
 
     public void onSubmit(View view) {
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/editProfileRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/editProfileRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -319,6 +323,7 @@ public class editProfileActivity extends AppCompatActivity {
                         if (response.equals("success")) {
                             Toast.makeText(getApplicationContext(), "Successfully edited profile", Toast.LENGTH_SHORT).show();
                             openProfilePage();
+                            finish();
                         }
                         else {
                             Log.d("Error", response);
@@ -384,10 +389,7 @@ public class editProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -40,15 +41,16 @@ public class editTicketActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView imageMenuView;
-
     private EditText descriptionTxt;
     private Button editTicketBtn;
     private Spinner ticketTypeSpinner;
-
+    private TextView chatBox;
+    private EditText chatTxt;
     private SharedPreferences sharedPreferencesHomeowner;
     private SharedPreferences sharedPreferencesTicket;
-
     private ArrayAdapter<String> ticketAdapter;
+    private Button replyBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,14 +60,33 @@ public class editTicketActivity extends AppCompatActivity {
         descriptionTxt = findViewById(R.id.descriptionTxt);
         editTicketBtn = findViewById(R.id.editTicketBtn);
         ticketTypeSpinner = findViewById(R.id.ticketTypeSpinner);
+        chatBox = findViewById(R.id.chatBox);
+        chatTxt = findViewById(R.id.chatTxt);
+        replyBtn = findViewById(R.id.replyBtn);
 
-        setSpinner();
+//        setSpinner();
         setDescription();
+        getChat();
 
         editTicketBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editTicket();
+            }
+        });
+
+        replyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(chatTxt.getText().toString() != null){
+                    postChat();
+                    finish();
+                    startActivity(getIntent());
+                    getChat();
+                }
+                else{
+                    Toast.makeText(editTicketActivity.this, "Please enter a reponse first", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -109,6 +130,10 @@ public class editTicketActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         openLoginPage();
+                        SharedPreferences.Editor editor = sharedPreferencesHomeowner.edit();
+                        editor.putString("logged", "false");
+                        editor.apply();
+                        finish();
                         break;
                     default:
                         break;
@@ -118,57 +143,58 @@ public class editTicketActivity extends AppCompatActivity {
         });
     }
 
-    public void setSpinner(){
-        //CONNECT DB
-        //Set service types in spinner
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/getServiceTypeRequest.php";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            //changing the response to a JSONobject because the php file is response is a JSON file
-                            Log.i("tagconvertstr", "["+response+"]");
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            String message = jsonObject.getString("message");
-                            if (status.equals("success")){
-                                JSONArray ticketTypesObj = jsonObject.getJSONArray("ticketTypes");
-                                ArrayList<String> ticketType = new ArrayList<>();
-                                for(int i = 0; i < ticketTypesObj.length(); i++ ){
-                                    ticketType.add(ticketTypesObj.getString(i));
-                                }
-                                ticketAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ticketType);
-                                ticketTypeSpinner.setAdapter(ticketAdapter);
-                            }
-                            else {
-                                Log.d("error", message);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> paramV = new HashMap<>();
-                return paramV;
-            }
-        };
-        queue.add(stringRequest);
-    }
+//    public void setSpinner(){
+//        //CONNECT DB
+//        //Set service types in spinner
+//        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//        String url = "https://fyphomeowner.herokuapp.com/getServiceTypeRequest.php";
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            //changing the response to a JSONobject because the php file is response is a JSON file
+//                            Log.i("tagconvertstr", "["+response+"]");
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            String status = jsonObject.getString("status");
+//                            String message = jsonObject.getString("message");
+//                            if (status.equals("success")){
+//                                JSONArray ticketTypesObj = jsonObject.getJSONArray("serviceTypes");
+//                                ArrayList<String> ticketType = new ArrayList<>();
+//                                for(int i = 0; i < ticketTypesObj.length(); i++ ){
+//                                    ticketType.add(ticketTypesObj.getString(i));
+//                                }
+//                                ticketAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ticketType);
+//                                ticketTypeSpinner.setAdapter(ticketAdapter);
+//                            }
+//                            else {
+//                                Log.d("error", message);
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//            }
+//        }) {
+//            protected Map<String, String> getParams() {
+//                Map<String, String> paramV = new HashMap<>();
+//                paramV.put("userID", sharedPreferencesHomeowner.getString("userID",""));
+//                return paramV;
+//            }
+//        };
+//        queue.add(stringRequest);
+//    }
 
     public void setDescription(){
         //CONNECT DB
         //Set service types in spinner
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/ticketRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/ticketRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -184,14 +210,15 @@ public class editTicketActivity extends AppCompatActivity {
                                 String description = jsonObject.getString("description");
                                 String name = jsonObject.getString("name");
                                 Log.d("ID: ",jsonObject.getString("id") );
-                                if(description != "null"){
+                                if(description != "null" && description != null){
                                     descriptionTxt.setText(description);
                                 }
-                                if(name != "null"){
-                                    int serviceTypeArrayPos = ticketAdapter.getPosition(name);
-                                    ticketTypeSpinner.setSelection(serviceTypeArrayPos);
+                                if(name != null){
+                                    if (ticketAdapter != null) {
+                                        int serviceTypeArrayPos = ticketAdapter.getPosition(name);
+                                        ticketTypeSpinner.setSelection(serviceTypeArrayPos);
+                                    }
                                 }
-
                             }
                             else {
                                 Log.d("error", message);
@@ -219,7 +246,7 @@ public class editTicketActivity extends AppCompatActivity {
     public void editTicket(){
         //CONNECT DB
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.1.168/fyp/editTicketRequest.php";
+        String url = "https://fyphomeowner.herokuapp.com/editTicketRequest.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -229,6 +256,8 @@ public class editTicketActivity extends AppCompatActivity {
                         if (response.equals("success")){
                             Log.d("success", response);
                             Toast.makeText(editTicketActivity.this, "Ticket successfully edited", Toast.LENGTH_SHORT).show();
+                            openTicketsPage();
+                            finish();
                         }
                         else {
                             Log.d("error", response);
@@ -244,9 +273,116 @@ public class editTicketActivity extends AppCompatActivity {
                 Map<String, String> paramV = new HashMap<>();
 //                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID",""));
                 paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID", ""));
-                paramV.put("type", ticketTypeSpinner.getSelectedItem().toString());
-                Log.d("Selected: ", ticketTypeSpinner.getSelectedItem().toString());
+//                paramV.put("type", ticketTypeSpinner.getSelectedItem().toString());
                 paramV.put("description", descriptionTxt.getText().toString());
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    public void getChat(){
+        //CONNECT DB
+        //Set service types in spinner
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/getChatRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //changing the response to a JSONobject because the php file is response is a JSON file
+                            Log.i("tagconvertstr", "["+response+"]");
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            String message = jsonObject.getString("message");
+                            if (status.equals("success")){
+                                JSONObject chatsObj = jsonObject.getJSONObject("chats");
+                                String fullChat = "";
+                                Iterator<String> keys = chatsObj.keys();
+                                while(keys.hasNext()){
+                                    String key = keys.next();
+                                    JSONObject chatObj = chatsObj.getJSONObject(key);
+                                    String date;
+                                    String ticket;
+                                    String name;
+                                    String text;
+                                    if(chatObj.getString("date")!="null"){
+                                        date = chatObj.getString("date");
+                                    }else{
+                                        date = "";
+                                    }
+                                    if(chatObj.getString("ticket")!="null"){
+                                        ticket = chatObj.getString("ticket");
+                                    }else{
+                                        ticket = "";
+                                    }
+                                    if(chatObj.getString("name")!="null"){
+                                        name = chatObj.getString("name");
+                                    }else{
+                                        name = "";
+                                    }
+                                    if(chatObj.getString("text")!="null"){
+                                        text = chatObj.getString("text");
+                                    }else{
+                                        text = "";
+                                    }
+                                    fullChat += date +" "+ name +": "+ text +"\n";
+                                }
+                                chatBox.setText(fullChat);
+                            }
+                            else {
+                                Log.d("error", message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID", ""));
+                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID", ""));
+                return paramV;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    public void postChat(){
+        //CONNECT DB
+        //Set service types in spinner
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://fyphomeowner.herokuapp.com/postChatRequest.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("success")){
+                            Toast.makeText(editTicketActivity.this, "successfully sent reposnse ", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Log.d("error", response);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> paramV = new HashMap<>();
+                paramV.put("userID", sharedPreferencesHomeowner.getString("userID", ""));
+                paramV.put("ticketID", sharedPreferencesTicket.getString("ticketID", ""));
+                paramV.put("text", chatTxt.getText().toString());
                 return paramV;
             }
         };
@@ -286,10 +422,7 @@ public class editTicketActivity extends AppCompatActivity {
         Intent intent = new Intent(this, businessViewActivity.class);
         startActivity(intent);
     }
-    public void openSettingsPage(){
-        Intent intent = new Intent(this, settingsActivity.class);
-        startActivity(intent);
-    }
+
 
     public void openAboutPage(){
         Intent intent = new Intent(this, aboutActivity.class);
