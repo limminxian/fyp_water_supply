@@ -15,23 +15,34 @@ if (isset($_POST['submit'])) {
 		$description = $_POST['description'];
 		$compName = $_POST['compName'];
 		$UEN = $_POST['uen'];
+		$file = $_FILES["fileToUpload"];
 		$a = new Company();
-		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"role"=>$role));
+		$result = $a->addCompany(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"description"=>$description,"compName"=>$compName,"UEN"=>$UEN,"acrapath"=>$file,"role"=>$role));		
+		if($result!=""){		
+			echo "<div class='error'>" . $result[1] . "</div>" ;
+			unset($_POST['role']);
+		}else{		
+			//header("Location: signUp.php");
+			header("Location: login.php");
+		}
 	}else{
 		$block = $_POST['block'];
+		//if(isset($_POST['unit'])){}
 		$unitno = $_POST['unit'];
 		$housetype = $_POST['house'];
 		$people = $_POST['people'];
 		$a = new Homeowner();
 		$result = $a->addHomeowner(array("name"=>$name,"email"=>$email,"password"=>$password,"number"=>$number,"street"=>$street,"postalcode"=>$postalcode,"block"=>$block,"unitno"=>$unitno,"housetype"=>$housetype,"people"=>$people,"role"=>$role));
+		if($result[0]){		
+			echo "<div class='success'>" . $result[1] . "</div>" ;
+			header("Location: login.php");
+		}else{		
+			echo "<div class='error'>" . $result[1] . "</div>" ;
+			unset($_POST['role']);
+		}
 	}
-
-	if(isset($_SESSION["errorAddUser"]))
-	{
-		$a=strval($_SESSION["errorAddUser"]);
-		echo "<div class='error'>" . $a . "</div>" ;
-		UNSET($_SESSION["errorAddUser"]);
-	}
+	
+	
 }
   
 
@@ -50,10 +61,10 @@ $(function(){
   $("#nav-placeholder").load("navBarIndex.php");
 });
 </script>
-
+	<h1>Register</h1>
 </head>
 <div class="center bg-img">
-<form action="" method="post" class="formcontainer">
+<form action="" method="post" class="formcontainer" enctype="multipart/form-data" >
 
 Role:
 <input type="radio" value="companyadmin" id="companyadmin" name="role" onclick="companyFuntion()" required>
@@ -65,7 +76,7 @@ Role:
 <label for="homeowner">homeowner</label>
  <br>
  
-Userame: 
+Username: 
 <input class="form" type="text" name="name" placeholder="Your Name" required ><br>
 
 Password: <input class="form" type="password" id="password" name="password" placeholder="Password" oninvalid="this.setCustomValidity('Please provide a password that matched rules above');" pattern="^[^\s]*(?=\S{8,16})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])[^\s]*$" oninput="setCustomValidity('')" required >
@@ -88,7 +99,7 @@ Decription of Business: <input type="text" class="form compForm" name="descripti
 
 UEN: <input type="text" class="form compForm" name="uen" placeholder="UEN" required ><br>
 
-ACRA certificate: <input type="file" class="form compForm" name="fileToUpload" id="fileToUpload" required>
+ACRA certificate: <input type="file" class="form compForm" name="fileToUpload" id="fileToUpload" onchange="checkFile()" required>
 
 </div>
 
@@ -96,7 +107,7 @@ ACRA certificate: <input type="file" class="form compForm" name="fileToUpload" i
 
 Block: <input type="text" class="form homeForm" name="block" placeholder="block" required ><br>
 
-Unit no: <input type="number" class="form homeForm" name="unit" placeholder="unit no" required><br>
+Unit no: <input type="number" title="" class="form homeForm" name="unit" placeholder="unit no"><br>
 
 <label for="house">House type:</label>
 
@@ -128,8 +139,6 @@ No. of people: <input type="number" class="form homeForm" name="people" placehol
 <input class="formbutton" type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
 
 </form>
-
-
 
 <script>
 function homeownerFuntion() {
@@ -169,6 +178,25 @@ function checkPassword() {
 		document.getElementById("repassword").setCustomValidity('');
 	}
 }
+
+function checkFile(){
+	var filename = document.getElementById("fileToUpload").value;
+	var parts = filename.split('.');
+	var ext = parts[parts.length - 1];
+	switch (ext.toLowerCase()) {
+    case 'jpg':
+    case 'pdf':
+		document.getElementById("fileToUpload").setCustomValidity('');
+		break;
+	default:
+		document.getElementById("fileToUpload").setCustomValidity("Please upload a pdf or jpg file");
+	}
+		
+	
+}
+
+
+
 </script>
 
 </div>

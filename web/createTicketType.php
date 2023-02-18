@@ -7,49 +7,23 @@ include_once 'userClass.php';
 <html>
 <title>IT for rent</title> 
 
-  <style>
-  .error{
-  padding: 20px;
-  background-color: #D91D1D; /* red */
-  color: white;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
+<link rel="stylesheet" href="style.css">
+<div id="nav-placeholder">
+</div>
 
-#homeownerForm {
-	display: none;
-}
-	
-#companyForm {
-	display: none;
-}	
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$(function(){
+  $("#nav-placeholder").load("navBarCust.php");
+});
+</script>
+</head>
 
-</style>
-<h1>Register</h1>
 <?php
 if(isset($_POST["logout"])){
 	unset($_SESSION["loginId"]);
@@ -58,24 +32,18 @@ if(isset($_POST["logout"])){
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
 	$description = $_POST['description'];
-	$toTech = $_POST['tech'];
-	//check role	
+	$tech = $_POST['tech'];
 	$a = new Tickettype();
-	$result = $a->addTicketType(array("name"=>$name,"description"=>$description,"tech"=>$tech));
-
-	if(isset($_SESSION["errorAddUser"]))
-	{
-		$a=strval($_SESSION["errorAddUser"]);
-		echo "<div class='error'>" . $a . "</div>" ;
-		UNSET($_SESSION["errorAddUser"]);
-	}
+	$a->addTicketType(array("name"=>$name,"description"=>$description,"totech"=>$tech));
+	header("Location: ticketType.php");
 }
   
 
 ?>
+<body>
+<div class="center bg-img">
 
-<div >
-<form action="" method="post" >
+<form action="" method="post" class="formcontainer">
 
  
 Name: <input type="text" name="name" placeholder="Name" required ><br>
@@ -96,11 +64,9 @@ Send To Technician Automatically:
 
 <br>
 <input type="submit" name="submit" value="Submit" />&nbsp;&nbsp;
-<input type="button" onclick="window.location.href='superAdmin.php';" value="Back" />
-<input type="submit" name="logout" value="Logout" />
 
 </form>
-</script>
+
 
 </div>
 </body>

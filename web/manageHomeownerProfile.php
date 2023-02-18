@@ -12,7 +12,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script>
 $(function(){
-  $("#nav-placeholder").load("navBarCUst.php");
+  $("#nav-placeholder").load("navBarCust.php");
 });
 </script>
 </head>
@@ -46,11 +46,11 @@ $company->getAllHomeowner($companyId);
 
 <form action="" method="post">
 		<input type="text" name="searchtext" placeholder="use space for multiple string" value="<?php if (isset($_SESSION["search"])) echo $_SESSION["search"] ;?>" />
-		<input type="submit" name="search" value="search" />
+		<input type="submit" name="search"class="edit" value="search" />
 	</form>
 	<br>
 	<table>
-	  <tr>
+	  <tr bgcolor="#488AC7">
 		<th>ID</th>
 		<th>Name</th>
 		<th>Number</th>
@@ -79,10 +79,13 @@ $company->getAllHomeowner($companyId);
 			<?php }
 		?>
 		<td>
-			<button  value="<?=base64_encode(serialize($h))?>" name="editHome"/>edit</button>
+			<center>
+			<button  value="<?=base64_encode(serialize($h))?>" name="editHome"class="edit"/>edit</button>
 		</td>
 		<td>
-			<button  value="<?=base64_encode(serialize($h))?>" name="deleteHome"/>delete</button>
+			<center>
+			
+		  </center>
 		</td>
 		</tr>
 	  <?php

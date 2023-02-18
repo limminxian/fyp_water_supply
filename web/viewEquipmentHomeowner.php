@@ -35,7 +35,12 @@ else{
 	}
 
 $equipment = new Equipment();
+<<<<<<< Updated upstream
 $equipment->getAllEquipmentHomeowner($_SESSION["equiptype"]->id);
+=======
+$equipment->getAllEquipmentHomeowner($_SESSION["equiptype"]->type);
+
+>>>>>>> Stashed changes
 if (isset($_POST["add"])){
 	header("Location: addEquipmentStock.php");
 }
@@ -51,6 +56,10 @@ if (isset($_POST["csv"])){
     <th>ID</th>
     <th>serial number</th>
     <th>installation date</th>
+<<<<<<< Updated upstream
+=======
+    <th>uninstallation date</th>
+>>>>>>> Stashed changes
     <th>homeowner</th>
   </tr>	
   <form action="" method="post">
@@ -59,7 +68,11 @@ foreach($equipment->equipmentArray as $c){
 	?>
   <tr>
 	<?php
+<<<<<<< Updated upstream
 		$properties = array('id', 'equipment', 'installationdate','homeowner');
+=======
+		$properties = array('id', 'equipment', 'installationdate','uninstallationdate','homeowner');
+>>>>>>> Stashed changes
 		foreach ($properties as $prop) {?>
 			<td>
 				<?=$c->$prop?>

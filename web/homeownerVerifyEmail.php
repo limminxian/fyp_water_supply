@@ -1,112 +1,17 @@
-<style>
-@import url('https://fonts.googleapis.com/css?family=Raleway:200');
+<div id="nav-placeholder">
+</div>
 
-$BaseBG: #ffffff;
-
-body,
-html {
-  height: 100%;
-  margin: 0;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 200;
-}
-
-body {
-  background-color: $BaseBG;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.digit-group input {
-    width: 60px;
-    height: 60px;
-    background-color: lighten($BaseBG, 5%);
-    border: none;
-    line-height: 50px;
-    text-align: center;
-    font-size: 24px;
-    font-family: 'Raleway', sans-serif;
-    font-weight: 800;
-    color: black;
-    margin: 0 2px;
-    border-radius: 18px;
-    border: 1px solid #d3d3d3;
-  }
-
-.prompt {
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: white;
-}
-
-::-webkit-input-placeholder {
-  /* Edge */
-  font-weight: 800;
-  color: #9c9a9a;
-}
-
-:-ms-input-placeholder {
-  /* Internet Explorer */
-  font-weight: 800;
-  color: #9c9a9a;
-}
-
-::placeholder {
-  font-weight: 900;
-  color: #9c9a9a;
-}
-
-.error{
-  padding: 20px;
-  background-color: #D91D1D; /* red */
-  color: white;
-  -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-.success {
-  padding: 20px;
-  background-color: #83FF9F; /* light green */
-  color: black;
-  -moz-animation: cssAnimation 0s ease-in 3s forwards;
-    /* Firefox */
-    -webkit-animation: cssAnimation 0s ease-in 3s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 0s ease-in 3s forwards;
-    /* Opera */
-    animation: cssAnimation 0s ease-in 3s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-		padding: 0;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-		padding: 0;
-    }
-}
-
-</style>
-
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script>
+$(function(){
+  $("#nav-placeholder").load("navBarIndex.php");
+});
+</script>
+	<h1>Verify email</h1>
+<div class="center bg-img">
 <?php
 include_once 'userClass.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
@@ -119,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 	}
 	else{
 		echo "<div class='error'> Wrong code, code resent </div>";
-		$a->resendCode();
+		$email = $a->getEmail($_SESSION["loginId"]);
+		$a->resendCode($email);
 	}
 }
 ?>
@@ -136,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 </form>
 
 <form action="" method="post">
-<br>Did not receive code? <input type="submit" name="resend" value="Resend code" />
+<br>Did not receive code? <input type="submit" name="resend"class="edit" value="Resend code" />
 </form>
 <script>
 

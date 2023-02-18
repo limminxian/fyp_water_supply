@@ -35,12 +35,20 @@ if(isset($_POST["logout"])){
 	unset($_SESSION["loginId"]);
 	header("Location: login.php");
 }
+
+if (isset($_POST["edit"])){
+		$t = unserialize(base64_decode($_POST["edit"]));
+		$t->changeStatus("SUSPEND");
+		/* header("Location: editHomeownerDetails.php");; */
+	}
 	
-$_SESSION["page"]="companyAdmin";
+$_SESSION["page"]="companyadmin";
 
 $company = new Company();
 $company->getAllStaff();
-$company->getAllHomeowner($company->id);
+$c = new CompanyAdmin();
+$id = $c->getCompany($_SESSION["loginId"]);
+$company->getAllHomeowner($id);
 ?>
 
 
@@ -54,11 +62,11 @@ $company->getAllHomeowner($company->id);
 	<a class="rightButton" href="createStaff.php">Create Staff</a>
 	<form action="" method="post">
 		<input type="text" name="searchtext" placeholder="use space for multiple string" value="<?php if (isset($_SESSION["search"])) echo $_SESSION["search"] ;?>" />
-		<input type="submit" name="search" value="search" />
-		<input type="submit" name="clear" value="clear" />
+		<input type="submit" class="edit"name="search" value="search" />
+		<input type="submit" class="delete"name="clear" value="clear" />
 	</form>
 	<table>
-	  <tr>
+	 <tr bgcolor="#488AC7">
 		<th>ID</th>
 		<th>Name</th>
 		<th>Email</th>
@@ -81,10 +89,10 @@ $company->getAllHomeowner($company->id);
 			<?php }
 		?>
 		<td>
-			<button  value="<?=base64_encode(serialize($s))?>" name="edit"/>Edit</button>
+			<button  value="<?=base64_encode(serialize($s))?>" class="edit"name="edit"/>suspend</button>
 		</td>
 		<td>
-			<button  value="<?=base64_encode(serialize($s))?>" name="delete"/>Delete</button>
+			
 		</td>
 	  </tr><?php
 	}
@@ -96,11 +104,12 @@ $company->getAllHomeowner($company->id);
 <div id="Homeowner" class="tabcontent">
 <form action="" method="post">
 		<input type="text" name="searchtext" placeholder="use space for multiple string" value="<?php if (isset($_SESSION["search"])) echo $_SESSION["search"] ;?>" />
-		<input type="submit" name="search" value="search" />
+		<input type="submit" class="edit"name="search" value="search" />
+		<input type="submit" class="delete"name="clear" value="clear" />
 	</form>
 	<br>
 	<table>
-	  <tr>
+	 <tr bgcolor="#488AC7">
 		<th>ID</th>
 		<th>Name</th>
 		<th>Number</th>
@@ -128,12 +137,15 @@ $company->getAllHomeowner($company->id);
 				</td>
 			<?php }
 		?>
-		<td>
-			<button  value="<?=base64_encode(serialize($h))?>" name="editHome"/>edit</button>
+		<!--td>
+			<center>
+			<button  value="<?=base64_encode(serialize($h))?>" class="edit"name="editHome"/>suspend</button>
 		</td>
 		<td>
-			<button  value="<?=base64_encode(serialize($h))?>" name="deleteHome"/>delete</button>
-		</td>
+			<center>
+			
+		  </center>
+		</td-->
 		</tr>
 	  <?php
 	}

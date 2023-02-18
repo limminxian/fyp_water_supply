@@ -21,16 +21,27 @@ include_once 'userClass.php';
 	});
 	</script>
 </head>
-<h1>Register</h1>
+<h1>Add Chemical</h1>
+<div class="center bg-img">
 <?php
 if (isset($_POST['submit'])) {
 	$name = $_POST['name'];
+	$measurement = $_POST['measurement'];
 	$amount = $_POST['amount'];
+	$per1lwater = $_POST['perwater'];
 	$c = new Chemical();
-	$c->addChemical(array("name"=>$name,"amount"=>$amount));
-	header("Location: technician.php");
+	$result = $c->addChemical(array("name"=>$name,"amount"=>$amount,"measurement"=>$measurement,"per1lwater"=>$per1lwater),$_SESSION["loginId"]);
+	if($result[0]){		
+		$_SESSION["success"]=$result[1];
+		header("Location: technician.php");
+	}else{		
+		echo "<div class='error'>" . $result[1] . "</div>" ;
+	}
 }
-  
+if(isset($_POST["logout"])){
+		unset($_SESSION["loginId"]);
+		header("Location: login.php");
+	}  
 
 ?>
 
@@ -41,6 +52,17 @@ if (isset($_POST['submit'])) {
  
 Name: <input class="form" type="text" name="name" placeholder="Name" required ><br>
 Amount: <input class="form" type="number" name="amount" placeholder="Amount" required ><br>
+<label for="measure">Measure:</label>
+
+<select name="measurement" id="measurement" class="form"  required>
+  <option value="Litre(l)">Litre(l)</option>
+  <option value="milielitre(ml)">milielitre(ml)</option>
+  <option value="gram(g)">gram(g)</option>
+  <option value="kilogram(kg)">kilogram(kg)</option>
+  <option value="centimetercube(cm3)">centimetercube(cm3)</option>
+</select>
+<br>
+Used per 1L water: <input class="form" type="number" name="perwater" placeholder="Used per 1L water" required ><br>
 
 
 <input class="formbutton" type="submit" name="submit" value="Submit" />

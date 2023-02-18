@@ -22,7 +22,7 @@ $(function(){
 });
 </script>
 </head>
-<h1>Register</h1>
+<h1>Create Staff</h1>
 <?php
 if(isset($_POST["logout"])){
 	unset($_SESSION["loginId"]);

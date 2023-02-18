@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<title>Edit Company Details</title> 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -7,6 +8,7 @@
 <div id="nav-placeholder">
 </div>
 
+<center>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -16,7 +18,11 @@ $(function(){
 });
 </script>
 </head>
+<h1>Edit Company Details</h1>
 <body>
+<div class="center bg-img">
+
+<form action="" method="post" class="formcontainer">
 <?php 
 include_once 'userClass.php';
 if(!isset($_SESSION['loginId'])){
@@ -37,6 +43,8 @@ else{
 	$company = $_SESSION["company"];
 	$status = array("PENDING","ACTIVE","SUSPEND");
 	$prop = array("id","name","number","email","street","postalcode","description","noofstar");
+	
+			
 	foreach($company as $key=>$value){
 		if(in_array($key,$prop)){
 			echo "<p>".$key. ": " .$value."</p>";
@@ -82,3 +90,4 @@ else{
    
 </body>
 </html> 
+</center>

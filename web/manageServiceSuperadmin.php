@@ -34,12 +34,17 @@ else{
 		header("Location: login.php");
 	}
 
-	if (isset($_POST["edit"])){
+	/* if (isset($_POST["edit"])){
 		$t = unserialize(base64_decode($_POST["edit"]));
-		$_SESSION["service"]=$t;
-		header("Location: editServiceDetails.php");
+		//$_SESSION["service"]=$t;
+		$t->updateService(array("status"=>"suspend"));
+		header("Location: manageServiceSuperwadmin.php");
+		//header("Location: editServiceDetails.php");
+	} */
+	if(isset($_SESSION["success"])){
+		echo "<div class='success'>" . $_SESSION["success"] . "</div>" ;
+		unset($_SESSION["success"]);
 	}
-	
 $service = new DataManager();
 $service->getAllService();
 ?>
@@ -48,12 +53,10 @@ $service->getAllService();
 <a class="rightButton" href="createService.php">Add new service</a>
 
 <table>
-  <tr>
+<tr bgcolor="#488AC7">
     <th>ID</th>
     <th>Name</th>
     <th>Description</th>
-    <th></th>
-    <th></th>
   </tr>	
   <form action="" method="post">
 <?php
@@ -68,12 +71,12 @@ foreach($service->serviceArray as $r){
 			</td>
 		<?php }
 	?>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="edit"/>edit</button>
-	</td>
-	<td>
-		<button  value="<?=base64_encode(serialize($r))?>" name="delete"/>delete</button>
-	</td>
+	
+	<!--td>
+		<center>
+		
+	  </center>
+	</td-->
 	</tr>
   <?php
 }
