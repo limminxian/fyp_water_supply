@@ -20,4 +20,9 @@ File contents description:
 
 -  us-cdbr-east-06_cleardb_net
 	File is for setting up the phpmyadmin database, creating table and inserting data
-	
+
+- homeowner_app.apk	
+	APK file to install homeowner app on the mobile device
+
+- technician_app_release.apk	
+	APK file to install technician app on the mobile device
